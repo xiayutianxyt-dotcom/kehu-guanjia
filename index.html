@@ -4814,24 +4814,30 @@ function _rTspNearest(pts) {
   }
   return order;
 }
-function _rGeo(c) {
+function _rWithTimeout(p, ms) {
   return new Promise(function(res, rej) {
+    var timer = setTimeout(function() { rej(new Error('timeout')); }, ms);
+    p.then(function(v) { clearTimeout(timer); res(v); }, function(e) { clearTimeout(timer); rej(e); });
+  });
+}
+function _rGeo(c) {
+  return _rWithTimeout(new Promise(function(res, rej) {
     var g = new AMap.Geocoder({});
     g.getLocation(_rFullAddr(c), function(st, r) {
       if (st === 'complete' && r.geocodes && r.geocodes.length) {
         res({ id: c.id, name: c.basic.name || '客户', addr: _rFullAddr(c), lng: r.geocodes[0].location.lng, lat: r.geocodes[0].location.lat });
       } else rej(c);
     });
-  });
+  }), 10000);
 }
 function _rDrive(from, to) {
-  return new Promise(function(res, rej) {
+  return _rWithTimeout(new Promise(function(res, rej) {
     var d = new AMap.Driving({ policy: AMap.DrivingPolicy.LEAST_TIME });
     d.search([from.lng, from.lat], [to.lng, to.lat], function(st, r) {
       if (st === 'complete' && r.routes && r.routes.length) res(r.routes[0]);
       else rej();
     });
-  });
+  }), 15000);
 }
 var _rPlanIds = null;
 function planIds(ids) {
