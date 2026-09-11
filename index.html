@@ -2195,6 +2195,7 @@ body {
         <button class="btn btn-primary btn-block" id="cpSaveBtn" style="margin-bottom:8px">保存新密码</button>
       </div>
       <button class="btn btn-secondary btn-block" id="lockNowBtn">立即锁定本页</button>
+      <div id="recoveryShow" style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6;word-break:break-all"></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" id="setCloseBtn">关闭</button>
@@ -4485,7 +4486,8 @@ body {
     localStorage.setItem(RECOVERY_KEY, rec);
     document.getElementById('setPass1').value = '';
     document.getElementById('setPass2').value = '';
-    confirmDialog('密码设置成功', '请务必记下恢复码（忘记密码时用它重置）：\n\n' + rec + '\n\n恢复码仅保存在本机，请抄在别处保存。', '我已记下，进入', function() { enterApp(); });
+    showToast('已设置密码，恢复码见「设置」');
+    enterApp();
   }
   function unlock() {
     var p = document.getElementById('unlockInput').value;
@@ -4520,7 +4522,7 @@ body {
       due = days >= interval;
     }
     if (due) {
-      confirmDialog('备份提醒', '距上次备份已超过 ' + interval + ' 天。为防止客户资料丢失，建议立即备份：点「去备份」后在设置中选择「加密导出」，文件可放心存入微信传输助手、网盘或传到电脑。', '去备份', function() { openSettings(); });
+      showToast('建议备份：设置→加密导出，防止资料丢失');
     }
   }
 
@@ -4531,6 +4533,8 @@ body {
       if (sel.options[i].value === cur) { sel.selectedIndex = i; break; }
     }
     document.getElementById('changePassBox').style.display = 'none';
+    var rcEl = document.getElementById('recoveryShow');
+    if (rcEl) rcEl.textContent = '恢复码：' + (localStorage.getItem(RECOVERY_KEY) || '未设置');
     document.getElementById('settingsMask').classList.add('show');
   }
   function closeSettings() { document.getElementById('settingsMask').classList.remove('show'); }
@@ -4704,6 +4708,8 @@ body {
   renderDiscProfile();
   renderList();
   showView('list');
+  var _mm0 = document.getElementById('modalMask');
+  if (_mm0) _mm0.classList.remove('show');
   checkLock();
 
 
