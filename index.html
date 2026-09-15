@@ -617,6 +617,20 @@ body {
   align-items: center;
   gap: 6px;
 }
+#discHead {
+  background: linear-gradient(135deg, #0F766E, #0D9488);
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-bottom: none;
+  cursor: pointer;
+  user-select: none;
+}
+#discHead .title-left { color: #fff; }
+#discHead .form-card-sub { color: rgba(255,255,255,.78); }
+#discHead .disc-arrow { color: #fff; }
+#discHead .disc-toggle { background: rgba(255,255,255,.18); color: #fff; border-color: transparent; }
 .form-card-sub {
   font-size: 12px;
   font-weight: 400;
@@ -1284,7 +1298,54 @@ body {
 .vq-empty { font-size: 13px; color: var(--text-muted); padding: 10px 0; text-align: center; }
 .vq-foot { display: flex; gap: 8px; border-top: 1px dashed var(--border); padding: 10px 14px; }
 .vq-foot .btn { flex: 1; }
+/* ===== 主导航 ===== */
+.main-nav { display:flex; gap:8px; padding:12px 0 10px; }
+.main-tab { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 2px 10px; border:none; border-radius:14px; background:transparent; color:var(--text-muted); font-size:12px; font-weight:700; cursor:pointer; }
+.main-tab.active { background:var(--card); color:var(--primary); box-shadow:0 2px 12px rgba(13,148,136,.10); }
+.main-tab .mt-ico { width:40px; height:40px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--text-muted); }
+.main-tab.active .mt-ico { background:var(--primary); color:#fff; }
+.main-tab[data-tab=client].active { color:#0D9488; }
+.main-tab[data-tab=client].active .mt-ico { background:#0D9488; }
+.main-tab[data-tab=qa].active { color:#2563EB; }
+.main-tab[data-tab=qa].active .mt-ico { background:#2563EB; }
+.main-tab[data-tab=visit].active { color:#EA580C; }
+.main-tab[data-tab=visit].active .mt-ico { background:#EA580C; }
+.main-tab[data-tab=map].active { color:#7C3AED; }
+.main-tab[data-tab=map].active .mt-ico { background:#7C3AED; }
+.main-tab[data-tab=client]:not(.active) .mt-ico { background:rgba(13,148,136,.12); color:#0D9488; }
+.main-tab[data-tab=qa]:not(.active) .mt-ico { background:rgba(37,99,235,.12); color:#2563EB; }
+.main-tab[data-tab=visit]:not(.active) .mt-ico { background:rgba(234,88,12,.12); color:#EA580C; }
+.main-tab[data-tab=map]:not(.active) .mt-ico { background:rgba(124,58,237,.12); color:#7C3AED; }
+.sub-nav { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none; }
+.sub-nav::-webkit-scrollbar { display:none; }
+.sub-tab { flex-shrink:0; padding:7px 15px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:13px; font-weight:600; cursor:pointer; }
+  @media (max-width: 640px) { .sub-tab { min-height:42px; padding:9px 16px; font-size:14px; } input, select, textarea { font-size:16px; } }
+.sub-tab.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+.nav-section { display:none; }
+.nav-section.active { display:block; }
+.map-actions { display:flex; gap:10px; margin:4px 0 2px; }
+.map-actions .btn { flex:1; min-height:42px; }
+.map-tools { display:flex; gap:8px; margin:10px 0 2px; align-items:center; flex-wrap:wrap; }
+.map-nav-mode { display:flex; gap:6px; background:#EEF6F4; border-radius:10px; padding:4px; flex:1; }
+.mode-tab { flex:1; border:none; background:transparent; padding:8px 4px; border-radius:8px; font-size:13px; font-weight:700; color:var(--text-muted); cursor:pointer; }
+.mode-tab.active { background:#fff; color:#0D9488; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+.vq-nav { flex-shrink:0; font-size:12px; font-weight:700; color:#0D9488; text-decoration:none; border:1px solid rgba(13,148,136,.35); border-radius:8px; padding:4px 10px; }
+.vq-nav:active { background:#0D9488; color:#fff; }
+.routeMapBox-expanded { height: calc(100vh - 250px) !important; }
+#mapVqPanel { margin-top:12px; }
+.need-qa-result-sub { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; padding-top: 4px; }
+.risk-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 12px; flex-wrap: wrap; }
+.risk-name { width: 92px; flex-shrink: 0; color: var(--text); font-weight: 600; }
+.risk-bar { flex: 1; min-width: 120px; height: 12px; background: #EDF1F0; border-radius: 6px; overflow: hidden; }
+.risk-bar i { display: block; height: 100%; border-radius: 6px; min-width: 4px; }
+.risk-score { width: 56px; flex-shrink: 0; font-weight: 700; }
+.risk-note { width: 100%; font-size: 11px; color: var(--text-muted); padding-left: 100px; }
+.disc-radar { display: flex; justify-content: center; padding: 4px 0 2px; }
+.disc-radar svg { width: 100%; max-width: 240px; height: auto; }
 </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D9488'/%3E%3Cpath d='M32 14l15 5.5V30c0 9.5-6.4 17-15 20-8.6-3-15-10.5-15-20V19.5z' fill='%23fff'/%3E%3Cpath d='M26.5 33l4.5 4.5 7.5-8.5' stroke='%230D9488' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFb0lEQVR4nO3dzXWTRwCFYZvD2lvcGVQAixSQGlJAFlABdIa3NECOzTGxsSV9PzPf/Nzn2WQVoyj31YwwyNdXnXn39fPP1o+Beu4+fLq+6kjTB2PstI7i8F/Y6OkphsN+McOnxxCq/yKGT88hVPvihs8IIRT/oobPSCG8KfnFjJ/aSm+sSE2Gz6inwe4TwPhppcT2dgVg/LS2d4ObAzB+erFni5sCMH56s3WTqwMwfnq1ZZurAjB+erd2o4sDMH5GsWariwIwfkazdLMXAzB+RrVku0X/KASM5mwAXv0Z3aUNnwzA+JnFuS27AhHt1QC8+jObU5t2AhDtRQBe/ZnVa9t2AhDtWQBe/Zndnxt3AhDtdwBe/UnxdOtOAKIJgGgPAbj+kOZx829bP5AE399/3PTv3X77Uvyx8JwAOhj62q8njHIE0HjkpR+DONYRwEDDX/M4hbDMtTfAYw9+KUG8zgkw6eAv/fcJ4pf4AGYf/imuSqEBpA7+lO/hJ0NEAEa/7bm6DYhh6gAMv8zzdztxCFMGYPh1ns/bCUPwh+GIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJoAQN//+0/ohdEkAQeMXwUsCCHMfgRD+J4DJnRq7CH4RwMQujfzG+wIBzGrpuG/Cr0ROAB6kRiCACW0d803gaSCAyZQY8E1QBAKYSKnh/vjr76sUAiB2/PcEMImka0tJApiAq892Ahic8e8jAK7S7v1PCWBg7v37CWBQrj5lCGBAxl+OAEIl3/ufEsBg3PvLEsBAXH3KE8AgjL8OAQRx739JAANw769HAJ2Pz9WnLgF0/Hk6xl+fABaOr/VJsJV7/3kC6PSzdEYNbjQC6PCzdFx9jiOAjZ+lU4vxH0sAG4fX8xXFvX85Aez8HJ2Seo5qVvEB7B1dqdG6+rQRHUAv4zX+dqIDKHlXbn19ce/fJjqAHiJoHU66+ABaRuDq054AKkVw1DfUXH32EUDFMdW+3hj/fgJoEIF7fz8EcHAErj59EcCBERh/fwQw2B27x8c0MgFcYHBzE8BAEfTyOGYigBXjazlA469DAAMM0fjrEcAGBjkPAXQegdjqEkDH4zT++gTQ6UiN/xgCKMBYxyWADiMQ1HEEUFCJ4Rr/sQRQ2KUBn/uGmvEfTwAVLBl46+8s84sAKvlz3JeiEEMbAqho6biNvx0BVGbcfRMA0QRANAEQTQBEEwDRBEA0ARBNAER7ezWh229fHv75/f3H1g9lqudzRlMG8Nr/ODHse/5mNXUATzkV1j1PKWICeCSE889LmrgAHgnh+fOQKjaA9PcJ6cN/FB9A2qlg+M8JICAEoz9NABOHYPiXCWDC9wmGv5wAJjoVDH89AQwegtHvI4BBQzD8MgQw2PsEwy9LAIOcCoZfhwA6D8Hw6xJAhyEY/XEE0NH7BMM/ngA6OBUMvx1/J7gx429LAER7c/fh03XrBwEt3G/fCUA0ARBNAEQTANEeAvBGmDSPm3cCEE0ARPsdgGsQKZ5u3QlAtGcBOAWY3Z8bdwIQ7UUATgFm9dq2nQBEezUApwCzObVpJwDRTgbgFGAW57Z89gQQAaO7tGFXIKJdDMApwKiWbHfRCSACRrN0s4uvQCJgFGu2uuo9gAjo3dqNrn4TLAJ6tWWbm34XSAT0ZusmN/82qAjoxZ4t7vo+gAhobe8Gd38jTAS0UmJ7RT8X9N3Xzz9Lfj2o/aJb9I9COA2orfTGqn0ytNOAEV5cq380uhDo+VZx2M8GEAI9XqcP/+EYQqCn95FNfzqMGGj9myfd/XgkUcztrrMfyfUfAG0kWw6X3VoAAAAASUVORK5CYII=">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFb0lEQVR4nO3dzXWTRwCFYZvD2lvcGVQAixSQGlJAFlABdIa3NECOzTGxsSV9PzPf/Nzn2WQVoyj31YwwyNdXnXn39fPP1o+Beu4+fLq+6kjTB2PstI7i8F/Y6OkphsN+McOnxxCq/yKGT88hVPvihs8IIRT/oobPSCG8KfnFjJ/aSm+sSE2Gz6inwe4TwPhppcT2dgVg/LS2d4ObAzB+erFni5sCMH56s3WTqwMwfnq1ZZurAjB+erd2o4sDMH5GsWariwIwfkazdLMXAzB+RrVku0X/KASM5mwAXv0Z3aUNnwzA+JnFuS27AhHt1QC8+jObU5t2AhDtRQBe/ZnVa9t2AhDtWQBe/Zndnxt3AhDtdwBe/UnxdOtOAKIJgGgPAbj+kOZx829bP5AE399/3PTv3X77Uvyx8JwAOhj62q8njHIE0HjkpR+DONYRwEDDX/M4hbDMtTfAYw9+KUG8zgkw6eAv/fcJ4pf4AGYf/imuSqEBpA7+lO/hJ0NEAEa/7bm6DYhh6gAMv8zzdztxCFMGYPh1ns/bCUPwh+GIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJoAQN//+0/ohdEkAQeMXwUsCCHMfgRD+J4DJnRq7CH4RwMQujfzG+wIBzGrpuG/Cr0ROAB6kRiCACW0d803gaSCAyZQY8E1QBAKYSKnh/vjr76sUAiB2/PcEMImka0tJApiAq892Ahic8e8jAK7S7v1PCWBg7v37CWBQrj5lCGBAxl+OAEIl3/ufEsBg3PvLEsBAXH3KE8AgjL8OAQRx739JAANw769HAJ2Pz9WnLgF0/Hk6xl+fABaOr/VJsJV7/3kC6PSzdEYNbjQC6PCzdFx9jiOAjZ+lU4vxH0sAG4fX8xXFvX85Aez8HJ2Seo5qVvEB7B1dqdG6+rQRHUAv4zX+dqIDKHlXbn19ce/fJjqAHiJoHU66+ABaRuDq054AKkVw1DfUXH32EUDFMdW+3hj/fgJoEIF7fz8EcHAErj59EcCBERh/fwQw2B27x8c0MgFcYHBzE8BAEfTyOGYigBXjazlA469DAAMM0fjrEcAGBjkPAXQegdjqEkDH4zT++gTQ6UiN/xgCKMBYxyWADiMQ1HEEUFCJ4Rr/sQRQ2KUBn/uGmvEfTwAVLBl46+8s84sAKvlz3JeiEEMbAqho6biNvx0BVGbcfRMA0QRANAEQTQBEEwDRBEA0ARBNAER7ezWh229fHv75/f3H1g9lqudzRlMG8Nr/ODHse/5mNXUATzkV1j1PKWICeCSE889LmrgAHgnh+fOQKjaA9PcJ6cN/FB9A2qlg+M8JICAEoz9NABOHYPiXCWDC9wmGv5wAJjoVDH89AQwegtHvI4BBQzD8MgQw2PsEwy9LAIOcCoZfhwA6D8Hw6xJAhyEY/XEE0NH7BMM/ngA6OBUMvx1/J7gx429LAER7c/fh03XrBwEt3G/fCUA0ARBNAEQTANEeAvBGmDSPm3cCEE0ARPsdgGsQKZ5u3QlAtGcBOAWY3Z8bdwIQ7UUATgFm9dq2nQBEezUApwCzObVpJwDRTgbgFGAW57Z89gQQAaO7tGFXIKJdDMApwKiWbHfRCSACRrN0s4uvQCJgFGu2uuo9gAjo3dqNrn4TLAJ6tWWbm34XSAT0ZusmN/82qAjoxZ4t7vo+gAhobe8Gd38jTAS0UmJ7RT8X9N3Xzz9Lfj2o/aJb9I9COA2orfTGqn0ytNOAEV5cq380uhDo+VZx2M8GEAI9XqcP/+EYQqCn95FNfzqMGGj9myfd/XgkUcztrrMfyfUfAG0kWw6X3VoAAAAASUVORK5CYII=">
 </head>
 <body>
 
@@ -1319,6 +1380,21 @@ body {
 
 <div class="container">
 
+  <!-- ===== 主导航 ===== -->
+  <nav class="main-nav" id="mainNav">
+    <button class="main-tab active" data-tab="client"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>客户信息</button>
+    <button class="main-tab" data-tab="qa"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>需求分析</button>
+    <button class="main-tab" data-tab="visit"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>拜访客户</button>
+    <button class="main-tab" data-tab="map"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg></span>拜访地图</button>
+  </nav>
+  <div class="sub-nav" id="subNav"></div>
+
+  <!-- ===== 需求分析 ===== -->
+  <section class="nav-section" id="sec-qa"></section>
+
+  <!-- ===== 客户信息 ===== -->
+  <section class="nav-section active" id="sec-client">
+
   <!-- ===== 视图：客户列表 ===== -->
   <section class="view active" id="view-list">
     <div class="page-title">客户档案</div>
@@ -1328,7 +1404,6 @@ body {
       录入客户信息
     </button>
     <div class="district-nav" id="districtNav"></div>
-    <div class="district-nav" id="needNav"></div>
 
     <div class="need-qa-card" id="needQaCard">
       <div class="need-qa-head" id="needQaToggle">
@@ -1544,7 +1619,10 @@ body {
             <span class="radio-item"><input type="radio" name="nq-money" value="倾向未来储蓄" id="nq-money-倾向未来储蓄"><label for="nq-money-倾向未来储蓄">更倾向为未来储蓄</label></span>
           </div>
         </div>
-        <button type="button" class="btn btn-primary btn-block" id="needQaBtn" style="margin-top:16px">生成需求分析</button>
+        <div class="field-row" style="gap:8px;margin-top:16px">
+        <button type="button" class="btn btn-primary" id="needQaBtn" style="flex:1">生成分析表</button>
+        <button type="button" class="btn btn-secondary" id="nqSaveToBtn" style="flex:1">录入客户信息</button>
+        </div>
         <div id="needQaResult"></div>
       </div>
     </div>
@@ -1596,6 +1674,49 @@ body {
       </div>
     </div>
 <div id="clientList"></div>
+  </section>
+  </section>
+
+  <!-- ===== 拜访客户 ===== -->
+  <section class="nav-section" id="sec-visit">
+    <div class="page-title">拜访客户</div>
+    <p class="page-desc">按拜访安排筛选客户，方便安排展业节奏</p>
+    <div id="visitList"></div>
+  </section>
+
+  <!-- ===== 拜访地图 ===== -->
+  <section class="nav-section" id="sec-map">
+    <div class="page-title">拜访地图</div>
+    <p class="page-desc">勾选客户或从待拜访列表一键规划当日路线</p>
+    <div class="map-actions">
+      <button class="btn btn-secondary" id="mapPickBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg> 去勾选客户</button>
+      <button class="btn btn-primary" id="mapPlanSelBtn" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> 规划选中路线</button>
+    </div>
+    <div class="vq-panel open" id="mapVqPanel">
+      <div class="vq-head" id="mapVqHead">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg>
+        <span class="vq-title">待拜访客户</span>
+        <span class="vq-count" id="mapVqCount">0 位</span>
+      </div>
+      <div class="vq-body">
+        <div class="vq-list" id="mapVqList"></div>
+        <div class="vq-foot">
+          <button class="btn btn-primary" id="mapVqPlanBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> 按此顺序规划路线</button>
+          <button class="btn btn-secondary" id="mapVqClearBtn">清空</button>
+        </div>
+      </div>
+    </div>
+    <div class="map-tools">
+      <div class="map-nav-mode" id="mapNavMode">
+        <button type="button" class="mode-tab active" data-mode="car">驾车</button>
+        <button type="button" class="mode-tab" data-mode="bus">公交</button>
+        <button type="button" class="mode-tab" data-mode="walk">步行</button>
+        <button type="button" class="mode-tab" data-mode="ride">骑行</button>
+      </div>
+      <button type="button" class="btn btn-secondary" id="mapExpandBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">放大地图</button>
+      <button type="button" class="btn btn-primary" id="mapNavLinkBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">高德导航</button>
+    </div>
+    <div id="routeMapBox" style="height:340px;border-radius:12px;overflow:hidden;margin-top:12px;background:#e8f0ee"></div>
   </section>
 
   <!-- ===== 视图：编辑 ===== -->
@@ -1714,6 +1835,15 @@ body {
             <option value="桐庐县">桐庐县</option>
             <option value="淳安县">淳安县</option>
             <option value="建德市">建德市</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">拜访安排</label>
+          <select class="field-select" id="f-visitPlan">
+            <option value="">未安排</option>
+            <option value="month">月拜访</option>
+            <option value="week">周拜访</option>
+            <option value="year">年度拜访</option>
           </select>
         </div>
       </div>
@@ -2017,9 +2147,10 @@ body {
     </div>
 
     <div class="form-card">
-      <div class="form-card-title">
+      <div class="form-card-title" id="discHead" style="cursor:pointer">
         <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg> 客户性格分析</span>
         <span class="form-card-sub">DISC 简版测评</span>
+        <svg class="disc-arrow" id="discArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;transition:transform .2s;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"></polyline></svg>
         <button type="button" class="disc-toggle" id="discToggle">展开测评</button>
       </div>
       <div id="discBody" style="display:none">
@@ -2030,6 +2161,21 @@ body {
         <strong>AI 深度分析（预留端口）</strong><br>
         当前版本内置 DISC 规则分析。接入 AI 模型训练后，此处将显示深度画像与展业建议。
         <div id="aiPortAction"></div>
+      </div>
+      <div class="field-row" style="gap:8px;margin-top:12px">
+        <button type="button" class="btn btn-primary" id="discGenBtn" style="flex:1">生成分析表</button>
+        <button type="button" class="btn btn-secondary" id="discSaveToBtn" style="flex:1">录入客户信息</button>
+      </div>
+      <div id="discSaveSection" style="display:none;margin-top:10px;padding:10px;background:#f0f7f5;border-radius:10px">
+        <label class="field-label">保存测评结果到客户档案</label>
+        <div class="field-row" style="gap:8px">
+          <input type="text" class="field-input" id="discNewName" placeholder="输入姓名，自动新建客户档案" maxlength="20" style="flex:1">
+          <button type="button" class="btn btn-primary" id="discSaveNewBtn" style="flex-shrink:0;min-height:46px;padding:10px 14px">新建客户</button>
+        </div>
+        <div class="field-row" style="gap:8px;margin-top:8px">
+          <select class="field-select" id="discSaveSelect" style="flex:1"><option value="">保存到既有客户…</option></select>
+          <button type="button" class="btn btn-secondary" id="discSaveBtn" style="flex-shrink:0;min-height:46px;padding:10px 14px">保存</button>
+        </div>
       </div>
       </div>
     </div>
@@ -2704,6 +2850,60 @@ body {
 
     var summary = role + '客户，个人年收入' + (personalIncome || '未填') + '，家庭年收入' + income + '。' + (noExisting ? '目前保障空白，需优先搭建基础保障。' : '已有部分保障，需查漏补缺。') + '建议按 重疾 → 医疗 → 意外 → 寿险 → 储蓄 的顺序规划。';
 
+    // ===== 保障风险图（多维风险评估）=====
+    var riskDims = [];
+    function _rd(name, score, note) { riskDims.push({ name: name, score: Math.max(0, Math.min(100, Math.round(score))), note: note || '' }); }
+    var rRatio = (personalMid && incomeMid) ? Math.round(personalMid / Math.max(incomeMid, 1) * 100) : 50;
+    var ds = 20;
+    if (risks.indexOf('大病重疾') !== -1) ds += 30;
+    if (risks.indexOf('大额医疗') !== -1) ds += 10;
+    if (healthSelf === '不太好') ds += 25; else if (healthSelf === '一般') ds += 15;
+    if (pressure.indexOf('健康隐患') !== -1) ds += 10;
+    if (disease.indexOf('治疗费用太高') !== -1 || disease.indexOf('拖累家人') !== -1) ds += 10;
+    _rd('疾病与健康', ds, (healthSelf === '不太好' ? '健康自评较差，需尽快核保' : healthSelf === '一般' ? '健康自评一般' : '健康自评良好') + (risks.indexOf('大病重疾') !== -1 ? '，明确关注大病' : ''));
+    var is_ = 20;
+    if (role === '家庭支柱') is_ += 25;
+    if (rRatio >= 70) is_ += 20;
+    if (risks.indexOf('身故风险') !== -1) is_ += 15;
+    if (debts.length) is_ += 15;
+    _rd('收入中断', is_, (role === '家庭支柱' ? '家庭支柱' : '非家庭支柱') + (rRatio >= 70 ? '，个人收入占比' + rRatio + '%' : '，收入来源' + (rRatio >= 40 && rRatio < 70 ? '较均衡' : rRatio < 40 ? '多元' : '较单一')));
+    var lr = 15;
+    if (debts.indexOf('房贷') !== -1) lr += 30;
+    if (debts.indexOf('车贷') !== -1) lr += 15;
+    if (debts.indexOf('其他负债') !== -1) lr += 10;
+    if (cares.indexOf('子女教育') !== -1) lr += 15;
+    if (cares.indexOf('父母赡养') !== -1) lr += 10;
+    if (role === '家庭支柱') lr += 10;
+    _rd('负债与家庭责任', lr, (debts.length ? '有' + debts.join('、') : '无明显负债') + (cares.length ? '，承担' + cares.join('、') : ''));
+    var ar = 15;
+    if (risks.indexOf('意外伤残') !== -1) ar += 40;
+    if (noExisting) ar += 30;
+    if (existing.indexOf('意外险') === -1 && !noExisting) ar += 20;
+    if (bigthing === '意外' || bigthing === '生病') ar += 15;
+    _rd('意外伤残', ar, (existing.indexOf('意外险') !== -1 ? '已有意外险' : '意外保障' + (noExisting ? '空白' : '待确认')));
+    var pr = 25;
+    if (pressure.indexOf('养老担忧') !== -1) pr += 20;
+    if (retire && retire !== '没考虑过') pr += 15;
+    if (existing.indexOf('养老年金') !== -1) pr -= 30;
+    if (existing.indexOf('储蓄型保险') !== -1) pr -= 15;
+    if (saving === '自己养老') pr += 15;
+    if (age === '46-60岁' || age === '60岁以上') pr += 15;
+    _rd('养老规划缺口', pr, (retire && retire !== '没考虑过' ? '退休期待：' + retire : '退休期待未明确') + (existing.indexOf('养老年金') !== -1 ? '，已备年金' : '，未备年金'));
+    var er = 10;
+    if (risks.indexOf('子女教育') !== -1) er += 40;
+    if (risks.indexOf('财富传承') !== -1) er += 40;
+    if (cares.indexOf('子女教育') !== -1) er += 20;
+    if (existing.indexOf('教育金') !== -1) er -= 30;
+    if (existing.indexOf('增额终身寿') !== -1) er -= 20;
+    _rd('教育/传承需求', er, (risks.indexOf('子女教育') !== -1 || risks.indexOf('财富传承') !== -1) ? '有明确需求' : '需求待挖掘');
+    var gs = 90;
+    if (existing.length === 1) gs = 55;
+    if (existing.length === 2) gs = 40;
+    if (existing.length >= 3) gs = 25;
+    if (existing.indexOf('商业重疾') !== -1) gs -= 15;
+    if (existing.indexOf('百万医疗') !== -1) gs -= 10;
+    _rd('现有保障缺口', gs, noExisting ? '保障空白，需优先搭建基础保障' : '已有 ' + existing.length + ' 类保障，需查漏补缺');
+
     // 深度洞察（引导客户内心真实想法）
     var insight = [];
     if (fear.length) {
@@ -2827,6 +3027,12 @@ body {
       '<div style="margin-top:6px">' + tags.map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>' +
       '<div style="margin-top:8px">' + plans.map(function(p) {
         return '<div class="fin-row-line">• <strong>' + escapeHtml(p.type) + '</strong>：' + escapeHtml(p.detail) + '</div>';
+      }).join('') + '</div>' +
+      '<div style="margin-top:14px"><div class="need-qa-result-sub">保障风险图（多维风险评估 · 得分越高风险越高）</div>' +
+      riskDims.map(function(d) {
+        var color = d.score >= 70 ? '#E11D48' : d.score >= 50 ? '#EA580C' : '#16A34A';
+        var level = d.score >= 70 ? '高' : d.score >= 50 ? '中' : '低';
+        return '<div class="risk-row"><div class="risk-name">' + d.name + '</div><div class="risk-bar"><i style="width:' + d.score + '%;background:' + color + '"></i></div><div class="risk-score" style="color:' + color + '">' + d.score + ' ' + level + '</div><div class="risk-note">' + d.note + '</div></div>';
       }).join('') + '</div>' +
       '<div class="fin-row-line fin-total" style="margin-top:6px">' + escapeHtml(premiumTip) + '</div>' +
       '<div style="margin-top:12px"><label class="field-label">保存分析结果</label>' +
@@ -3025,7 +3231,7 @@ body {
   }
 
   function renderClientCards(filtered) {
-    var box = document.getElementById('clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
     box.innerHTML = filtered.map(function(c) {
       var b = c.basic || {};
       var s = c.service || {};
@@ -3096,7 +3302,7 @@ body {
   }
 
   function renderFamilyGroups(filtered) {
-    var box = document.getElementById('clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
     var families = {};
     var singles = [];
     filtered.forEach(function(c) {
@@ -3162,31 +3368,12 @@ body {
   }
 
   // ================= 保障需求导航 =================
-  function renderNeedNav() {
+    function renderNeedNav() {
     var nav = document.getElementById('needNav');
-    if (!nav) return;
-    var html = '<button class="district-tab' + (followMode ? ' active' : '') + '" data-f="1">跟进历史</button>';
-    html += '<button class="district-tab' + (!needFilter && !followMode ? ' active' : '') + '" data-n="">全部需求</button>';
-    NEED_LIST.forEach(function(n) {
-      html += '<button class="district-tab' + (needFilter === n ? ' active' : '') + '" data-n="' + n + '">' + n + '</button>';
-    });
-    nav.innerHTML = html;
-    nav.querySelectorAll('.district-tab').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        if (this.getAttribute('data-f')) {
-          followMode = true;
-          needFilter = '';
-        } else {
-          followMode = false;
-          needFilter = this.getAttribute('data-n');
-        }
-        renderNeedNav();
-        renderList();
-      });
-    });
+    if (nav) nav.innerHTML = '';
   }
 
-  function renderDistrictNav() {
+function renderDistrictNav() {
     var box = document.getElementById('districtNav');
     var tabs = ['<button class="district-tab' + (districtFilter === '' ? ' active' : '') + '" data-d="">全部</button>'];
     DISTRICT_LIST.forEach(function(d) {
@@ -3222,18 +3409,21 @@ body {
       if (hit && intent) {
         hit = (c.service.intent || '') === intent;
       }
-      if (hit && districtFilter) {
+      if (hit && mainTab === 'client' && districtFilter) {
         hit = (c.basic.district || '') === districtFilter;
       }
       if (hit && needFilter) {
         hit = ((c.needs && c.needs.focus) || []).indexOf(needFilter) !== -1;
+      }
+      if (hit && mainTab === 'visit' && visitFilter) {
+        hit = (c.visitPlan || '') === visitFilter || (visitFilter === 'month' && c.visitPlan === 'appoint');
       }
       return hit;
     });
 
     document.getElementById('clientCount').textContent = clients.length;
 
-    var box = document.getElementById('clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
     if (filtered.length === 0) {
       box.innerHTML =
         '<div class="client-empty">' +
@@ -3388,7 +3578,12 @@ body {
         '尊重他的决定，不要反复打扰'
       ],
       risk: '偏进取，重视回报，敢于做决定',
-      decision: '决策快，基于结果判断'
+      decision: '决策快，基于结果判断',
+      manage: '结果导向型客户：保持专业简洁，用数据和结论说话；每季度主动汇报保单与服务进展，让他始终有掌控感。复购与转介绍从「帮他省时间、提效率」切入，别绕弯子。',
+      words: [
+        '给您直接上结论：保额、免赔、理赔速度都列在这，您看哪个方案合适，我们今天就定。',
+        '以后每季度我把您的保单情况做成一页小结发给您，扫一眼就清楚，不占用您时间。'
+      ]
     },
     I: {
       name: '影响型',
@@ -3401,7 +3596,12 @@ body {
         '约见最好安排在轻松场合'
       ],
       risk: '随兴趣和信任，易受他人影响',
-      decision: '凭感觉和信任做决定，需要认同感'
+      decision: '凭感觉和信任做决定，需要认同感',
+      manage: '关系导向型客户：多约见面、多参加他参与的场合，成为他圈子里的熟人；用身边案例、口碑和「大家都这样配」带动；请他做转介绍人，他会很乐意。',
+      words: [
+        '上次跟您情况差不多的那位客户配完之后特别满意，还专门介绍了两个朋友给我。',
+        '您朋友多，哪天有人问起保险，直接把我推过去就行，您这面子我先谢过了。'
+      ]
     },
     S: {
       name: '稳健型',
@@ -3414,7 +3614,12 @@ body {
         '避免施加压力，尊重他的节奏'
       ],
       risk: '保守，安全第一，厌恶风险',
-      decision: '决策慢，需要信任和习惯'
+      decision: '决策慢，需要信任和习惯',
+      manage: '安全导向型客户：细水长流先建信任再谈单；多问候、多陪聊，记住他家人的事；强调长期可靠和确定性承诺（续费提醒、服务响应），绝不逼单。',
+      words: [
+        '这个方案我反复核过了，条款和理赔条件都写清楚，您放心，有任何问题随时找我。',
+        '不着急，您先和家人商量，我下周三再来听您的想法。'
+      ]
     },
     C: {
       name: '谨慎型',
@@ -3427,7 +3632,12 @@ body {
         '给足独立思考和研究的时间'
       ],
       risk: '理性，精打细算，追求性价比',
-      decision: '决策慢而准，需要充分信息'
+      decision: '决策慢而准，需要充分信息',
+      manage: '数据导向型客户：准备充分材料（条款原文、对比表、公司资质）；话术精确、不夸大、不承诺做不到的事；给他独立研究的时间，用条款原文和第三方数据背书，别催单。',
+      words: [
+        '这条免责我逐句给您讲一下，这是多数产品都有的，三家的条款对比表我已经打印出来了。',
+        '您先研究，产品说明书和理赔案例我都整理好发给您，有任何疑问随时解答。'
+      ]
     }
   };
 
@@ -3494,6 +3704,23 @@ body {
     html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 0l3-3m-3 3L9 5"></path><path d="M5 12h14"></path><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path></svg> 风险偏好</div><p>' + prof.risk + '</p></div>';
     html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 决策风格</div><p>' + prof.decision + '</p></div>';
     html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg> 四项得分</div>';
+    var _rdT = ['D', 'I', 'S', 'C'];
+    function _rdP(t, v) {
+      var r = 78 * (v / DISC_QUESTIONS.length);
+      if (t === 'D') return '100,' + (100 - r).toFixed(1);
+      if (t === 'I') return (100 + r).toFixed(1) + ',100';
+      if (t === 'S') return '100,' + (100 + r).toFixed(1);
+      return (100 - r).toFixed(1) + ',100';
+    }
+    var _rdData = _rdT.map(function(t) { return _rdP(t, calc.scores[t] || 0); }).join(' ');
+    var _rdLabels = _rdT.map(function(t) {
+      var pos = { D: '100,13', I: '186,104', S: '100,192', C: '16,104' }[t];
+      var anc = { D: 'middle', I: 'start', S: 'middle', C: 'end' }[t];
+      return '<text x="' + pos.split(',')[0] + '" y="' + pos.split(',')[1] + '" text-anchor="' + anc + '" font-size="11" font-weight="700" fill="#0D9488">' + DISC_PROFILES[t].name + ' ' + (calc.scores[t] || 0) + '</text>';
+    }).join('');
+    html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 性格四维雷达</div><div class="disc-radar"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,22 178,100 100,178 22,100" fill="none" stroke="#E2E8F0"/><polygon points="100,61 139,100 100,139 61,100" fill="none" stroke="#EDF1F0"/><line x1="100" y1="100" x2="100" y2="22" stroke="#E2E8F0"/><line x1="100" y1="100" x2="178" y2="100" stroke="#E2E8F0"/><line x1="100" y1="100" x2="100" y2="178" stroke="#E2E8F0"/><line x1="100" y1="100" x2="22" y2="100" stroke="#E2E8F0"/><polygon points="' + _rdData + '" fill="rgba(13,148,136,.22)" stroke="#0D9488" stroke-width="2"/><circle cx="100" cy="100" r="2" fill="#0D9488"/>' + _rdLabels + '</svg></div></div>';
+    html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> 经营策略（怎么跟这个客户打交道）</div><p>' + prof.manage + '</p></div>';
+    html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 话术示例（可以直接用）</div><ul>' + prof.words.map(function(w) { return '<li>' + w + '</li>'; }).join('') + '</ul></div>';
     order.forEach(function(t) {
       var pct = Math.round(calc.scores[t] / DISC_QUESTIONS.length * 100);
       html += '<div class="profile-score-row"><span class="profile-score-name">' + DISC_PROFILES[t].name + '</span><div class="profile-score-bar"><i style="width:' + pct + '%"></i></div><span class="profile-score-val">' + calc.scores[t] + '</span></div>';
@@ -3533,6 +3760,43 @@ body {
           : '完成 12 题测评后，可在此接入 AI 深度分析。') +
         '</div>';
     }
+  }
+
+  // DISC 生成分析表 / 录入客户信息
+  function discSavePayload() {
+    var calc = calcDisc();
+    var order = ['D', 'I', 'S', 'C'];
+    var sorted = order.slice().sort(function(a, b) { return calc.scores[b] - calc.scores[a]; });
+    return { answers: discAnswers, scores: calc.scores, answered: calc.answered, main: sorted[0] };
+  }
+  function saveDiscNew() {
+    var name = document.getElementById('discNewName').value.trim();
+    if (!name) { showToast('请输入客户姓名后再保存'); return; }
+    var payload = discSavePayload();
+    var now = nowText();
+    var nc = {
+      id: genId(), createdAt: now, updatedAt: now,
+      basic: { name: name }, policies: [], needs: {}, finance: {}, health: {},
+      disc: payload, service: { notes: [] }, privacy: { agreed: false }
+    };
+    clients.unshift(nc);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+    renderList();
+    document.getElementById('discSaveSection').style.display = 'none';
+    showToast('已新建客户「' + name + '」并保存测评结果');
+  }
+  function saveDiscExisting() {
+    var sel = document.getElementById('discSaveSelect');
+    var cid = sel.value;
+    if (!cid) { showToast('请先选择要保存的客户'); return; }
+    var target = null;
+    for (var i = 0; i < clients.length; i++) { if (clients[i].id === cid) { target = clients[i]; break; } }
+    if (!target) { showToast('客户不存在'); return; }
+    target.disc = discSavePayload();
+    target.updatedAt = nowText();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+    document.getElementById('discSaveSection').style.display = 'none';
+    showToast('测评结果已保存到「' + (target.basic.name || '未命名') + '」档案');
   }
 
   // ================= 保单动态行 =================
@@ -3688,6 +3952,7 @@ body {
     setVal('f-children', b.children);
     setVal('f-city', b.city);
     setVal('f-district', b.district);
+    setVal('f-visitPlan', b.visitPlan === 'appoint' ? 'month' : b.visitPlan);
     setVal('f-source', b.source);
     setVal('f-address', b.address);
     geoLat = (b.lat != null) ? b.lat : null;
@@ -3803,6 +4068,7 @@ body {
       children: document.getElementById('f-children').value,
       city: document.getElementById('f-city').value.trim(),
       district: document.getElementById('f-district').value,
+      visitPlan: document.getElementById('f-visitPlan').value,
       source: document.getElementById('f-source').value,
       address: document.getElementById('f-address').value.trim(),
       lat: geoLat,
@@ -4356,13 +4622,36 @@ body {
     document.getElementById('needQaCard').classList.toggle('open');
   });
   document.getElementById('needQaBtn').addEventListener('click', analyzeNeeds);
+  document.getElementById('nqSaveToBtn').addEventListener('click', function() { analyzeNeeds(); var r = document.getElementById('needQaResult'); if (r) { setTimeout(function() { r.scrollIntoView({ behavior: 'smooth', block: 'start' }); var inp = document.getElementById('nqNewName'); if (inp) inp.focus(); }, 120); } });
   // 性格分析折叠
-  document.getElementById('discToggle').addEventListener('click', function() {
+  function toggleDisc() {
     var body = document.getElementById('discBody');
     var open = body.style.display !== 'none';
     body.style.display = open ? 'none' : 'block';
-    this.textContent = open ? '展开测评' : '收起测评';
+    var tg = document.getElementById('discToggle');
+    if (tg) tg.textContent = open ? '展开测评' : '收起测评';
+    var ar = document.getElementById('discArrow');
+    if (ar) ar.style.transform = open ? 'rotate(180deg)' : '';
+  }
+  document.getElementById('discToggle').addEventListener('click', toggleDisc);
+  var _dh = document.getElementById('discHead');
+  if (_dh) _dh.addEventListener('click', function(e) { if (e.target && e.target.closest && e.target.closest('#discToggle')) return; toggleDisc(); });
+  var _dgb = document.getElementById('discGenBtn');
+  if (_dgb) _dgb.addEventListener('click', function() { renderDiscProfile(); });
+  var _dst = document.getElementById('discSaveToBtn');
+  if (_dst) _dst.addEventListener('click', function() {
+    var calc = calcDisc();
+    if (!calc.answered) { showToast('请先完成性格测评再录入'); return; }
+    var sel = document.getElementById('discSaveSelect');
+    sel.innerHTML = '<option value="">保存到既有客户…</option>' + clients.map(function(c) { return '<option value="' + c.id + '">' + escapeHtml(c.basic.name || '未命名') + (c.basic.district ? '（' + escapeHtml(c.basic.district) + '）' : '') + '</option>'; }).join('');
+    var sec = document.getElementById('discSaveSection');
+    sec.style.display = 'block';
+    sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
+  var _dsn = document.getElementById('discSaveNewBtn');
+  if (_dsn) _dsn.addEventListener('click', saveDiscNew);
+  var _dse = document.getElementById('discSaveBtn');
+  if (_dse) _dse.addEventListener('click', saveDiscExisting);
   document.getElementById('backToHomeBtn').addEventListener('click', function() { renderList(); showView('list'); });
   document.getElementById('exportAllBtn').addEventListener('click', exportAll);
   document.getElementById('cancelEditBtn').addEventListener('click', function() {
@@ -4881,6 +5170,33 @@ body {
   document.getElementById('lockNowBtn').addEventListener('click', function() { closeSettings(); lockNow(); });
 
   // ================= 初始化 =================
+  (function () {
+    var qa = document.getElementById('sec-qa');
+    if (qa) {
+      var hd = document.createElement('div');
+      hd.innerHTML = '<div class="page-title">需求分析</div><p class="page-desc">按客户实际情况作答，自动生成需求分析与建议方案</p>';
+      qa.appendChild(hd);
+      var nn = document.getElementById('needNav');
+      var nq = document.getElementById('needQaCard');
+      if (nn) qa.appendChild(nn);
+      if (nq) qa.appendChild(nq);
+    }
+    var dnEl = document.getElementById('districtNav');
+    if (dnEl) dnEl.style.display = 'none';
+    var _qabox = document.getElementById('sec-qa');
+    var _dhEl = document.getElementById('discHead');
+    var _dbEl = document.getElementById('discBody');
+    if (_qabox && _dhEl) _qabox.appendChild(_dhEl);
+    if (_qabox && _dbEl) _qabox.appendChild(_dbEl);
+    var _mapbox2 = document.getElementById('sec-map');
+    var _rb = document.querySelector('.route-bar');
+    var _vqp = document.getElementById('vqPanel');
+    if (_mapbox2 && _rb) _mapbox2.insertBefore(_rb, _mapbox2.firstChild);
+    if (_mapbox2 && _vqp) _mapbox2.appendChild(_vqp);
+    bindMainNav();
+    mainTab = 'client';
+    renderSubNav();
+  })();
   renderDistrictNav();
   renderNeedNav();
   renderDiscQuestions();
@@ -4897,8 +5213,130 @@ var routeMode = false;
 var _amapReady = false, _amapLoading = false;
 var _routeMap = null, _rMarkers = [], _rLine = null, _rRoute = null;
 var _rStats = { dist: 0, time: 0 };
+var _rNavMode = 'car';
 
 function _r$(id) { return document.getElementById(id); }
+/* ===== 主导航 ===== */
+var mainTab = 'client';
+var visitFilter = '';
+var mapMode = 'plan';
+function _subMenuDefs() {
+  return {
+    qa: [{ k: '', t: '需求分析问答' }],
+    client: [{ k: '', t: '全部' }].concat((typeof DISTRICT_LIST !== 'undefined' && DISTRICT_LIST ? DISTRICT_LIST : []).map(function (d) { return { k: d, t: d }; })),
+    visit: [{ k: 'month', t: '月拜访' }, { k: 'week', t: '周拜访' }, { k: 'year', t: '年度拜访' }],
+    map: [{ k: 'plan', t: '规划拜访路线' }, { k: 'todo', t: '待拜访客户路线' }]
+  };
+}
+function bindMainNav() {
+  var nav = document.getElementById('mainNav');
+  if (!nav) return;
+  nav.querySelectorAll('.main-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () { switchMain(this.getAttribute('data-tab')); });
+  });
+  var mp = document.getElementById('mapPickBtn');
+  if (mp) mp.addEventListener('click', function () { switchMain('client'); toggleRouteMode(); });
+  var mps = document.getElementById('mapPlanSelBtn');
+  if (mps) mps.addEventListener('click', function () {
+    if (!selCount()) { showToast('请先到「客户信息」勾选客户'); return; }
+    planRouteForSelected();
+  });
+  var mvqp = document.getElementById('mapVqPlanBtn');
+  if (mvqp) mvqp.addEventListener('click', function () {
+    if (!visitQueue.length) { showToast('暂无待拜访客户'); return; }
+    openRouteModal(visitQueue.slice());
+  });
+  var mvqc = document.getElementById('mapVqClearBtn');
+  if (mvqc) mvqc.addEventListener('click', function () { visitQueue = []; vqSave(); vqRenderPanel(); renderMapVq(); showToast('待拜访已清空'); });
+  var mnm = document.getElementById('mapNavMode');
+  if (mnm) mnm.querySelectorAll('.mode-tab').forEach(function (mt) {
+    mt.addEventListener('click', function () {
+      mnm.querySelectorAll('.mode-tab').forEach(function (x) { x.classList.remove('active'); });
+      this.classList.add('active');
+      _rNavMode = this.getAttribute('data-mode') || 'car';
+      if (_rPlanIds && _rPlanIds.length) { showToast('按「' + this.textContent + '」重新规划…'); replan(); }
+      else { showToast('导航方式已切换：' + this.textContent); }
+      var vqbox = document.getElementById('mapVqList');
+      if (vqbox && visitQueue.length) renderMapVq();
+    });
+  });
+  var meb = document.getElementById('mapExpandBtn');
+  if (meb) meb.addEventListener('click', function () {
+    var box2 = document.getElementById('routeMapBox');
+    if (!box2) return;
+    var ex = box2.classList.toggle('routeMapBox-expanded');
+    this.textContent = ex ? '还原地图' : '放大地图';
+    if (_routeMapBox && _routeMapBox.resize) setTimeout(function () { _routeMapBox.resize(); }, 120);
+  });
+  var mnl = document.getElementById('mapNavLinkBtn');
+  if (mnl) mnl.addEventListener('click', function () {
+    if (!_rPlanIds || !_rPlanIds.length) {
+      if (!visitQueue.length) { showToast('请先规划路线或添加待拜访客户'); return; }
+      var first = getClientById(visitQueue[0]);
+      if (!first) { showToast('客户不存在'); return; }
+      window.open(_rNavUrl(first), '_blank');
+      return;
+    }
+    var first = getClientById(_rPlanIds[0]);
+    if (!first) { showToast('客户不存在'); return; }
+    window.open(_rNavUrl(first), '_blank');
+  });
+}
+function switchMain(tab) {
+  mainTab = tab;
+  followMode = false;
+  document.querySelectorAll('.main-tab').forEach(function (b) {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+  });
+  document.querySelectorAll('.nav-section').forEach(function (s) {
+    s.classList.toggle('active', s.id === 'sec-' + tab);
+  });
+  renderSubNav();
+  if (tab === 'client') { renderDistrictNav(); renderNeedNav(); renderList(); }
+  if (tab === 'visit') { renderList(); }
+  if (tab === 'map') { renderMapVq(); updateRouteBar(); _rEnsureAmap(function () { initMapBox(); refreshMapBox(); }); }
+}
+function renderSubNav() {
+  var box = document.getElementById('subNav');
+  if (!box) return;
+  var defs = _subMenuDefs()[mainTab] || [];
+  box.innerHTML = defs.map(function (d) {
+    var act = mainTab === 'client' ? d.k === districtFilter
+      : mainTab === 'visit' ? d.k === visitFilter
+      : mainTab === 'map' ? d.k === mapMode
+      : d.k === '';
+    return '<button class="sub-tab' + (act ? ' active' : '') + '" data-k="' + d.k + '">' + d.t + '</button>';
+  }).join('');
+  box.querySelectorAll('.sub-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var k = this.getAttribute('data-k') || '';
+      if (mainTab === 'client') { districtFilter = k; renderSubNav(); renderList(); }
+      if (mainTab === 'visit') { visitFilter = k; renderSubNav(); renderList(); }
+      if (mainTab === 'map') { mapMode = k; renderSubNav(); }
+    });
+  });
+}
+function _rNavUrl(c) {
+  var b = (c && c.basic) || {};
+  var mode = _rNavMode || 'car';
+  var to = '';
+  if (b.lat != null && b.lng != null) to = b.lng + ',' + b.lat + ',' + encodeURIComponent(b.name || '客户');
+  else to = encodeURIComponent(((b.district || '') + (b.address || '')) || (b.name || '客户'));
+  return 'https://uri.amap.com/navigation?to=' + to + '&mode=' + mode + '&coordinate=gaode';
+}
+function renderMapVq() {
+  var box = document.getElementById('mapVqList');
+  var cnt = document.getElementById('mapVqCount');
+  if (cnt) cnt.textContent = visitQueue.length + ' 位';
+  if (!box) return;
+  if (!visitQueue.length) { box.innerHTML = '<div class="vq-empty">暂无待拜访客户：打开客户卡片，点「拜访」即可加入</div>'; return; }
+  box.innerHTML = visitQueue.map(function (id, idx) {
+    var c = getClientById(id);
+    if (!c) return '';
+    var b = c.basic || {};
+    return '<div class="vq-item"><span class="vq-idx">' + (idx + 1) + '</span><div class="vq-info"><div class="vq-name">' + (b.name || '') + '</div><div class="vq-addr">' + (b.district || '') + (b.address || '') + '</div></div><a class="vq-nav" href="' + _rNavUrl(c) + '" target="_blank" rel="noopener">导航</a></div>';
+  }).join('');
+}
 function isSel(id) { return !!(routeSelected || {})[id]; }
 function setSel(id, on) { if (on) routeSelected[id] = true; else delete routeSelected[id]; updateRouteBar(); }
 function clearSel() { routeSelected = {}; updateRouteBar(); }
@@ -4928,12 +5366,14 @@ function _rEsc(s) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
   });
 }
+var _rDefKey = '9dade9d00835f87060af323698c78498';
+var _rDefJs = '9b08129bf0618c5394397e8281260f09';
 function _rEnsureAmap(cb) {
-  var key = localStorage.getItem('mc_visit_amap_key');
+  var key = localStorage.getItem('mc_visit_amap_key') || _rDefKey;
   if (!key) {
-    var k = prompt('请粘贴高德地图 Key（与智能路线图网页共用，可打开智能路线图右上角设置查看）', '');
+    var k = prompt('请粘贴高德地图 Key', _rDefKey);
     if (k === null) return;
-    var j = prompt('请粘贴安全密钥 securityJsCode（未开启数字签名可留空）', localStorage.getItem('mc_visit_amap_jscode') || '');
+    var j = prompt('请粘贴安全密钥 securityJsCode', localStorage.getItem('mc_visit_amap_jscode') || _rDefJs);
     localStorage.setItem('mc_visit_amap_key', k.trim());
     localStorage.setItem('mc_visit_amap_jscode', (j || '').trim());
     key = k.trim();
@@ -4941,12 +5381,12 @@ function _rEnsureAmap(cb) {
   if (_amapReady) { cb(); return; }
   if (_amapLoading) { setTimeout(function() { _rEnsureAmap(cb); }, 400); return; }
   _amapLoading = true;
-  window._AMapSecurityConfig = { securityJsCode: localStorage.getItem('mc_visit_amap_jscode') || '' };
+  window._AMapSecurityConfig = { securityJsCode: localStorage.getItem('mc_visit_amap_jscode') || _rDefJs };
   var s = document.createElement('script');
   s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(key);
   s.onload = function() {
     if (typeof AMap === 'undefined') { _amapLoading = false; showToast('高德地图加载失败，请检查 Key'); return; }
-    AMap.plugin(['AMap.Geocoder', 'AMap.Driving'], function() { _amapReady = true; _amapLoading = false; cb(); });
+    AMap.plugin(['AMap.Geocoder', 'AMap.Driving', 'AMap.Transfer', 'AMap.Walking', 'AMap.Riding'], function() { _amapReady = true; _amapLoading = false; cb(); });
   };
   s.onerror = function() { _amapLoading = false; showToast('无法连接高德地图服务，请检查网络'); };
   document.head.appendChild(s);
@@ -4964,11 +5404,62 @@ function initRouteMap() {
   if (_routeMap) return;
   _routeMap = new AMap.Map('routeMap', { zoom: 11, center: [120.1536, 30.2875], mapStyle: 'amap://styles/fresh' });
 }
+var _routeMapBox = null;
+function initMapBox() {
+  if (_routeMapBox) { if (_routeMapBox.resize) _routeMapBox.resize(); return; }
+  _routeMapBox = new AMap.Map('routeMapBox', { zoom: 11, center: [120.1536, 30.2875], mapStyle: 'amap://styles/fresh' });
+}
+function refreshMapBox() {
+  if (!_routeMapBox) return;
+  _rClearLayers();
+  var q = [];
+  try { q = JSON.parse(localStorage.getItem('mc_visit_queue_v1') || '[]'); } catch (e) {}
+  if (!q.length) { _routeMapBox.setZoomAndCenter(11, [120.1536, 30.2875]); return; }
+  var geocoder = new AMap.Geocoder();
+  var pts = [];
+  var done = 0;
+  q.forEach(function(item, idx) {
+    var c = null;
+    try { c = (clients || []).find(function(x) { return x.id === item.id; }); } catch (e) {}
+    var addr = (item && item.address) || (c && c.basic && c.basic.address) || '';
+    var name = (item && item.name) || (c && c.basic && c.basic.name) || '客户';
+    if (c && c.basic && c.basic.lat != null) {
+      pts.push({ idx: idx, name: name, lnglat: [c.basic.lng, c.basic.lat] });
+      done++; if (done === q.length) drawPts(); return;
+    }
+    if (!addr) { done++; if (done === q.length) drawPts(); return; }
+    geocoder.getLocation(addr, function(status, result) {
+      if (status === 'complete' && result.geocodes && result.geocodes.length) {
+        var g = result.geocodes[0].location;
+        pts.push({ idx: idx, name: name, lnglat: [g.lng, g.lat] });
+      }
+      done++; if (done === q.length) drawPts();
+    });
+  });
+  function drawPts() {
+    if (!pts.length) { _routeMapBox.setZoomAndCenter(11, [120.1536, 30.2875]); return; }
+    pts.sort(function(a, b) { return a.idx - b.idx; });
+    var bounds = new AMap.Bounds();
+    pts.forEach(function(p, i) {
+      var m = new AMap.Marker({
+        position: p.lnglat,
+        content: '<div style="background:#0D9488;color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">' + (i + 1) + '</div>',
+        offset: new AMap.Pixel(-13, -13),
+        title: p.name
+      });
+      _routeMapBox.add(m);
+      _rMarkers.push(m);
+      bounds.extend(p.lnglat);
+    });
+    _routeMapBox.setBounds(bounds, false, [60, 60, 60, 60]);
+  }
+}
 function _rClearLayers() {
-  _rMarkers.forEach(function(m) { if (_routeMap) _routeMap.remove(m); });
+  var _rm = _routeMapBox || _routeMap;
+  _rMarkers.forEach(function(m) { if (_rm) _rm.remove(m); });
   _rMarkers = [];
-  if (_rLine) { if (_routeMap) _routeMap.remove(_rLine); _rLine = null; }
-  if (_rRoute) { if (_routeMap) _routeMap.remove(_rRoute); _rRoute = null; }
+  if (_rLine) { if (_rm) _rm.remove(_rLine); _rLine = null; }
+  if (_rRoute) { if (_rm) _rm.remove(_rRoute); _rRoute = null; }
 }
 function _rHaversine(a, b) {
   var R = 6371, dLat = (b.lat - a.lat) * Math.PI / 180, dLng = (b.lng - a.lng) * Math.PI / 180;
@@ -5008,14 +5499,37 @@ function _rGeo(c) {
     });
   }), 10000);
 }
-function _rDrive(from, to) {
+function _rRouteSeg(from, to) {
+  var mode = _rNavMode || 'car';
   return _rWithTimeout(new Promise(function(res, rej) {
-    var d = new AMap.Driving({ policy: AMap.DrivingPolicy.LEAST_TIME });
-    d.search([from.lng, from.lat], [to.lng, to.lat], function(st, r) {
-      if (st === 'complete' && r.routes && r.routes.length) res(r.routes[0]);
-      else rej();
-    });
-  }), 15000);
+    if (mode === 'bus') {
+      var t = new AMap.Transfer({ city: '杭州' });
+      t.search([from.lng, from.lat], [to.lng, to.lat], function(st, r) {
+        if (st === 'complete' && r.plans && r.plans.length) {
+          var plan = r.plans[0];
+          var pts = [];
+          (plan.segments || []).forEach(function(seg) {
+            if (seg.transit_mode && seg.transit_mode.paths) seg.transit_mode.paths.forEach(function(p) { pts.push([p.lng, p.lat]); });
+            if (seg.walking && seg.walking.paths) seg.walking.paths.forEach(function(p) { pts.push([p.lng, p.lat]); });
+          });
+          res({ steps: pts.length ? [{ path: pts }] : [], distance: plan.distance || 0, time: plan.time || 0 });
+        } else rej();
+      });
+    } else {
+      var Cls = mode === 'walk' ? AMap.Walking : mode === 'ride' ? AMap.Riding : AMap.Driving;
+      var opt = {};
+      if (Cls === AMap.Driving) opt.policy = AMap.DrivingPolicy.LEAST_TIME;
+      var s = new Cls(opt);
+      s.search([from.lng, from.lat], [to.lng, to.lat], function(st, r) {
+        if (st === 'complete' && r.routes && r.routes.length) {
+          var route = r.routes[0];
+          var steps = [];
+          (route.steps || []).forEach(function(stp) { if (stp.path) steps.push({ path: stp.path }); });
+          res({ steps: steps, distance: route.distance || 0, time: route.time || 0 });
+        } else rej();
+      });
+    }
+  }), 20000);
 }
 var _rPlanIds = null;
 function planIds(ids) {
@@ -5075,7 +5589,7 @@ function _rDrawRoute(order) {
       showToast('路线规划完成');
       return;
     }
-    _rDrive(order[idx], order[idx + 1]).then(function(route) {
+    _rRouteSeg(order[idx], order[idx + 1]).then(function(route) {
       route.steps.forEach(function(st) { if (st.path && st.path.length) st.path.forEach(function(p) { routePath.push([p.lng, p.lat]); }); });
       totalDist += route.distance || 0;
       totalTime += route.time || 0;
@@ -5124,7 +5638,7 @@ var visitQueue = [];
 var VQ_KEY = 'mc_visit_queue_v1';
 function vqLoad() { try { var s = localStorage.getItem(VQ_KEY); visitQueue = (s ? JSON.parse(s) : []) || []; if (!Array.isArray(visitQueue)) visitQueue = []; } catch (e) { visitQueue = []; } }
 function vqSave() { try { localStorage.setItem(VQ_KEY, JSON.stringify(visitQueue)); } catch (e) {} }
-function vqHas(id) { return visitQueue.indexOf(id) !== -1; }
+function vqHas(id) { return (visitQueue || []).indexOf(id) !== -1; }
 function vqCount() { return visitQueue.length; }
 function vqToggle(id) {
   var i = visitQueue.indexOf(id);
