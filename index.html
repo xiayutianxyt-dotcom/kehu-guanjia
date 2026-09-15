@@ -2249,13 +2249,20 @@ body {
   function loadClients() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      var list = raw ? JSON.parse(raw) : [];
+      if (!raw) return [];
+      var obj = JSON.parse(raw);
+      if (obj && obj.v === 2) return [];
+      var list = JSON.parse(raw);
       return Array.isArray(list) ? list : [];
     } catch (e) { return []; }
   }
 
   function saveClients() {
     try {
+      if (window.__mclKey) {
+        encStore();
+        return true;
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
       return true;
     } catch (e) {
@@ -4452,7 +4459,7 @@ body {
     document.getElementById('lockSetView').style.display = v === 'set' ? '' : 'none';
     document.getElementById('lockUnlockView').style.display = v === 'unlock' ? '' : 'none';
     document.getElementById('lockResetView').style.display = v === 'reset' ? '' : 'none';
-    var sub = { set: '首次使用，请设置访问密码', unlock: '输入密码解锁', reset: '使用恢复码重置密码' }[v];
+    var sub = { set: '首次使用，请设置访问密码\n（客户数据将以您的密码加密存储）', unlock: '输入密码解锁\n（数据已加密，密码只存于本机）', reset: '使用恢复码重置密码\n（原数据无法找回，将清空）' }[v];
     document.getElementById('lockSub').textContent = sub;
     lockScreen().style.display = 'flex';
   }
@@ -4462,13 +4469,93 @@ body {
     for (var i = 0; i < 8; i++) r += chars.charAt(Math.floor(Math.random() * chars.length));
     return r;
   }
+  // ===== 数据加密（AES-GCM + PBKDF2，密码不落盘）=====
+  function b64(bytes) {
+    var s = '';
+    var u = new Uint8Array(bytes);
+    for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]);
+    return btoa(s);
+  }
+  function unb64(s) {
+    var bin = atob(s);
+    var u = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return u;
+  }
+  function randB(n) {
+    var u = new Uint8Array(n);
+    (window.crypto || window.msCrypto).getRandomValues(u);
+    return u;
+  }
+  function deriveKey(p, saltB64) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(p), 'PBKDF2', false, ['deriveKey'])
+      .then(function (k) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: unb64(saltB64), iterations: 150000, hash: 'SHA-256' },
+          k, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+      });
+  }
+  function hashP(p, saltB64) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(p), 'PBKDF2', false, ['deriveBits'])
+      .then(function (k) {
+        return crypto.subtle.deriveBits(
+          { name: 'PBKDF2', salt: unb64(saltB64), iterations: 150000, hash: 'SHA-256' }, k, 256);
+      }).then(function (b) { return b64(b); });
+  }
+  function encStr(key, txt) {
+    var iv = randB(12);
+    return crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, new TextEncoder().encode(txt))
+      .then(function (ct) { return { i: b64(iv), d: b64(ct) }; });
+  }
+  function decStr(key, ivB64, ctB64) {
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(ivB64) }, key, unb64(ctB64))
+      .then(function (pt) { return new TextDecoder().decode(pt); });
+  }
+  function passMeta() {
+    var pk = localStorage.getItem(PASS_KEY);
+    if (pk && pk.indexOf('v2:') === 0) { try { return JSON.parse(pk.slice(3)); } catch (e) {} }
+    return null;
+  }
+  function loadPlain() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  function encStore() {
+    if (!window.__mclKey) return;
+    encStr(window.__mclKey, JSON.stringify(clients)).then(function (box) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 2, i: box.i, d: box.d }));
+      localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString());
+    }).catch(function () { showToast('加密保存失败'); });
+  }
   function enterApp() {
-    sessionStorage.setItem(UNLOCK_KEY, '1');
     lockScreen().style.display = 'none';
+    renderNeedNav();
+    renderDiscQuestions();
+    renderDiscProfile();
+    renderList();
+    showView('list');
     maybeCheckBackup();
   }
   function checkLock() {
-    if (sessionStorage.getItem(UNLOCK_KEY) === '1') { lockScreen().style.display = 'none'; maybeCheckBackup(); return; }
+    var sp = sessionStorage.getItem(UNLOCK_KEY);
+    if (sp && passMeta()) {
+      var meta = passMeta();
+      deriveKey(sp, meta.s).then(function (key) {
+        window.__mclKey = key;
+        var raw = localStorage.getItem(STORAGE_KEY);
+        var obj = raw ? JSON.parse(raw) : null;
+        if (obj && obj.v === 2) {
+          decStr(key, obj.i, obj.d).then(function (txt) {
+            try { clients = JSON.parse(txt); } catch (e) { clients = []; }
+            enterApp();
+          }).catch(function () { showLockView('unlock'); });
+        } else { clients = loadPlain(); enterApp(); }
+      });
+      return;
+    }
     if (!localStorage.getItem(PASS_KEY)) showLockView('set'); else showLockView('unlock');
   }
   function lockNow() {
@@ -4481,19 +4568,66 @@ body {
     var p2 = document.getElementById('setPass2').value;
     if (p1.length < 4) { showToast('密码至少4位'); return; }
     if (p1 !== p2) { showToast('两次输入不一致'); return; }
-    localStorage.setItem(PASS_KEY, encP(p1));
-    var rec = genRecovery();
-    localStorage.setItem(RECOVERY_KEY, rec);
-    document.getElementById('setPass1').value = '';
-    document.getElementById('setPass2').value = '';
-    showToast('已设置密码，恢复码见「设置」');
-    enterApp();
+    var salt = b64(randB(16));
+    hashP(p1, salt).then(function (h) {
+      localStorage.setItem(PASS_KEY, 'v2:' + JSON.stringify({ s: salt, h: h }));
+      var rec = genRecovery();
+      localStorage.setItem(RECOVERY_KEY, rec);
+      return deriveKey(p1, salt).then(function (key) {
+        window.__mclKey = key;
+        sessionStorage.setItem(UNLOCK_KEY, p1);
+        clients = loadPlain();
+        document.getElementById('setPass1').value = '';
+        document.getElementById('setPass2').value = '';
+        encStore();
+        enterApp();
+        showToast('已设置密码，数据已加密；恢复码见「设置」');
+      });
+    });
   }
   function unlock() {
     var p = document.getElementById('unlockInput').value;
-    if (!localStorage.getItem(PASS_KEY)) { showLockView('set'); return; }
-    if (decP(localStorage.getItem(PASS_KEY)) === p) enterApp();
-    else { showToast('密码错误，请重试'); document.getElementById('unlockInput').value = ''; }
+    var pk = localStorage.getItem(PASS_KEY);
+    if (!pk) { showLockView('set'); return; }
+    var meta = passMeta();
+    if (meta) {
+      hashP(p, meta.s).then(function (h) {
+        if (h !== meta.h) { showToast('密码错误，请重试'); document.getElementById('unlockInput').value = ''; return; }
+        return deriveKey(p, meta.s).then(function (key) {
+          window.__mclKey = key;
+          sessionStorage.setItem(UNLOCK_KEY, p);
+          var raw = localStorage.getItem(STORAGE_KEY);
+          var obj = raw ? JSON.parse(raw) : null;
+          if (obj && obj.v === 2) {
+            return decStr(key, obj.i, obj.d).then(function (txt) {
+              try { clients = JSON.parse(txt); } catch (e) { clients = []; }
+              document.getElementById('unlockInput').value = '';
+              enterApp();
+            });
+          }
+          clients = loadPlain();
+          encStore();
+          document.getElementById('unlockInput').value = '';
+          enterApp();
+        });
+      });
+    } else {
+      if (decP(pk) === p) {
+        var salt2 = b64(randB(16));
+        hashP(p, salt2).then(function (h) {
+          localStorage.setItem(PASS_KEY, 'v2:' + JSON.stringify({ s: salt2, h: h }));
+          return deriveKey(p, salt2).then(function (key) {
+            window.__mclKey = key;
+            sessionStorage.setItem(UNLOCK_KEY, p);
+            clients = loadPlain();
+            encStore();
+            document.getElementById('unlockInput').value = '';
+            enterApp();
+            showToast('已升级为加密存储');
+          });
+        });
+      } else { showToast('密码错误，请重试'); document.getElementById('unlockInput').value = ''; }
+    }
   }
   function resetPass() {
     var rec = document.getElementById('resetRecovery').value.trim().toUpperCase();
@@ -4502,12 +4636,24 @@ body {
     if (rec !== (localStorage.getItem(RECOVERY_KEY) || '')) { showToast('恢复码不正确'); return; }
     if (p1.length < 4) { showToast('新密码至少4位'); return; }
     if (p1 !== p2) { showToast('两次输入不一致'); return; }
-    localStorage.setItem(PASS_KEY, encP(p1));
-    showToast('密码已重置');
-    document.getElementById('resetRecovery').value = '';
-    document.getElementById('resetPass1').value = '';
-    document.getElementById('resetPass2').value = '';
-    enterApp();
+    if (!confirm('重置密码将清空全部客户数据（原数据已加密无法找回）。建议先导出备份。确定继续？')) return;
+    var salt = b64(randB(16));
+    hashP(p1, salt).then(function (h) {
+      localStorage.setItem(PASS_KEY, 'v2:' + JSON.stringify({ s: salt, h: h }));
+      var rec2 = genRecovery();
+      localStorage.setItem(RECOVERY_KEY, rec2);
+      return deriveKey(p1, salt).then(function (key) {
+        window.__mclKey = key;
+        sessionStorage.setItem(UNLOCK_KEY, p1);
+        clients = [];
+        encStore();
+        document.getElementById('resetRecovery').value = '';
+        document.getElementById('resetPass1').value = '';
+        document.getElementById('resetPass2').value = '';
+        enterApp();
+        showToast('密码已重置，数据已清空');
+      });
+    });
   }
 
   // ================= 备份提醒与导入 =================
