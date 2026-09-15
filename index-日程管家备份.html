@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>日程管家 · 日常工作安排</title>
+<style>
+  :root{
+    --green:#16a34a; --green-dark:#15803d; --green-light:#dcfce7;
+    --ink:#1f2937; --ink-2:#6b7280; --line:#e5e7eb; --bg:#f4f7f5;
+    --warn:#d97706; --warn-bg:#fef3c7; --danger:#dc2626; --danger-bg:#fee2e2;
+    --card:#ffffff; --radius:14px; --shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html{font-size:16px;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); min-height:100vh; padding-bottom:80px;
+  }
+  /* ===== 顶栏 ===== */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%);
+    color:#fff; padding:14px 16px calc(12px + env(safe-area-inset-top));
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 2px 8px rgba(21,128,61,.25);
+  }
+  .topbar h1{font-size:19px; font-weight:800; letter-spacing:.5px;}
+  .topbar .today{font-size:12px; opacity:.9; margin-top:2px;}
+  .topbar .actions{display:flex; gap:8px; align-items:center;}
+  .icon-btn{
+    background:rgba(255,255,255,.16); border:none; color:#fff; border-radius:10px;
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .icon-btn:active{background:rgba(255,255,255,.3);}
+  /* ===== 提醒横幅 ===== */
+  .notify-bar{
+    margin:12px 14px 0; padding:10px 12px; border-radius:12px;
+    background:#fff7ed; border:1px solid #fed7aa; color:#9a3412;
+    font-size:13px; display:none; align-items:center; gap:8px;
+  }
+  .notify-bar .nb-btn{
+    margin-left:auto; background:var(--warn); color:#fff; border:none;
+    border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; cursor:pointer; flex-shrink:0;
+  }
+  /* ===== 添加表单 ===== */
+  .add-card{
+    margin:14px; padding:14px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+  }
+  .add-row{display:flex; gap:8px; margin-bottom:8px;}
+  .add-row input{
+    flex:1; min-width:0; border:1.5px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-size:15px; outline:none; background:#fafcfa; color:var(--ink);
+  }
+  .add-row input:focus{border-color:var(--green); background:#fff;}
+  .add-row .dt{
+    width:44%; flex:none; text-align:center; -webkit-appearance:none; appearance:none;
+  }
+  .add-row .tm{width:30%; flex:none; text-align:center;}
+  .add-main{
+    display:flex; gap:8px;
+  }
+  .add-main input{flex:1;}
+  .add-main button{
+    flex:none; background:var(--green); color:#fff; border:none; border-radius:10px;
+    padding:0 22px; font-size:15px; font-weight:800; cursor:pointer; letter-spacing:2px;
+  }
+  .add-main button:active{background:var(--green-dark);}
+  .add-quick{margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;}
+  .quick{
+    background:#f0fdf4; color:var(--green-dark); border:1px solid #bbf7d0;
+    border-radius:999px; padding:5px 12px; font-size:12.5px; cursor:pointer;
+  }
+  .quick:active{background:var(--green-light);}
+  /* ===== 分组标题 ===== */
+  .group{
+    margin:18px 14px 6px; display:flex; align-items:baseline; gap:8px;
+  }
+  .group .g-name{font-size:15px; font-weight:800; color:var(--ink);}
+  .group .g-sub{font-size:12px; color:var(--ink-2);}
+  .group .g-count{margin-left:auto; font-size:12px; color:var(--ink-2); background:#eef2ef; border-radius:999px; padding:2px 9px;}
+  /* ===== 事项卡片 ===== */
+  .item{
+    margin:0 14px 8px; padding:12px 14px; background:var(--card); border-radius:12px;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:12px;
+    border-left:4px solid var(--green); position:relative;
+  }
+  .item.done{border-left-color:#cbd5e1; opacity:.72;}
+  .item.overdue{border-left-color:var(--danger);}
+  .item .tick{
+    flex:none; width:26px; height:26px; border-radius:50%; cursor:pointer;
+    border:2px solid var(--green); display:flex; align-items:center; justify-content:center;
+    color:transparent; background:#fff; font-size:14px; font-weight:900;
+  }
+  .item.done .tick{background:var(--green); color:#fff; border-color:var(--green);}
+  .item .mid{flex:1; min-width:0;}
+  .item .t-time{font-size:14px; font-weight:800; color:var(--green-dark); display:flex; align-items:center; gap:6px;}
+  .item.done .t-time{color:var(--ink-2);}
+  .item .t-text{font-size:15px; margin-top:3px; line-height:1.45; word-break:break-word;}
+  .item.done .t-text{text-decoration:line-through; color:var(--ink-2);}
+  .item .t-meta{font-size:11.5px; color:var(--ink-2); margin-top:4px; display:flex; gap:8px; flex-wrap:wrap;}
+  .tag{display:inline-flex; align-items:center; gap:3px; background:#f0fdf4; color:var(--green-dark); border-radius:6px; padding:1px 6px; font-size:11px;}
+  .tag.warn{background:var(--warn-bg); color:var(--warn);}
+  .item .ops{flex:none; display:flex; gap:6px;}
+  .mini-btn{
+    width:32px; height:32px; border-radius:9px; border:1px solid var(--line);
+    background:#fff; color:var(--ink-2); display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .mini-btn:active{background:#f3f4f6;}
+  .mini-btn.del{color:var(--danger); border-color:#fecaca;}
+  /* ===== 空状态 ===== */
+  .empty{
+    margin:40px 14px; text-align:center; color:var(--ink-2); font-size:14px; line-height:2;
+  }
+  .empty svg{opacity:.35; margin-bottom:8px;}
+  /* ===== 底部统计 ===== */
+  .footbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:50;
+    background:#fff; border-top:1px solid var(--line);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; gap:12px; font-size:13px; color:var(--ink-2);
+  }
+  .footbar .st{display:flex; gap:14px; margin-right:auto;}
+  .footbar b{color:var(--green-dark);}
+  .footbar button{
+    background:#fff; border:1px solid var(--line); color:var(--ink);
+    border-radius:8px; padding:6px 12px; font-size:12.5px; cursor:pointer;
+  }
+  .footbar button:active{background:#f3f4f6;}
+  /* ===== 编辑弹层 ===== */
+  .modal-mask{
+    position:fixed; inset:0; background:rgba(15,23,42,.45); z-index:100;
+    display:none; align-items:flex-end; justify-content:center;
+  }
+  .modal-mask.show{display:flex;}
+  .modal{
+    background:#fff; width:100%; max-width:520px; border-radius:20px 20px 0 0;
+    padding:20px 18px calc(24px + env(safe-area-inset-bottom));
+    animation:up .22s ease;
+  }
+  @keyframes up{from{transform:translateY(40px); opacity:.5;} to{transform:none; opacity:1;}}
+  .modal h3{font-size:17px; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+  .modal .f{margin-bottom:12px;}
+  .modal .f label{display:block; font-size:12.5px; color:var(--ink-2); margin-bottom:5px;}
+  .modal .f input{
+    width:100%; border:1.5px solid var(--line); border-radius:10px;
+    padding:11px 12px; font-size:15px; outline:none;
+  }
+  .modal .f input:focus{border-color:var(--green);}
+  .modal .btns{display:flex; gap:10px; margin-top:16px;}
+  .modal .btns button{
+    flex:1; padding:12px; border-radius:11px; border:none; font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .btn-ok{background:var(--green); color:#fff;}
+  .btn-ok:active{background:var(--green-dark);}
+  .btn-no{background:#f3f4f6; color:var(--ink-2);}
+  /* ===== 顶部临时提示 ===== */
+  #toast{
+    position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:200;
+    background:rgba(17,24,39,.92); color:#fff; font-size:13.5px;
+    padding:9px 18px; border-radius:999px; opacity:0; pointer-events:none;
+    transition:opacity .25s; max-width:86vw; text-align:center;
+  }
+  #toast.show{opacity:1;}
+  /* 到点提醒横幅 */
+  .remind-banner{
+    position:fixed; top:0; left:0; right:0; z-index:150;
+    background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff;
+    padding:14px 16px calc(12px + env(safe-area-inset-top));
+    box-shadow:0 3px 12px rgba(217,119,6,.4); display:none;
+  }
+  .remind-banner.show{display:block; animation:down .25s ease;}
+  @keyframes down{from{transform:translateY(-100%);} to{transform:none;}}
+  .remind-banner .rb-time{font-size:14px; font-weight:900; letter-spacing:1px;}
+  .remind-banner .rb-text{font-size:15px; font-weight:700; margin-top:3px; line-height:1.4;}
+  .remind-banner .rb-close{
+    position:absolute; top:10px; right:12px; background:rgba(255,255,255,.22);
+    border:none; color:#fff; width:28px; height:28px; border-radius:8px; font-size:14px; cursor:pointer;
+  }
+  /* ===== 视图切换 ===== */
+  .view-tabs{
+    position:sticky; top:64px; z-index:40;
+    margin:10px 14px 0; background:var(--card); border-radius:12px;
+    box-shadow:var(--shadow); padding:4px; display:flex; gap:4px;
+  }
+  .view-tabs .vt{
+    flex:1; border:none; background:transparent; color:var(--ink-2);
+    border-radius:9px; padding:8px 0; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .view-tabs .vt.on{background:var(--green); color:#fff;}
+  .cal-head{
+    margin:12px 14px 0; display:flex; align-items:center; justify-content:space-between;
+    background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:8px 10px;
+  }
+  .cal-head .ch-title{font-size:15px; font-weight:800; color:var(--ink);}
+  .cal-head .ch-nav{display:flex; gap:6px;}
+  .cal-head button{
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; width:32px; height:32px; font-size:15px; cursor:pointer;
+  }
+  .cal-head button:active{background:#f3f4f6;}
+  .cal-head .ch-today{width:auto; padding:0 12px; font-size:13px; color:var(--green-dark); border-color:#bbf7d0; font-weight:700;}
+  /* 周视图 */
+  .week-grid{display:flex; gap:4px; margin:10px 14px 0;}
+  .w-cell{
+    flex:1; min-width:0; background:var(--card); border-radius:10px; padding:8px 2px; text-align:center;
+    box-shadow:var(--shadow); cursor:pointer; border:2px solid transparent;
+  }
+  .w-cell .w-dow{font-size:10.5px; color:var(--ink-2);}
+  .w-cell .w-day{font-size:17px; font-weight:800; color:var(--ink); margin-top:2px;}
+  .w-cell .w-cnt{
+    display:inline-block; min-width:18px; height:18px; line-height:18px; border-radius:999px;
+    background:var(--green); color:#fff; font-size:11px; font-weight:800; margin-top:4px; padding:0 4px;
+  }
+  .w-cell.no-cnt .w-cnt{display:none;}
+  .w-cell.today{border-color:var(--green);}
+  .w-cell.sel{background:var(--green-light);}
+  .w-cell.sel .w-day{color:var(--green-dark);}
+  /* 月视图 */
+  .month-grid{display:flex; flex-wrap:wrap; gap:3px; margin:10px 14px 0;}
+  .m-cell{
+    width:calc((100% - 18px)/7); background:var(--card); border-radius:8px; min-height:46px; padding:4px 2px; text-align:center;
+    box-shadow:var(--shadow); cursor:pointer; border:2px solid transparent; position:relative; box-sizing:border-box;
+  }
+  .m-cell.out{opacity:.35;}
+  .m-cell .m-day{font-size:14px; font-weight:700; color:var(--ink);}
+  .m-cell .m-cnt{
+    display:inline-block; min-width:16px; height:16px; line-height:16px; border-radius:999px;
+    background:var(--green); color:#fff; font-size:10px; font-weight:800; margin-top:3px; padding:0 4px;
+  }
+  .m-cell.no-cnt .m-cnt{display:none;}
+  .m-cell.today{border-color:var(--green);}
+  .m-cell.sel{background:var(--green-light);}
+  .m-cell.sel .m-day{color:var(--green-dark);}
+  .m-cell.dow{background:transparent; box-shadow:none; cursor:default; color:var(--ink-2); font-size:11px; padding:6px 0; min-height:auto; width:calc((100% - 18px)/7); box-sizing:border-box;}
+  /* ===== 图片/OCR ===== */
+  .add-img{
+    margin:8px 14px 0; display:flex; align-items:center; gap:8px;
+    background:var(--card); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); flex-wrap:wrap;
+  }
+  .img-btn{
+    flex:none; background:var(--green); color:#fff; border:none; border-radius:8px;
+    padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .img-btn:active{background:var(--green-dark);}
+  .img-hint{font-size:12px; color:var(--ink-2);}
+  .img-prev{
+    width:100%; display:none; align-items:flex-start; gap:10px; margin-top:4px;
+  }
+  .img-prev img{
+    width:92px; height:92px; object-fit:cover; border-radius:10px; border:1px solid var(--line); flex:none;
+  }
+  .img-prev .ip-btns{display:flex; flex-direction:column; gap:6px; flex:1; min-width:120px;}
+  .ocr-btn{
+    border:none; border-radius:8px; padding:9px 10px; font-size:13px; font-weight:700; cursor:pointer;
+    background:var(--warn); color:#fff;
+  }
+  .ocr-btn:disabled{background:#ccc; color:#fff;}
+  .ocr-btn:active:not(:disabled){background:#d97706;}
+  .img-clear{
+    border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; cursor:pointer;
+    background:#fff; color:var(--ink-2);
+  }
+  .img-locate{
+    border:none; border-radius:8px; padding:9px 10px; font-size:13px; font-weight:700; cursor:pointer;
+    background:var(--green); color:#fff;
+  }
+  .ocr-progress{font-size:12px; color:var(--warn); margin-top:6px;}
+  .nav-chk{
+    width:100%; display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-2);
+    margin-top:6px; cursor:pointer;
+  }
+  .nav-chk input{width:16px; height:16px; accent-color:var(--green);}
+  .mi-img{width:46px; height:46px; object-fit:cover; border-radius:8px; border:1px solid var(--line); cursor:zoom-in; margin-top:4px;}
+  .lightbox{
+    position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:999;
+    display:none; align-items:center; justify-content:center; padding:16px;
+  }
+  .lightbox.show{display:flex;}
+  .lightbox img{max-width:100%; max-height:100%; border-radius:8px;}
+  .lightbox .lb-close{
+    position:absolute; top:14px; right:16px; width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.2); color:#fff; border:none; font-size:17px; cursor:pointer;
+  }
+  /* ===== 添加区加大 ===== */
+  #f-text{height:48px; font-size:16px;}
+  #addBtn{font-size:15px; padding:0 20px; min-height:48px;}
+  #f-date, #f-time{font-size:15px; padding:11px 10px;}
+  #f-addr{font-size:15px; padding:12px 12px;}
+  .add-main input[type="text"]{font-size:16px; padding:0 14px;}
+  /* ===== 地图搜索框 ===== */
+  .map-search{
+    padding:8px 12px; display:flex; gap:8px; background:#fff; border-bottom:1px solid var(--line);
+  }
+  .map-search input{
+    flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:14px; outline:none;
+  }
+  .map-search input:focus{border-color:var(--green);}
+  .map-search button{
+    flex:none; background:var(--green); color:#fff; border:none; border-radius:8px; padding:0 16px; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .map-sug{
+    position:absolute; z-index:20; left:12px; right:12px; background:#fff; border-radius:10px;
+    box-shadow:0 6px 20px rgba(0,0,0,.15); overflow:hidden; display:none; max-height:260px; overflow-y:auto;
+  }
+  .map-sug .ms-item{padding:11px 14px; font-size:13.5px; border-bottom:1px solid var(--line); cursor:pointer;}
+  .map-sug .ms-item:last-child{border-bottom:none;}
+  .map-sug .ms-item:active{background:#f2f9f4;}
+  /* ===== 当日明细（周/月下方） ===== */
+  .day-detail{
+    margin:10px 14px 0; background:var(--card); border-radius:12px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  .day-detail .dd-head{
+    padding:9px 12px; font-size:13px; font-weight:800; color:var(--green-dark);
+    background:#f2f9f4; display:flex; align-items:center; justify-content:space-between;
+  }
+  .day-detail .dd-head button{
+    border:1px solid var(--line); background:#fff; color:var(--ink-2); border-radius:8px;
+    padding:4px 10px; font-size:12px; cursor:pointer;
+  }
+  /* ===== 详情弹层 ===== */
+  .detail-box .d-row{padding:12px 0; border-bottom:1px solid var(--line); display:flex; gap:10px;}
+  .detail-box .d-row:last-child{border-bottom:none;}
+  .detail-box .d-label{flex:none; width:52px; font-size:12.5px; color:var(--ink-2); padding-top:2px;}
+  .detail-box .d-val{flex:1; font-size:14.5px; color:var(--ink); line-height:1.6; word-break:break-all;}
+  .detail-box .d-img{width:100%; border-radius:10px; margin-top:4px; cursor:zoom-in;}
+  .detail-box .d-btns{display:flex; gap:8px; margin-top:14px;}
+  .detail-box .d-btns button{
+    flex:1; border:none; border-radius:9px; padding:11px 0; font-size:13.5px; font-weight:700; cursor:pointer;
+  }
+  .d-nav{background:var(--green); color:#fff;}
+  .d-edit{background:var(--warn); color:#fff;}
+  .d-del{background:#fee2e2; color:#b91c1c;}
+  /* ===== 回收站 ===== */
+  .trash-head{
+    margin:10px 14px 0; display:flex; align-items:center; justify-content:space-between;
+  }
+  .trash-head b{font-size:14px; color:var(--ink);}
+  .trash-head button{
+    border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 12px; font-size:12.5px; color:var(--ink-2); cursor:pointer;
+  }
+  .trash-head .empty-all{border-color:#fecaca; color:#b91c1c;}
+  .trash-item{
+    margin:8px 14px 0; background:var(--card); border-radius:12px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  .trash-item .ti-row{padding:11px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line);}
+  .trash-item .ti-row:last-child{border-bottom:none;}
+  .trash-item .ti-mid{flex:1; min-width:0;}
+  .trash-item .ti-time{font-size:12px; color:var(--ink-2);}
+  .trash-item .ti-text{font-size:14.5px; margin-top:2px;}
+  .trash-item .ti-btns{display:flex; gap:8px; flex:none;}
+  .trash-item .ti-btns button{border:none; border-radius:8px; padding:7px 12px; font-size:12.5px; font-weight:700; cursor:pointer;}
+  .ti-restore{background:var(--green); color:#fff;}
+  .ti-del{background:#fee2e2; color:#b91c1c;}
+  /* 地图导航按钮 */
+  .mi-nav{
+    flex:none; min-width:54px; height:32px; padding:0 10px; border-radius:8px; cursor:pointer;
+    background:var(--green); color:#fff; border:none;
+    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
+  }
+  .mi-nav:active{opacity:.8;}
+  .mi-nav.off{background:#e8efe9; color:#94a3b8;}
+  /* ===== 添加页宽屏横向 ===== */
+  @media (min-width: 860px) {
+    #addView .add-card{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;}
+    #addView .add-row{width:calc(50% - 5px); margin-bottom:0;}
+    #addView .add-main{width:100%;}
+    #addView .add-img{width:100%; margin:8px 0 0;}
+    #addView .nav-chk{width:100%; margin-top:8px;}
+    #addView .add-quick{width:100%;}
+    #addView .img-prev{width:100%;}
+  }
+  /* ===== 地图视图 ===== */
+  .map-card{
+    margin:10px 14px 0; background:var(--card); border-radius:12px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  .map-card .m-head{
+    padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid var(--line);
+  }
+  .map-card .m-head b{font-size:14px; color:var(--ink);}
+  .map-card .m-head button{
+    border:none; background:var(--green); color:#fff; border-radius:8px;
+    padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .map-card .m-head button:active{background:var(--green-dark);}
+  .map-card #map{width:100%; height:300px; background:#eef2ef;}
+  .map-key-bar{
+    margin:0; padding:8px 12px; background:#fffbeb; border-bottom:1px solid #fde68a;
+    display:none; align-items:center; gap:8px; font-size:12.5px; color:#92400e;
+  }
+  .map-key-bar input{
+    flex:1; min-width:0; border:1px solid #fcd34d; border-radius:8px; padding:7px 10px; font-size:13px; outline:none;
+  }
+  .map-key-bar button{
+    flex:none; background:var(--warn); color:#fff; border:none; border-radius:8px; padding:7px 12px; font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .map-item{
+    margin:0; padding:11px 14px; display:flex; align-items:center; gap:10px;
+    border-bottom:1px solid var(--line); background:#fff;
+  }
+  .map-item:last-child{border-bottom:none;}
+  .map-item .sel{
+    flex:none; width:24px; height:24px; border-radius:8px; border:2px solid var(--green);
+    background:#fff; color:transparent; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; cursor:pointer;
+  }
+  .map-item .sel.on{background:var(--green); color:#fff;}
+  .map-item .mi-mid{flex:1; min-width:0;}
+  .map-item .mi-time{font-size:13px; font-weight:800; color:var(--green-dark);}
+  .map-item .mi-text{font-size:14.5px; margin-top:2px;}
+  .map-item .mi-addr{font-size:12px; color:var(--ink-2); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .map-item .mi-done{
+    flex:none; width:26px; height:26px; border-radius:50%; cursor:pointer;
+    border:2px solid var(--green); display:flex; align-items:center; justify-content:center;
+    color:transparent; background:#fff; font-size:14px; font-weight:900;
+  }
+  .map-item.done .mi-done{background:var(--green); color:#fff;}
+  .map-item.done .mi-text{text-decoration:line-through; color:var(--ink-2);}
+  .map-noaddr{
+    margin:10px 14px 0; background:var(--card); border-radius:12px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  .map-noaddr .na-head{
+    padding:10px 12px; font-size:13px; color:var(--ink-2); background:#f8faf8; cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .map-noaddr .na-body{display:none;}
+  .map-noaddr.open .na-body{display:block;}
+  .map-empty{padding:24px 14px; text-align:center; color:var(--ink-2); font-size:13px; line-height:1.8;}
+  .map-sum{
+    margin:8px 14px 0; font-size:12.5px; color:var(--ink-2); display:flex; align-items:center; gap:6px;
+  }
+  /* 当天聚焦提示条 */
+  .focus-bar{
+    margin:12px 14px 0; display:none; align-items:center; gap:8px;
+    font-size:13px; color:var(--green-dark); font-weight:700;
+  }
+  .focus-bar button{
+    border:1px solid #bbf7d0; background:#f0fdf4; color:var(--green-dark);
+    border-radius:8px; padding:5px 12px; font-size:12.5px; cursor:pointer; font-weight:700;
+  }
+  @media (min-width:760px){
+    body{max-width:680px; margin:0 auto; box-shadow:0 0 30px rgba(0,0,0,.06);}
+    .modal{border-radius:20px; margin-bottom:10vh;}
+  }
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316a34a'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white'%3E%E6%97%A5%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<header class="topbar">
+  <div>
+    <h1>日程管家</h1>
+    <div class="today" id="todayLabel"></div>
+  </div>
+  <div class="actions">
+    <button class="icon-btn" id="exportBtn" title="导出备份">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    </button>
+    <button class="icon-btn" id="importBtn" title="导入备份">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+    </button>
+  </div>
+</header>
+
+<!-- 到点提醒横幅 -->
+<div class="remind-banner" id="remindBanner">
+  <button class="rb-close" id="rbClose">&times;</button>
+  <div class="rb-time" id="rbTime"></div>
+  <div class="rb-text" id="rbText"></div>
+</div>
+
+<!-- 通知授权条 -->
+<div class="notify-bar" id="notifyBar">
+  <span>开启通知：到点可在通知栏收到提醒</span>
+  <button class="nb-btn" id="notifyBtn">开启通知</button>
+</div>
+
+<!-- ===== 视图切换 ===== -->
+<div class="trash-head" id="trashEntry" style="display:none">
+    <b>回收站</b>
+    <button id="trashClose">返回</button>
+  </div>
+  <div id="trashList" style="display:none"></div>
+<div class="view-tabs">
+  <button class="vt on" data-view="map">地图</button>
+  <button class="vt" data-view="week">周</button>
+  <button class="vt" data-view="month">月</button>
+  <button class="vt" data-view="add">添加</button>
+  <button class="vt" data-view="todo">待办</button>
+</div><div id="addView" style="display:none">
+<!-- ===== 添加 ===== -->
+<section class="add-card">
+  <div class="add-row">
+    <input type="date" id="f-date" class="dt">
+    <input type="time" id="f-time" class="tm" value="09:00">
+  </div>
+  <div class="add-main">
+    <input type="text" id="f-text" placeholder="要做什么？如：拜访张总 / 回访李姐 / 晨会">
+    <button id="addBtn">添加</button>
+  </div>
+  <div class="add-row">
+    <input type="text" id="f-addr" placeholder="地址（选填，用于地图规划路线）">
+  </div>
+  <div class="add-img">
+    <input type="file" id="f-img" accept="image/*" style="display:none">
+    <button class="img-btn" id="imgBtn">拍照 / 选图</button>
+    <span class="img-hint">可识别文字自动填入</span>
+    <div class="img-prev" id="imgPrev">
+      <img id="imgPrevImg" alt="预览">
+      <div class="ip-btns">
+        <button class="ocr-btn" id="ocrBtn">识别文字</button>
+        <button class="img-locate" id="imgLocate">定位到地图</button>
+        <button class="img-clear" id="imgClear">移除图片</button>
+        <div class="ocr-progress" id="ocrProg"></div>
+      </div>
+    </div>
+  </div>
+  <label class="nav-chk"><input type="checkbox" id="f-nav"> 添加后直接在地图上导航</label>
+  <div class="add-quick" id="quickRow">
+    <span class="quick" data-min="0">现在</span>
+    <span class="quick" data-min="30">30分钟后</span>
+    <span class="quick" data-min="60">1小时后</span>
+    <span class="quick" data-min="120">2小时后</span>
+    <span class="quick" data-min="0" data-tomorrow="1">明天</span>
+  </div>
+</section>
+</div>
+
+
+<!-- 待办视图（独立） -->
+<div id="todoView" style="display:none">
+  <div class="m-head">
+    <b>全部待办</b>
+    <span class="map-sum" id="todoSum"></span>
+  </div>
+  <div id="todoList"></div>
+</div>
+
+<!-- 周/月概览（默认隐藏） -->
+<div id="calWrap" style="display:none">
+  <div class="cal-head">
+    <span class="ch-title" id="calTitle"></span>
+    <span class="ch-nav">
+      <button id="calPrev">‹</button>
+      <button class="ch-today" id="calToday">今天</button>
+      <button id="calNext">›</button>
+    </span>
+  </div>
+  <div id="weekWrap" class="week-grid"></div>
+  <div id="monthWrap" class="month-grid" style="display:none"></div>
+</div>
+
+<!-- 当日明细（周/月点天后显示） -->
+<div class="day-detail" id="dayDetail" style="display:none">
+  <div class="dd-head"><span id="ddTitle"></span><button id="ddClose">收起</button></div>
+  <div id="ddBody"></div>
+</div>
+
+<!-- 当天聚焦条 -->
+<div class="focus-bar" id="focusBar">
+  <span id="focusLabel"></span>
+  <button id="focusAll">查看全部</button>
+</div>
+
+<!-- ===== 地图视图（默认隐藏） ===== -->
+<div id="mapView" style="display:none">
+  <div class="map-card">
+    <div class="map-key-bar" id="mapKeyBar">
+      <span>高德地图 Key</span>
+      <input type="text" id="mapKeyInput" placeholder="粘贴高德 Key" style="min-width:160px">
+      <span>安全密钥</span>
+      <input type="text" id="mapJscodeInput" placeholder="粘贴安全密钥（选填）" style="min-width:160px">
+      <button id="mapKeySave">保存</button>
+    </div>
+    <div class="map-search">
+      <input type="text" id="mapSearchInput" placeholder="搜索地点，如：杭州东站 / 客户小区名">
+      <button id="mapSearchBtn">搜索</button>
+    </div>
+    <div class="map-sug" id="mapSug"></div>
+    <div class="m-head">
+      <b id="mapTitle">今日办理地图</b>
+      <button id="mapPlanBtn">规划路线</button>
+    </div>
+    <div id="map"></div>
+    <div class="map-sum" id="mapSum"></div>
+  </div>
+  <div id="mapList"></div>
+  <div class="map-noaddr" id="mapNoAddr">
+    <div class="na-head" id="naHead"><span id="naTitle">无地址事项</span><span>展开 ▾</span></div>
+    <div class="na-body" id="naBody"></div>
+  </div>
+</div>
+
+
+
+<!-- ===== 列表 ===== -->
+<div id="listWrap"></div>
+
+<!-- ===== 底部 ===== -->
+<footer class="footbar">
+  <div class="st">
+    <span>今日 <b id="stToday">0</b></span>
+    <span>待办 <b id="stTodo">0</b></span>
+    <span>完成 <b id="stDone">0</b></span>
+  </div>
+  <button id="clearDoneBtn">清除已完成</button>
+  <button id="trashOpenBtn" style="margin-left:8px">回收站</button>
+</footer>
+
+<!-- ===== 编辑弹层 ===== -->
+<div class="lightbox" id="lightbox" style="display:none">
+    <img id="lbImg" alt="查看">
+    <button class="lb-close" id="lbClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+  </div>
+<div class="modal-mask" id="detailMask" style="display:none">
+  <div class="modal detail-box" id="detailBody"></div>
+</div>
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <h3>编辑事项</h3>
+    <div class="f">
+      <label>日期</label>
+      <input type="date" id="e-date">
+    </div>
+    <div class="f">
+      <label>时间</label>
+      <input type="time" id="e-time">
+    </div>
+    <div class="f">
+      <label>内容</label>
+      <input type="text" id="e-text" placeholder="事项内容">
+    </div>
+    <div class="f">
+      <label>地址（选填，用于地图规划路线）</label>
+      <input type="text" id="e-addr" placeholder="如：杭州市西湖区文三路138号">
+    </div>
+    <div class="btns">
+      <button class="btn-no" id="e-cancel">取消</button>
+      <button class="btn-ok" id="e-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="importFile" accept=".json" style="display:none">
+
+<script>
+/* ========== 数据 ========== */
+var LS = { items: 'schedule_items_v1', notified: 'schedule_notified_v1' };
+var items = [];
+var editingId = null;
+var remindedSet = {};
+var curView = 'list';      // list | week | month
+var weekBase = new Date(); // 周视图基准（该周任意一天）
+var monthBase = new Date();// 月视图基准（该月任意一天）
+var focusDate = null;      // 聚焦某天（null=全部）
+
+function load() {
+  try { items = JSON.parse(localStorage.getItem(LS.items)) || []; } catch (e) { items = []; }
+  try { remindedSet = JSON.parse(localStorage.getItem(LS.notified)) || {}; } catch (e) { remindedSet = {}; }
+}
+function save() {
+  localStorage.setItem(LS.items, JSON.stringify(items));
+  localStorage.setItem(LS.notified, JSON.stringify(remindedSet));
+}
+function uid() { return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function fmtHM(min) {
+  var h = Math.floor(min / 60), m = min % 60;
+  return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
+}
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function dateStr(d) {
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+function dateCN(d) {
+  var w = ['日', '一', '二', '三', '四', '五', '六'];
+  return (d.getMonth() + 1) + '月' + d.getDate() + '日 周' + w[d.getDay()];
+}
+function todayStr() { return dateStr(new Date()); }
+function parseItemTime(it) { return new Date(it.date + 'T' + (it.time || '09:00') + ':00'); }
+
+/* ========== 分组渲染 ========== */
+function groupLabel(ds) {
+  var t = todayStr();
+  if (ds === t) return { name: '今天', sub: dateCN(new Date()) };
+  var tom = new Date(); tom.setDate(tom.getDate() + 1);
+  if (ds === dateStr(tom)) return { name: '明天', sub: dateCN(tom) };
+  var y = new Date(); y.setDate(y.getDate() - 1);
+  if (ds === dateStr(y)) return { name: '昨天', sub: dateCN(y) };
+  var d = new Date(ds + 'T00:00:00');
+  if (isNaN(d.getTime())) return { name: ds, sub: '' };
+  // 本周？
+  var now = new Date();
+  var start = new Date(now); start.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
+  var end = new Date(start); end.setDate(start.getDate() + 6);
+  if (d >= start && d <= end) return { name: ds.slice(5), sub: '本周' + dateCN(d) };
+  return { name: ds, sub: dateCN(d) };
+}
+function dayTag(ds) {
+  var t = todayStr();
+  if (ds === t) return '<span class="tag">今天</span>';
+  var parts = String(ds).split('-');
+  var d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+  var now = new Date();
+  var base = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var off = Math.round((d - base) / 86400000);
+  if (off === 1) return '<span class="tag">明天</span>';
+  if (off === -1) return '<span class="tag">昨天</span>';
+  if (isNaN(d.getTime())) return '<span class="tag">' + esc(ds) + '</span>';
+  return '<span class="tag">' + (d.getMonth() + 1) + '/' + d.getDate() + '</span>';
+}
+function opsHtml(id) {
+  return '<button class="mini-btn" data-act="edit" title="编辑"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path></svg></button>' +
+    '<button class="mini-btn del" data-act="del" title="删除"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
+}
+function render() {
+  var now = new Date();
+  var today = todayStr();
+  var sorted = items.slice().sort(function (a, b) {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (a.time || '') < (b.time || '') ? -1 : 1;
+  });
+  if (focusDate) {
+    sorted = sorted.filter(function (x) { return x.date === focusDate; });
+    var fb = $('focusBar'), fl = $('focusLabel');
+    if (sorted.length) {
+      var gl = groupLabel(focusDate);
+      fl.textContent = '正在查看：' + gl.name + (gl.sub ? '（' + gl.sub + '）' : '');
+    } else {
+      fl.textContent = '正在查看：' + focusDate + '（无事项）';
+    }
+    fb.style.display = 'flex';
+  } else {
+    $('focusBar').style.display = 'none';
+  }
+  var html = '';
+  if (!sorted.length) {
+    html = '<div class="empty"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><br>' + (focusDate ? '这一天没有安排' : '还没有安排') + '<br>在上面添加吧</div>';
+  } else if (focusDate) {
+    var gl0 = groupLabel(focusDate);
+    var done0 = sorted.filter(function (x) { return x.done; }).length;
+    html += '<div class="group"><span class="g-name">' + esc(gl0.name) + '</span>' +
+      (gl0.sub ? '<span class="g-sub">' + esc(gl0.sub) + '</span>' : '') +
+      '<span class="g-count">' + done0 + '/' + sorted.length + '</span></div>';
+    sorted.forEach(function (it) {
+      var overdue = !it.done && (it.date === today && (it.time || '') < fmtHM(now.getHours() * 60 + now.getMinutes()));
+      html += '<div class="item' + (it.done ? ' done' : '') + (overdue ? ' overdue' : '') + '" data-id="' + it.id + '">' +
+        '<div class="tick">✓</div>' +
+        '<div class="mid">' +
+          '<div class="t-time">' + esc(it.time || '09:00') +
+            (overdue ? '<span class="tag warn">已过期</span>' : '') +
+            (it.done ? '<span class="tag">已完成</span>' : '') +
+          '</div>' +
+          '<div class="t-text">' + esc(it.text || '（无内容）') + '</div>' +
+        '</div>' +
+        '<div class="ops">' + opsHtml(it.id) + '</div>' +
+      '</div>';
+    });
+  } else {
+    var todo = sorted.filter(function (x) { return !x.done; });
+    if (!todo.length) {
+      html = '<div class="empty"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg><br>待办已清空<br>所有事项都完成啦</div>';
+    } else {
+      html += '<div class="group"><span class="g-name">全部待办</span><span class="g-count">' + todo.length + ' 项</span></div>';
+      todo.forEach(function (it) {
+        var tag = dayTag(it.date);
+        var overdue = it.date < today || (it.date === today && (it.time || '') < fmtHM(now.getHours() * 60 + now.getMinutes()));
+        html += '<div class="item' + (overdue ? ' overdue' : '') + '" data-id="' + it.id + '">' +
+          '<div class="tick">✓</div>' +
+          '<div class="mid">' +
+            '<div class="t-time">' + tag + ' · ' + esc(it.time || '09:00') +
+              (overdue ? '<span class="tag warn">已过期</span>' : '') +
+            '</div>' +
+            '<div class="t-text">' + esc(it.text || '（无内容）') + '</div>' +
+          '</div>' +
+          '<div class="ops">' + opsHtml(it.id) + '</div>' +
+        '</div>';
+      });
+    }
+  }
+  $('listWrap').innerHTML = html;  $('listWrap').innerHTML = html;
+  // 底部统计
+  var tAll = items.filter(function (x) { return x.date === today; }).length;
+  var tDone = items.filter(function (x) { return x.date === today && x.done; }).length;
+  var tTodo = items.filter(function (x) { return !x.done && !x.deleted; }).length;
+  $('stToday').textContent = tAll;
+  $('stTodo').textContent = tTodo;
+  $('stDone').textContent = tDone;
+}
+
+/* ========== 顶栏日期 ========== */
+function refreshToday() {
+  $('todayLabel').textContent = dateCN(new Date()) + ' · 共 ' +
+    items.filter(function (x) { return x.date === todayStr() && !x.done; }).length + ' 项待办';
+}
+
+/* ========== 添加 ========== */
+var pendingImg = null;
+function addItem(text, date, time, addr) {
+  if (!text || !text.trim()) { toast('请填写事项内容'); return; }
+  var ds = date || todayStr();
+  var tm = time || '09:00';
+  items.push({ id: uid(), text: text.trim(), date: ds, time: tm, done: false, addr: (addr || '').trim(), img: pendingImg || null });
+  pendingImg = null;
+  save(); render(); refreshToday();
+  toast('已添加 ' + ds + ' ' + tm);
+}
+$('addBtn').addEventListener('click', function () {
+  var addr = $('f-addr').value;
+  var nav = $('f-nav').checked;
+  addItem($('f-text').value, $('f-date').value, $('f-time').value, addr);
+  $('f-text').value = '';
+  $('f-addr').value = '';
+  if (nav && addr && addr.trim()) {
+    setTimeout(function () { locateOnMap(addr.trim()); }, 400);
+  } else if (!nav) {
+    toast('已添加，可继续添加');
+  }
+});
+$('f-text').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') { $('addBtn').click(); }
+});
+// 快捷添加
+$('quickRow').addEventListener('click', function (e) {
+  var q = e.target.closest('.quick');
+  if (!q) return;
+  var min = parseInt(q.getAttribute('data-min') || '0', 10);
+  var d = new Date();
+  if (q.getAttribute('data-tomorrow')) { d.setDate(d.getDate() + 1); }
+  d.setMinutes(d.getMinutes() + min);
+  var ds = dateStr(d), tm = fmtHM(d.getHours() * 60 + d.getMinutes());
+  var txt = $('f-text').value;
+  if (!txt || !txt.trim()) { $('f-date').value = ds; $('f-time').value = tm; toast('已选时间，填写内容后点添加'); return; }
+  addItem(txt, ds, tm, $('f-addr').value);
+  $('f-text').value = '';
+});
+
+/* ========== 列表操作 ========== */
+$('listWrap').addEventListener('click', function (e) {
+  var itemEl = e.target.closest('.item');
+  if (!itemEl) return;
+  var id = itemEl.getAttribute('data-id');
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (e.target.closest('.tick')) {
+    it.done = !it.done;
+    save(); render(); refreshToday();
+    toast(it.done ? '已完成 ✓' : '已恢复待办');
+    return;
+  }
+  var act = e.target.closest('button[data-act]');
+  if (!act) return;
+  var a = act.getAttribute('data-act');
+  if (a === 'del') {
+    moveToTrash(id);
+  } else if (a === 'edit') {
+    editingId = id;
+    $('e-date').value = it.date || todayStr();
+    $('e-time').value = it.time || '09:00';
+    $('e-text').value = it.text || '';
+    $('e-addr').value = it.addr || '';
+    $('modalMask').classList.add('show');
+  }
+});
+// 编辑保存/取消
+$('e-save').addEventListener('click', function () {
+  var it = items.filter(function (x) { return x.id === editingId; })[0];
+  if (!it) { $('modalMask').classList.remove('show'); return; }
+  it.date = $('e-date').value || it.date;
+  it.time = $('e-time').value || it.time;
+  it.text = $('e-text').value || it.text;
+  it.addr = ($('e-addr').value || '').trim();
+  save(); render(); refreshToday();
+  if (focusDate) renderDayDetail(focusDate);
+  $('modalMask').classList.remove('show');
+  toast('已保存');
+});
+$('e-cancel').addEventListener('click', function () { $('modalMask').classList.remove('show'); });
+$('modalMask').addEventListener('click', function (e) {
+  if (e.target === $('modalMask')) $('modalMask').classList.remove('show');
+});
+$('trashOpenBtn').addEventListener('click', showTrash);
+$('clearDoneBtn').addEventListener('click', function () {
+  var n = items.filter(function (x) { return x.done; }).length;
+  if (!n) { toast('没有已完成事项'); return; }
+  if (confirm('清除全部 ' + n + ' 条已完成事项？')) {
+    items = items.filter(function (x) { return !x.done; });
+    save(); render(); refreshToday(); toast('已清除');
+  }
+});
+
+/* ========== 通知 ========== */
+function notifSupported() {
+  return 'Notification' in window;
+}
+function showNotifyBar() {
+  if (!notifSupported()) return;
+  if (Notification.permission === 'default') $('notifyBar').style.display = 'flex';
+}
+$('notifyBtn').addEventListener('click', function () {
+  if (!notifSupported()) { toast('当前浏览器不支持通知'); return; }
+  Notification.requestPermission().then(function (p) {
+    if (p === 'granted') {
+      $('notifyBar').style.display = 'none';
+      toast('通知已开启，到点提醒你');
+    } else {
+      toast('未授权，只能在页面内提醒');
+    }
+  });
+});
+
+/* ========== 到点提醒 ========== */
+var ringing = null;
+function beep() {
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    var ctx = new Ctx();
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine'; o.frequency.value = 880;
+    g.gain.setValueAtTime(0.25, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+    o.start(); o.stop(ctx.currentTime + 0.8);
+    setTimeout(function () { try { ctx.close(); } catch (e) {} }, 1000);
+  } catch (e) {}
+}
+function pushNotif(title, body) {
+  if (notifSupported() && Notification.permission === 'granted') {
+    try { new Notification(title, { body: body, tag: 'schedule-remind' }); } catch (e) {}
+  }
+}
+function showBanner(it) {
+  $('rbTime').textContent = (it.date || '') + ' ' + (it.time || '');
+  $('rbText').textContent = (it.text || '') + ' 时间到了！';
+  $('remindBanner').classList.add('show');
+  beep(); pushNotif('日程提醒 · ' + (it.time || ''), it.text || '');
+}
+$('rbClose').addEventListener('click', function () { $('remindBanner').classList.remove('show'); });
+function checkRemind() {
+  var now = new Date();
+  var nowKey = dateStr(now) + ' ' + fmtHM(now.getHours() * 60 + now.getMinutes());
+  items.forEach(function (it) {
+    if (it.done) return;
+    var key = it.id + '|' + it.date + '|' + it.time;
+    if (remindedSet[key]) return;
+    if (dateStr(now) === it.date && fmtHM(now.getHours() * 60 + now.getMinutes()) === (it.time || '')) {
+      remindedSet[key] = 1;
+      save();
+      showBanner(it);
+    }
+  });
+}
+
+/* ========== 备份 ========== */
+$('exportBtn').addEventListener('click', function () {
+  var data = JSON.stringify({ v: 1, at: new Date().toISOString(), items: items }, null, 1);
+  var blob = new Blob([data], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '日程管家备份_' + todayStr() + '.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast('备份已导出');
+});
+$('importBtn').addEventListener('click', function () { $('importFile').click(); });
+$('importFile').addEventListener('change', function (e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function () {
+    try {
+      var j = JSON.parse(rd.result);
+      var arr = j.items || j;
+      if (!Array.isArray(arr)) throw new Error('bad');
+      if (!confirm('导入 ' + arr.length + ' 条事项？将合并到现有安排')) return;
+      arr.forEach(function (it) {
+        if (it && it.text && it.date) items.push({
+          id: uid(), text: String(it.text), date: String(it.date),
+          time: it.time || '09:00', done: !!it.done
+        });
+      });
+      save(); render(); refreshToday(); toast('导入完成');
+    } catch (err) { toast('备份文件格式不正确'); }
+    $('importFile').value = '';
+  };
+  rd.readAsText(f);
+});
+
+/* ========== 提示 ========== */
+var toastTimer = null;
+function toast(msg) {
+  var t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
+}
+
+/* ========== 图片 / OCR ========== */
+function compressImg(dataURL, maxW, cb) {
+  var img = new Image();
+  img.onload = function () {
+    var w = img.width, h = img.height;
+    var scale = Math.min(1, (maxW || 480) / w);
+    var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+    var cv = document.createElement('canvas');
+    cv.width = cw; cv.height = ch;
+    cv.getContext('2d').drawImage(img, 0, 0, cw, ch);
+    cb(cv.toDataURL('image/jpeg', 0.72));
+  };
+  img.onerror = function () { toast('图片读取失败'); };
+  img.src = dataURL;
+}
+$('imgBtn').addEventListener('click', function () { $('f-img').click(); });
+$('f-img').addEventListener('change', function () {
+  var f = this.files && this.files[0];
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () {
+    compressImg(fr.result, 480, function (small) {
+      pendingImg = small;
+      $('imgPrevImg').src = small;
+      $('imgPrev').style.display = 'flex';
+      $('ocrProg').textContent = '';
+      $('ocrBtn').disabled = false;
+      $('ocrBtn').textContent = '识别文字';
+      toast('已选图片，可点“识别文字”');
+    });
+  };
+  fr.readAsDataURL(f);
+  this.value = '';
+});
+$('imgClear').addEventListener('click', function () {
+  pendingImg = null;
+  $('imgPrev').style.display = 'none';
+  $('imgPrevImg').src = '';
+  $('ocrProg').textContent = '';
+  $('ocrBtn').disabled = false;
+  $('ocrBtn').textContent = '识别文字';
+});
+$('imgLocate').addEventListener('click', function () {
+  if (!pendingImg) { toast('请先拍照或选择图片'); return; }
+  var addr = ($('f-addr').value || '').trim();
+  if (!addr) { toast('请先在“地址”栏填写地点，再点定位'); return; }
+  locateOnMap(addr, '导');
+});
+function loadTesseract(cb) {
+  if (window.Tesseract) { cb(); return; }
+  var urls = [
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js',
+    'https://registry.npmmirror.com/tesseract.js/5.1.0/files/dist/tesseract.min.js'
+  ];
+  var i = 0;
+  (function tryLoad() {
+    if (i >= urls.length) { toast('识别组件下载失败，请检查网络后重试'); return; }
+    var s = document.createElement('script');
+    s.src = urls[i++];
+    s.onload = function () { cb(); };
+    s.onerror = function () { s.remove(); tryLoad(); };
+    document.head.appendChild(s);
+  })();
+}
+$('ocrBtn').addEventListener('click', function () {
+  if (!pendingImg) { toast('请先拍照或选择图片'); return; }
+  var btn = $('ocrBtn');
+  btn.disabled = true;
+  btn.textContent = '准备识别…';
+  $('ocrProg').textContent = '加载识别组件…';
+  loadTesseract(function () {
+    btn.textContent = '识别中…';
+    $('ocrProg').textContent = '首次识别需下载中文识别包（约20MB），请耐心等待';
+    enhanceImg(pendingImg, function (enh) {
+    Tesseract.recognize(enh, 'chi_sim', {
+      langPath: 'https://cdn.npmmirror.com/packages/@tesseract.js-data/chi_sim/1.0.0/files/4.0.0_best_int',
+      workerPath: 'https://registry.npmmirror.com/tesseract.js/5.1.0/files/dist/worker.min.js',
+      corePath: 'https://registry.npmmirror.com/tesseract.js-core/5.1.0/files/tesseract-core.wasm.js',
+      logger: function (m) {
+        if (m.status === 'recognizing text') {
+          var p = Math.round((m.progress || 0) * 100);
+          $('ocrProg').textContent = '识别进度 ' + p + '%';
+        } else if (m.status === 'loading tesseract core') {
+          $('ocrProg').textContent = '加载识别引擎…';
+        } else if (m.status === 'loading language traineddata') {
+          $('ocrProg').textContent = '下载中文识别包 ' + Math.round((m.progress || 0) * 100) + '%';
+        }
+      }
+    }).then(function (res) {
+      var txt = (res.data && res.data.text || '').trim();
+      btn.disabled = false;
+      btn.textContent = '识别文字';
+      $('ocrProg').textContent = '';
+      if (!txt) { toast('未识别到文字，请换清晰图片重试'); return; }
+      var dt = extractDateTime(txt);
+      var addr = extractAddress(txt);
+      if (dt.date) $('f-date').value = dt.date;
+      if (dt.time) $('f-time').value = dt.time;
+      if (addr && !($('f-addr').value || '').trim()) $('f-addr').value = addr;
+      var cur = $('f-text').value;
+      $('f-text').value = cur ? cur + ' ' + txt.replace(/\s+/g, ' ').slice(0, 160) : txt.replace(/\s+/g, ' ').slice(0, 160);
+      var msg = '识别完成';
+      if (dt.date) msg += '，日期已填 ' + dt.date;
+      if (dt.time) msg += '，时间已填';
+      if (addr) msg += '，识别到地址';
+      toast(msg);
+      if (addr && ($('f-addr').value || '').trim()) {
+        setTimeout(function () {
+          if (confirm('识别到地址：' + $('f-addr').value + '\n是否立即在地图上定位？')) {
+            locateOnMap($('f-addr').value);
+          }
+        }, 400);
+      }
+    }).catch(function (e) {
+      btn.disabled = false;
+      btn.textContent = '识别文字';
+      $('ocrProg').textContent = '';
+      toast('识别失败，请重试');
+    });
+    });
+  });
+});
+function openLightbox(src) {
+  $('lbImg').src = src;
+  $('lightbox').classList.add('show');
+  $('lightbox').style.display = 'flex';
+}
+$('lbClose').addEventListener('click', function () {
+  $('lightbox').classList.remove('show');
+  $('lightbox').style.display = 'none';
+});
+$('lightbox').addEventListener('click', function (e) {
+  if (e.target === this) { $('lightbox').style.display = 'none'; $('lightbox').classList.remove('show'); }
+});
+
+/* ========== 地图视图 ========== */
+var map = null, amapLoading = false, amapReady = false;
+var mapMarkers = [];
+var selectedForPlan = {};
+
+function loadAmap() {
+  if (window.AMap) { initMap(); return; }
+  if (amapLoading) return;
+  var key = localStorage.getItem('mc_visit_amap_key');
+  if (!key) { $('mapKeyBar').style.display = 'flex'; return; }
+  amapLoading = true;
+  var jscode = localStorage.getItem('mc_visit_amap_jscode') || '';
+  if (jscode) window._AMapSecurityConfig = { securityJsCode: jscode };
+  var s = document.createElement('script');
+  s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + key;
+  s.onload = function () { amapLoading = false; initMap(); };
+  s.onerror = function () { amapLoading = false; $('mapKeyBar').style.display = 'flex'; };
+  document.head.appendChild(s);
+}
+function initMap() {
+  if (!window.AMap || map) return;
+  map = new AMap.Map('map', { zoom: 11, center: [120.155, 30.274] });
+  if (window.AMap.plugin) {
+    AMap.plugin(['AMap.Driving', 'AMap.Geocoder'], function () { amapReady = true; });
+  } else {
+    amapReady = true;
+  }
+}
+$('mapKeySave').addEventListener('click', function () {
+  var k = ($('mapKeyInput').value || '').trim();
+  var j = ($('mapJscodeInput').value || '').trim();
+  if (!k) { toast('请输入高德 Key'); return; }
+  localStorage.setItem('mc_visit_amap_key', k);
+  localStorage.setItem('mc_visit_amap_jscode', j);
+  $('mapKeyBar').style.display = 'none';
+  amapLoading = false;
+  loadAmap();
+  toast('Key 已保存');
+});
+
+// 已有 Key 时回填安全密钥输入框（供补填）
+$('mapKeyInput').addEventListener('focus', function () {
+  if (!$('mapKeyInput').value) $('mapKeyInput').value = localStorage.getItem('mc_visit_amap_key') || '';
+  if (!$('mapJscodeInput').value) $('mapJscodeInput').value = localStorage.getItem('mc_visit_amap_jscode') || '';
+});
+
+function renderMap() {
+  var today = todayStr();
+  var tAll = items.filter(function (x) { return x.date === today; }).length;
+  var tDone = items.filter(function (x) { return x.date === today && x.done; }).length;
+  var tTodo = items.filter(function (x) { return !x.done && !x.deleted; }).length;
+  stToday.textContent = tAll;
+  stTodo.textContent = tTodo;
+  stDone.textContent = tDone;
+  var todo = items.filter(function (x) { return !x.done && !x.deleted; });
+  var addrItems = todo.filter(function (x) { return x.addr && x.addr.trim(); }).sort(function (a, b) {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (a.time || '') < (b.time || '') ? -1 : 1;
+  });
+  var noAddr = todo.filter(function (x) { return !(x.addr && x.addr.trim()); });
+  addrItems.forEach(function (it) {
+    if (!(it.id in selectedForPlan)) selectedForPlan[it.id] = true;
+  });
+  var html = '';
+  if (!addrItems.length) {
+    html = '<div class="map-empty">还没有带地址的待办事项<br>添加事项时填写地址，即可在这里规划路线</div>';
+  } else {
+    addrItems.forEach(function (it) {
+      var sel = selectedForPlan[it.id] ? ' on' : '';
+      html += '<div class="map-item" data-id="' + it.id + '">' +
+        '<div class="sel' + sel + '">✓</div>' +
+        '<div class="mi-mid">' +
+          '<div class="mi-time">' + dayTag(it.date) + ' · ' + esc(it.time || '09:00') + '</div>' +
+          '<div class="mi-text">' + esc(it.text) + '</div>' +
+          '<div class="mi-addr">' + esc(it.addr) + '</div>' +
+          (it.img ? '<img class="mi-img" src="' + it.img + '" data-lb="1" alt="图">' : '') +
+        '</div>' +
+        '<div class="mi-nav" data-nav="1">导航</div>' +
+        '<div class="ops">' + opsHtml(it.id) + '</div>' +
+        '<div class="mi-done">✓</div>' +
+      '</div>';
+    });
+  }
+  $('mapList').innerHTML = html;
+  var selN = Object.keys(selectedForPlan).filter(function (k) { return selectedForPlan[k]; }).length;
+  $('mapSum').textContent = '已选 ' + selN + ' 项进路线 · 点左侧勾选/取消，点右侧圆圈标记完成';
+  $('naTitle').textContent = '无地址事项（' + noAddr.length + ' 项）';
+  if (noAddr.length) {
+    $('mapNoAddr').style.display = 'block';
+    var nh = '';
+    noAddr.forEach(function (it) {
+      nh += '<div class="map-item" data-id="' + it.id + '">' +
+        '<div class="mi-mid">' +
+          '<div class="mi-time">' + dayTag(it.date) + ' · ' + esc(it.time || '09:00') + '</div>' +
+          '<div class="mi-text">' + esc(it.text) + '</div>' +
+          '<div class="mi-addr" style="color:#d97706">未填地址，点编辑补上后可进地图</div>' +
+          (it.img ? '<img class="mi-img" src="' + it.img + '" data-lb="1" alt="图">' : '') +
+        '</div>' +
+        '<div class="ops">' + opsHtml(it.id) + '</div>' +
+        '<div class="mi-done">✓</div>' +
+      '</div>';
+    });
+    $('naBody').innerHTML = nh;
+  } else {
+    $('mapNoAddr').style.display = 'none';
+  }
+}
+
+/* ========== 待办视图 ========== */
+function renderTodo() {
+  var todo = items.filter(function (x) { return !x.done && !x.deleted; }).sort(function (a, b) {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (a.time || '') < (b.time || '') ? -1 : 1;
+  });
+  $('todoSum').textContent = '共 ' + todo.length + ' 项 · 点右侧圆圈完成，完成后进回收站';
+  if (!todo.length) {
+    $('todoList').innerHTML = '<div class="map-empty">全部待办已清空<br>去「添加」录入新事项吧</div>';
+    return;
+  }
+  var h = '';
+  todo.forEach(function (it) {
+    h += '<div class="map-item" data-id="' + it.id + '">' +
+      '<div class="mi-mid">' +
+        '<div class="mi-time">' + dayTag(it.date) + ' · ' + esc(it.time || '09:00') + '</div>' +
+        '<div class="mi-text">' + esc(it.text) + '</div>' +
+        (it.addr ? '<div class="mi-addr">' + esc(it.addr) + '</div>' : '<div class="mi-addr" style="color:#d97706">未填地址</div>') +
+        (it.img ? '<img class="mi-img" src="' + it.img + '" data-lb="1" alt="图">' : '') +
+      '</div>' +
+      (it.addr ? '<div class="mi-nav" data-nav="1">导航</div>' : '<div class="mi-nav off" data-nav="1">导航</div>') +
+      '<div class="ops">' + opsHtml(it.id) + '</div>' +
+      '<div class="mi-done">✓</div>' +
+    '</div>';
+  });
+  $('todoList').innerHTML = h;
+}
+$('todoList').addEventListener('click', function (e) {
+  var itEl = e.target.closest('.map-item');
+  if (!itEl) return;
+  var id = itEl.getAttribute('data-id');
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (e.target.closest('[data-lb="1"]')) { openLightbox(e.target.src); return; }
+  if (e.target.closest('.mi-done')) {
+    if (!confirm('标记「' + it.text + '」为已完成并移入回收站？')) return;
+    it.done = true;
+    save(); renderTodo(); renderMap(); refreshToday();
+    toast('已完成，已移入回收站');
+    return;
+  }
+  if (e.target.closest('.mi-nav')) {
+    if (it.addr && it.addr.trim()) locateOnMap(it.addr, '导航');
+    else toast('该事项没有地址，点编辑补上后即可导航');
+    return;
+  }
+  if (e.target.closest('.mi-mid') || e.target.closest('.mi-time')) { showDetail(id); return; }
+  var act = e.target.closest('button[data-act]');
+  if (!act) return;
+  var a = act.getAttribute('data-act');
+  if (a === 'del') { moveToTrash(id); }
+  else if (a === 'edit') { openEdit(id); }
+});
+
+/* ========== 当日明细（周/月点天后显示） ========== */
+function renderDayDetail(ds) {
+  if (!ds) { $('dayDetail').style.display = 'none'; return; }
+  var list = items.filter(function (x) { return x.date === ds && !x.deleted; });
+  var gl = groupLabel(ds);
+  $('ddTitle').textContent = gl.name + (gl.sub ? '（' + gl.sub + '）' : '') + ' · ' + list.length + ' 项';
+  if (!list.length) {
+    $('ddBody').innerHTML = '<div class="map-empty">这一天没有事项</div>';
+  } else {
+    var h = '';
+    list.forEach(function (it) {
+      h += '<div class="map-item" data-id="' + it.id + '">' +
+        '<div class="mi-mid">' +
+          '<div class="mi-time">' + esc(it.time || '09:00') + (it.done ? '<span class="tag">已完成</span>' : '<span class="tag">待办</span>') + '</div>' +
+          '<div class="mi-text">' + esc(it.text) + '</div>' +
+          (it.addr ? '<div class="mi-addr">' + esc(it.addr) + '</div>' : '') +
+          (it.img ? '<img class="mi-img" src="' + it.img + '" data-lb="1" alt="图">' : '') +
+        '</div>' +
+        (it.addr ? '<div class="mi-nav" data-nav="1">导航</div>' : '') +
+        '<div class="ops">' + opsHtml(it.id) + '</div>' +
+        '<div class="mi-done">✓</div>' +
+      '</div>';
+    });
+    $('ddBody').innerHTML = h;
+  }
+  $('dayDetail').style.display = 'block';
+}
+$('ddClose').addEventListener('click', function () { $('dayDetail').style.display = 'none'; focusDate = null; });
+$('ddBody').addEventListener('click', function (e) {
+  var itEl = e.target.closest('.map-item');
+  if (!itEl) return;
+  var id = itEl.getAttribute('data-id');
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (e.target.closest('[data-lb="1"]')) { openLightbox(e.target.src); return; }
+  if (e.target.closest('.mi-done')) {
+    if (!confirm('标记「' + it.text + '」为已完成并移入回收站？')) return;
+    it.done = true;
+    save(); renderMap(); renderDayDetail(focusDate); refreshToday();
+    toast('已完成，已移入回收站');
+    return;
+  }
+  if (e.target.closest('.mi-nav')) {
+    if (it.addr && it.addr.trim()) locateOnMap(it.addr, '导航');
+    else toast('该事项没有地址，点编辑补上后即可导航');
+    return;
+  }
+  if (e.target.closest('.mi-mid') || e.target.closest('.mi-time')) { showDetail(id); return; }
+  var act = e.target.closest('button[data-act]');
+  if (!act) return;
+  var a = act.getAttribute('data-act');
+  if (a === 'del') { moveToTrash(id); }
+  else if (a === 'edit') { openEdit(id); }
+});
+
+/* ========== 详情弹层 ========== */
+var lastDetailId = null;
+function openEdit(id) {
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  editingId = id;
+  $('e-date').value = it.date || todayStr();
+  $('e-time').value = it.time || '09:00';
+  $('e-text').value = it.text || '';
+  $('e-addr').value = it.addr || '';
+  $('modalMask').classList.add('show');
+}
+function showDetail(id) {
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  lastDetailId = id;
+  var h = '<div class="d-row"><div class="d-label">日期</div><div class="d-val">' + esc(it.date) + '（' + dateCN(new Date(it.date + 'T00:00:00')) + '）</div></div>' +
+    '<div class="d-row"><div class="d-label">时间</div><div class="d-val">' + esc(it.time || '—') + '</div></div>' +
+    '<div class="d-row"><div class="d-label">内容</div><div class="d-val">' + esc(it.text || '—') + '</div></div>' +
+    (it.addr ? '<div class="d-row"><div class="d-label">地址</div><div class="d-val">' + esc(it.addr) + '</div></div>' : '') +
+    (it.img ? '<div class="d-row"><div class="d-label">图片</div><div class="d-val"><img class="d-img" src="' + it.img + '" data-lb="1" alt="图"></div></div>' : '') +
+    (it.done ? '<div class="d-row"><div class="d-label">状态</div><div class="d-val" style="color:var(--green-dark)">已完成</div></div>' : '') +
+    '<div class="d-btns">' +
+      (it.addr ? '<button class="d-nav" data-act="nav">地图导航</button>' : '') +
+      '<button class="d-edit" data-act="edit">编辑</button>' +
+      '<button class="d-del" data-act="del">删除</button>' +
+    '</div>';
+  $('detailBody').innerHTML = h;
+  $('detailMask').style.display = 'flex';
+}
+function closeDetail() { $('detailMask').style.display = 'none'; $('detailBody').innerHTML = ''; }
+$('detailMask').addEventListener('click', function (e) {
+  if (e.target === this) { closeDetail(); return; }
+  var b = e.target.closest('button[data-act]');
+  if (!b) return;
+  var a = b.getAttribute('data-act');
+  var it = items.filter(function (x) { return x.id === lastDetailId; })[0];
+  if (!it) return;
+  if (a === 'nav') { closeDetail(); locateOnMap(it.addr, '导'); }
+  else if (a === 'edit') { closeDetail(); openEdit(lastDetailId); }
+  else if (a === 'del') { closeDetail(); moveToTrash(lastDetailId); }
+});
+
+/* ========== 回收站 ========== */
+function moveToTrash(id) {
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (!confirm('将「' + it.text + '」移入回收站？可随时恢复')) return;
+  it.deleted = true;
+  delete selectedForPlan[id];
+  save();
+  render(); renderMap(); refreshToday();
+  if (focusDate) renderDayDetail(focusDate);
+  toast('已移入回收站');
+}
+function restoreItem(id) {
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  it.deleted = false;
+  if (it.done) it.done = false;
+  save(); renderTrash(); renderMap(); refreshToday();
+  toast('已恢复');
+}
+function purgeItem(id) {
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (!confirm('彻底删除「' + it.text + '」？不可恢复')) return;
+  items = items.filter(function (x) { return x.id !== id; });
+  save(); renderTrash(); refreshToday();
+  toast('已彻底删除');
+}
+function emptyTrash() {
+  var n = items.filter(function (x) { return x.deleted || x.done; }).length;
+  if (!n) { toast('回收站是空的'); return; }
+  if (!confirm('清空回收站（' + n + ' 项）？不可恢复')) return;
+  items = items.filter(function (x) { return !x.deleted && !x.done; });
+  save(); renderTrash(); refreshToday();
+  toast('回收站已清空');
+}
+function renderTrash() {
+  var trash = items.filter(function (x) { return x.deleted || x.done; });
+  if (!trash.length) { $('trashList').innerHTML = '<div class="map-empty">回收站是空的</div>'; return; }
+  var h = '';
+  trash.forEach(function (it) {
+    h += '<div class="trash-item" data-id="' + it.id + '"><div class="ti-row">' +
+      '<div class="ti-mid">' +
+        '<div class="ti-time">' + esc(it.date) + ' · ' + esc(it.time || '09:00') + ' · ' + (it.done ? '已完成' : '已删除') + '</div>' +
+        '<div class="ti-text">' + esc(it.text) + '</div>' +
+        (it.addr ? '<div class="ti-time">' + esc(it.addr) + '</div>' : '') +
+      '</div>' +
+      '<div class="ti-btns">' +
+        '<button class="ti-restore" data-ti="restore">恢复</button>' +
+        '<button class="ti-del" data-ti="purge">彻底删除</button>' +
+      '</div></div></div>';
+  });
+  $('trashList').innerHTML = h;
+}
+function showTrash() {
+  closeDetail();
+  $('trashEntry').style.display = 'flex';
+  $('trashList').style.display = 'block';
+  ['view-tabs', 'add-card', 'addView', 'todoView', 'calWrap', 'mapView', 'listWrap', 'focusBar', 'dayDetail', 'footbar'].forEach(function (sel) {
+    var el = document.querySelector('.' + sel) || $('#' + sel);
+    if (el) el.style.display = 'none';
+  });
+  renderTrash();
+}
+function closeTrash() {
+  $('trashEntry').style.display = 'none';
+  $('trashList').style.display = 'none';
+  var mapEl = $('mapView'), calEl = $('calWrap');
+  var mapShown = mapEl && mapEl.style.display === 'block';
+  ['view-tabs', 'add-card', 'listWrap', 'focusBar', 'footbar'].forEach(function (sel) {
+    var el = document.querySelector('.' + sel) || $('#' + sel);
+    if (el) el.style.display = '';
+  });
+  if (curView === 'add') { $('addView').style.display = 'block'; }
+  if (curView === 'todo') { $('todoView').style.display = 'block'; }
+  if (curView === 'map' || mapShown) { $('mapView').style.display = 'block'; }
+  if (curView === 'week' || curView === 'month') { $('calWrap').style.display = 'block'; }
+  if (focusDate) { $('dayDetail').style.display = 'block'; }
+  renderMap();
+}
+$('trashClose').addEventListener('click', closeTrash);
+$('trashList').addEventListener('click', function (e) {
+  var b = e.target.closest('button[data-ti]');
+  if (!b) return;
+  var row = e.target.closest('.trash-item');
+  if (!row) return;
+  var id = row.getAttribute('data-id');
+  if (b.getAttribute('data-ti') === 'restore') restoreItem(id);
+  else purgeItem(id);
+});
+
+/* ========== 地图定位 ========== */
+function locateOnMap(addr, label) {
+  if (!addr || !addr.trim()) { toast('该事项没有地址'); return; }
+  switchView('map');
+  var safeAddr = addr.trim();
+  var tries = 0;
+  var waitMap = function () {
+    tries++;
+    if (!window.AMap) {
+      if (tries === 1) loadAmap();
+      if (tries < 25) { setTimeout(waitMap, 300); return; }
+      toast('地图加载失败，请检查网络'); return;
+    }
+    if (!map) { initMap(); }
+    AMap.plugin(['AMap.Geocoder'], function () {
+      var g = new AMap.Geocoder({});
+      g.getLocation(safeAddr, function (status, result) {
+        if (status === 'complete' && result.geocodes && result.geocodes.length) {
+          var loc = result.geocodes[0].location;
+          map.setZoomAndCenter(15, [loc.lng, loc.lat]);
+          var mk = new AMap.Marker({
+            position: [loc.lng, loc.lat],
+            content: '<div style="background:#dc2626;color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;box-shadow:0 2px 10px rgba(0,0,0,.35)">' + (label || '导') + '</div>'
+          });
+          map.add(mk);
+          mapMarkers.push(mk);
+          toast('已定位：' + safeAddr);
+        } else { toast('无法定位该地址'); }
+      });
+    });
+  };
+  setTimeout(waitMap, 200);
+}
+
+/* ========== 地图搜索 ========== */
+function mapSearch() {
+  var kw = ($('mapSearchInput').value || '').trim();
+  if (!kw) { toast('请输入搜索关键词'); return; }
+  if (!window.AMap) { toast('地图加载中…'); return; }
+  AMap.plugin(['AMap.PlaceSearch'], function () {
+    var ps = new AMap.PlaceSearch({ pageSize: 6, pageIndex: 1 });
+    ps.search(kw, function (status, result) {
+      if (status === 'complete' && result.poiList && result.poiList.pois && result.poiList.pois.length) {
+        var pois = result.poiList.pois;
+        var h = '';
+        pois.forEach(function (p) {
+          h += '<div class="ms-item" data-lng="' + p.location.lng + '" data-lat="' + p.location.lat + '" data-name="' + esc(p.name) + '">' +
+            esc(p.name) + '<div style="font-size:11.5px;color:var(--ink-2)">' + esc(p.address || '') + '</div></div>';
+        });
+        $('mapSug').innerHTML = h;
+        $('mapSug').style.display = 'block';
+      } else { toast('未找到「' + kw + '」'); }
+    });
+  });
+}
+$('mapSearchBtn').addEventListener('click', mapSearch);
+$('mapSearchInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') mapSearch(); });
+$('mapSug').addEventListener('click', function (e) {
+  var it = e.target.closest('.ms-item');
+  if (!it) return;
+  $('mapSug').style.display = 'none';
+  var lng = +it.getAttribute('data-lng'), lat = +it.getAttribute('data-lat');
+  if (!map) initMap();
+  map.setZoomAndCenter(15, [lng, lat]);
+  map.add(new AMap.Marker({ position: [lng, lat] }));
+  $('mapSearchInput').value = it.getAttribute('data-name');
+});
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('.map-search') && !e.target.closest('.map-sug')) { var s = $('mapSug'); if (s) s.style.display = 'none'; }
+});
+
+/* ========== OCR 增强 ========== */
+function enhanceImg(dataURL, cb) {
+  var img = new Image();
+  img.onload = function () {
+    var W = Math.min(2000, Math.round(img.width * 1.6)), H = Math.min(2000, Math.round(img.height * 1.6));
+    var cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d');
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(img, 0, 0, W, H);
+    var id = ctx.getImageData(0, 0, W, H);
+    var d = id.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      g = g > 128 ? Math.min(255, 110 + (g - 128) * 1.55) : Math.max(0, g * 0.55);
+      d[i] = d[i + 1] = d[i + 2] = g;
+    }
+    ctx.putImageData(id, 0, 0);
+    cb(cv.toDataURL('image/png'));
+  };
+  img.onerror = function () { cb(dataURL); };
+  img.src = dataURL;
+}
+function _p2(n) { return (n < 10 ? '0' : '') + n; }
+function extractDateTime(txt) {
+  var s = String(txt || '').replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+  s = s.replace(/\s+/g, ' ');
+  var date = null, time = null;
+  var m = s.match(/(\d{4})[年\-\/\.]\s*(\d{1,2})[月\-\/\.]\s*(\d{1,2})日?/);
+  if (!m) m = s.match(/(\d{1,2})月\s*(\d{1,2})日/);
+  if (!m) m = s.match(/(\d{1,2})\/(\d{1,2})(?![\d\.])/);
+  if (!m) m = s.match(/(\d{1,2})[月\-\/\.](\d{1,2})日?/);
+  if (m) {
+    var y, mo, d;
+    if (m[1].length === 4) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+    else { y = new Date().getFullYear(); mo = +m[1]; d = +m[2]; }
+    if (mo >= 1 && mo <= 12 && d >= 1 && d <= 31) date = y + '-' + _p2(mo) + '-' + _p2(d);
+  }
+  var t = s.match(/(上午|下午|晚上|中午|早上|凌晨)?\s*(\d{1,2})[点时:：]\s*(\d{1,2})?分?/);
+  if (t) {
+    var h = +t[2], mi = +(t[3] || 0) || 0;
+    var ap = t[1] || '';
+    if (ap === '下午' || ap === '晚上') { if (h < 12) h += 12; }
+    else if (ap === '中午') { if (h < 12) h = 12; }
+    else if (ap === '凌晨' && h === 12) { h = 0; }
+    if (h >= 0 && h <= 23 && mi >= 0 && mi <= 59) time = _p2(h) + ':' + _p2(mi);
+  }
+  return { date: date, time: time };
+}
+function extractAddress(txt) {
+  var s = String(txt || '').replace(/\s+/g, '');
+  var m = s.match(/[^\s，。；、！？]{2,}?(?:路|街|道|弄|巷|小区|苑|园|大厦|广场|写字楼|商务楼)[^\s，。；、！？]{0,20}/);
+  if (!m) m = s.match(/(?:[^\s，。；、！？]{2,}?(?:村|镇|乡|县|区))[^\s，。；、！？]{0,20}/);
+  return m ? m[0] : null;
+}
+
+function clearMapLayers() {
+  if (!map) return;
+  map.clearMap();
+  mapMarkers = [];
+}
+function planRoute() {
+  var ids = Object.keys(selectedForPlan).filter(function (k) { return selectedForPlan[k]; });
+  var list = items.filter(function (x) { return ids.indexOf(x.id) > -1 && x.addr && x.addr.trim(); });
+  if (!list.length) { toast('请先勾选要办理的事项'); return; }
+  if (!window.AMap) { loadAmap(); toast('地图加载中，稍后再点'); return; }
+  if (!map) { initMap(); }
+  toast('正在定位地址…');
+  AMap.plugin(['AMap.Geocoder', 'AMap.Driving'], function () {
+    amapReady = true;
+    clearMapLayers();
+    var geo = new AMap.Geocoder({});
+    var pts = [], fails = [], pending = list.length;
+    list.forEach(function (it) {
+      geo.getLocation(it.addr, function (status, result) {
+        pending--;
+        if (status === 'complete' && result.geocodes && result.geocodes.length) {
+          pts.push({ id: it.id, text: it.text, addr: it.addr, time: it.time, lng: result.geocodes[0].location.lng, lat: result.geocodes[0].location.lat });
+        } else {
+          fails.push(it.text);
+        }
+        if (pending === 0) drawRoute(pts, fails);
+      });
+    });
+  });
+}
+function drawRoute(pts, fails) {
+  if (fails.length) toast('无法定位：' + fails.join('、'));
+  if (!pts.length) return;
+  pts.sort(function (a, b) { return (a.time || '') < (b.time || '') ? -1 : 1; });
+  var markers = [];
+  pts.forEach(function (p, i) {
+    var m = new AMap.Marker({
+      position: [p.lng, p.lat],
+      content: '<div style="background:var(--green);color:#fff;border:2.5px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;box-shadow:0 3px 9px rgba(0,0,0,.35)">' + (i + 1) + '</div>',
+      offset: new AMap.Pixel(-15, -15),
+      title: (i + 1) + '. ' + p.text
+    });
+    map.add(m);
+    markers.push(m);
+  });
+  mapMarkers = markers;
+  if (pts.length > 1 && window.AMap.Driving) {
+    var driving = new AMap.Driving({ map: map, hideMarkers: true });
+    var way = [];
+    for (var i = 1; i < pts.length - 1; i++) way.push([pts[i].lng, pts[i].lat]);
+    var opts = {};
+    if (way.length) opts.waypoints = way;
+    driving.search([pts[0].lng, pts[0].lat], [pts[pts.length - 1].lng, pts[pts.length - 1].lat], opts, function (status, result) {
+      if (status === 'complete' && result.routes && result.routes.length) {
+        map.setFitView(markers, false, [50, 50, 50, 50]);
+      } else {
+        map.setFitView(markers, false, [50, 50, 50, 50]);
+      }
+    });
+  } else {
+    map.setFitView(markers, false, [50, 50, 50, 50]);
+  }
+  toast('路线已生成：' + pts.length + ' 站（按时间顺序）');
+}
+$('mapPlanBtn').addEventListener('click', planRoute);
+$('mapList').addEventListener('click', function (e) {
+  var itEl = e.target.closest('.map-item');
+  if (!itEl) return;
+  var id = itEl.getAttribute('data-id');
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (e.target.closest('.sel')) {
+    selectedForPlan[id] = !selectedForPlan[id];
+    renderMap();
+    return;
+  }
+  if (e.target.closest('[data-lb="1"]')) { openLightbox(e.target.src); return; }
+  if (e.target.closest('.mi-done')) {
+    if (!confirm('标记「' + it.text + '」为已完成并移入回收站？')) return;
+    it.done = true;
+    delete selectedForPlan[id];
+    save(); render(); renderMap(); refreshToday();
+    toast('已完成，已移入回收站');
+    return;
+  }
+  if (e.target.closest('.mi-nav')) {
+    if (it.addr && it.addr.trim()) locateOnMap(it.addr, '导航');
+    else toast('该事项没有地址，点编辑补上后即可导航');
+    return;
+  }
+  if (e.target.closest('.mi-mid') || e.target.closest('.mi-time')) { showDetail(id); return; }
+  var act = e.target.closest('button[data-act]');
+  if (!act) return;
+  var a = act.getAttribute('data-act');
+  if (a === 'del') {
+    moveToTrash(id);
+  } else if (a === 'edit') {
+    openEdit(id);
+  }
+});
+$('naHead').addEventListener('click', function () { $('mapNoAddr').classList.toggle('open'); });
+$('naBody').addEventListener('click', function (e) {
+  var itEl = e.target.closest('.map-item');
+  if (!itEl) return;
+  var id = itEl.getAttribute('data-id');
+  var it = items.filter(function (x) { return x.id === id; })[0];
+  if (!it) return;
+  if (e.target.closest('.mi-done')) {
+    if (!confirm('标记「' + it.text + '」为已完成并移入回收站？')) return;
+    it.done = true;
+    save(); render(); renderMap(); refreshToday(); toast('已完成，已移入回收站');
+    return;
+  }
+  if (e.target.closest('[data-lb="1"]')) { openLightbox(e.target.src); return; }
+  var act = e.target.closest('button[data-act]');
+  if (!act) return;
+  var a = act.getAttribute('data-act');
+  if (a === 'edit') {
+    editingId = id;
+    $('e-date').value = it.date || todayStr();
+    $('e-time').value = it.time || '09:00';
+    $('e-text').value = it.text || '';
+    $('e-addr').value = it.addr || '';
+    $('modalMask').classList.add('show');
+  } else if (a === 'del') {
+    moveToTrash(id);
+  }
+});
+
+/* ========== 周/月视图 ========== */
+function countForDate(ds) {
+  return items.filter(function (x) { return x.date === ds && !x.done; }).length;
+}
+function weekStart(d) {
+  var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  var w = x.getDay();
+  var off = (w === 0 ? -6 : 1 - w);
+  x.setDate(x.getDate() + off);
+  return x;
+}
+function renderWeek() {
+  var start = weekStart(weekBase);
+  var today = todayStr();
+  var html = '';
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(start);
+    d.setDate(start.getDate() + i);
+    var ds = dateStr(d);
+    var cnt = countForDate(ds);
+    html += '<div class="w-cell' + (ds === today ? ' today' : '') + (ds === focusDate ? ' sel' : '') + (cnt ? '' : ' no-cnt') + '" data-d="' + ds + '">' +
+      '<div class="w-dow">' + '日一二三四五六'.charAt(d.getDay()) + '</div>' +
+      '<div class="w-day">' + d.getDate() + '</div>' +
+      '<div class="w-cnt">' + cnt + '</div>' +
+    '</div>';
+  }
+  $('weekWrap').innerHTML = html;
+  $('calTitle').textContent = dateCN(start) + ' ~ ' + dateCN(new Date(start.getTime() + 6 * 86400000));
+}
+function renderMonth() {
+  var y = monthBase.getFullYear(), m = monthBase.getMonth();
+  var first = new Date(y, m, 1);
+  var start = weekStart(first);
+  var today = todayStr();
+  var html = '<div class="m-cell dow">日</div><div class="m-cell dow">一</div><div class="m-cell dow">二</div><div class="m-cell dow">三</div><div class="m-cell dow">四</div><div class="m-cell dow">五</div><div class="m-cell dow">六</div>';
+  for (var i = 0; i < 42; i++) {
+    var d = new Date(start);
+    d.setDate(start.getDate() + i);
+    var ds = dateStr(d);
+    var cnt = countForDate(ds);
+    var out = d.getMonth() !== m;
+    html += '<div class="m-cell' + (out ? ' out' : '') + (ds === today ? ' today' : '') + (ds === focusDate ? ' sel' : '') + (cnt ? '' : ' no-cnt') + '" data-d="' + ds + '">' +
+      '<div class="m-day">' + d.getDate() + '</div>' +
+      '<div class="m-cnt">' + cnt + '</div>' +
+    '</div>';
+  }
+  $('monthWrap').innerHTML = html;
+  $('calTitle').textContent = y + '年' + (m + 1) + '月';
+}
+function switchView(v) {
+  curView = v;
+  var tabs = document.querySelectorAll('.view-tabs .vt');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('on', tabs[i].getAttribute('data-view') === v);
+  var isCal = (v === 'week' || v === 'month');
+  $('calWrap').style.display = isCal ? 'block' : 'none';
+  $('mapView').style.display = (v === 'map') ? 'block' : 'none';
+  $('addView').style.display = (v === 'add') ? 'block' : 'none';
+  $('todoView').style.display = (v === 'todo') ? 'block' : 'none';
+  $('listWrap').style.display = (v === 'add') ? 'none' : '';
+  if (v === 'map') {
+    $('focusBar').style.display = 'none';
+    loadAmap();
+    renderMap();
+  } else if (v === 'week') {
+    weekBase = new Date();
+    $('weekWrap').style.display = '';
+    $('monthWrap').style.display = 'none';
+    renderWeek();
+  } else if (v === 'month') {
+    monthBase = new Date();
+    $('monthWrap').style.display = '';
+    $('weekWrap').style.display = 'none';
+    renderMonth();
+  } else if (v === 'todo') {
+    $('focusBar').style.display = 'none';
+    renderTodo();
+  } else {
+    render();
+  }
+}
+document.querySelector('.view-tabs').addEventListener('click', function (e) {
+  var b = e.target.closest('.vt');
+  if (b) switchView(b.getAttribute('data-view'));
+});
+$('calPrev').addEventListener('click', function () {
+  if (curView === 'week') { weekBase.setDate(weekBase.getDate() - 7); renderWeek(); }
+  else { monthBase.setMonth(monthBase.getMonth() - 1); renderMonth(); }
+});
+$('calNext').addEventListener('click', function () {
+  if (curView === 'week') { weekBase.setDate(weekBase.getDate() + 7); renderWeek(); }
+  else { monthBase.setMonth(monthBase.getMonth() + 1); renderMonth(); }
+});
+$('calToday').addEventListener('click', function () {
+  weekBase = new Date(); monthBase = new Date();
+  if (curView === 'week') renderWeek(); else renderMonth();
+});
+$('weekWrap').addEventListener('click', function (e) {
+  var c = e.target.closest('.w-cell');
+  if (!c) return;
+  focusDate = c.getAttribute('data-d');
+  renderDayDetail(focusDate);
+});
+$('monthWrap').addEventListener('click', function (e) {
+  var c = e.target.closest('.m-cell');
+  if (!c || c.classList.contains('dow')) return;
+  focusDate = c.getAttribute('data-d');
+  renderDayDetail(focusDate);
+});
+$('focusAll').addEventListener('click', function () {
+  focusDate = null;
+  render();
+  refreshToday();
+});
+
+/* ========== 初始化 ========== */
+(function init() {
+  var d = new Date();
+  $('f-date').value = dateStr(d);
+  var def = new Date(d.getTime() + 60 * 60000);
+  $('f-time').value = fmtHM(def.getHours() * 60 + def.getMinutes());
+  load();
+  refreshToday();
+  showNotifyBar();
+  switchView('map');
+  setInterval(checkRemind, 30000);
+  checkRemind();
+})();
+</script>
+</body>
+</html>
