@@ -2234,6 +2234,7 @@ body {
   // ================= 数据层 =================
   var STORAGE_KEY = 'meican_clients_v1';
   var SCHEMA_VERSION = 1;
+  var routeSelected = {};
   var clients = loadClients();
   var editingId = null;   // 当前编辑的客户 id，null 表示新增
   var viewingId = null;   // 当前查看的客户 id
@@ -4860,14 +4861,13 @@ body {
 
 
 /* ===== 拜访路线规划（智能路线图集成）===== */
-var routeSelected = {};
 var routeMode = false;
 var _amapReady = false, _amapLoading = false;
 var _routeMap = null, _rMarkers = [], _rLine = null, _rRoute = null;
 var _rStats = { dist: 0, time: 0 };
 
 function _r$(id) { return document.getElementById(id); }
-function isSel(id) { return !!routeSelected[id]; }
+function isSel(id) { return !!(routeSelected || {})[id]; }
 function setSel(id, on) { if (on) routeSelected[id] = true; else delete routeSelected[id]; updateRouteBar(); }
 function clearSel() { routeSelected = {}; updateRouteBar(); }
 function selCount() { var n = 0; for (var k in routeSelected) if (routeSelected[k]) n++; return n; }
