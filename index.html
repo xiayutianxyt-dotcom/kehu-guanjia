@@ -1342,12 +1342,65 @@ body {
 .risk-note { width: 100%; font-size: 11px; color: var(--text-muted); padding-left: 100px; }
 .disc-radar { display: flex; justify-content: center; padding: 4px 0 2px; }
 .disc-radar svg { width: 100%; max-width: 240px; height: auto; }
+/* ===== 新增：全局加载遮罩 ===== */
+.loading-mask { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; transition: opacity .3s; }
+.loading-mask.hide { opacity: 0; pointer-events: none; }
+.load-spinner { width: 40px; height: 40px; border: 4px solid #CCFBF1; border-top-color: #0D9488; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 14px; color: #1A2E2B; font-weight: 500; }
+
+/* ===== 新增：客户头像 ===== */
+.avatar-upload { margin-bottom: 16px; }
+.avatar-upload .field-label { margin-bottom: 8px; }
+.avatar-preview { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; background: var(--bg); border: 2px solid var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 8px; position: relative; }
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-preview .no-photo { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; color: var(--text-muted); }
+.avatar-input-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.avatar-input-row input[type=file] { flex: 1; min-width: 120px; font-size: 13px; color: var(--text-secondary); }
+.avatar-clear-btn { border: 1px solid var(--border); background: #fff; color: var(--text-secondary); font-size: 12px; border-radius: 8px; padding: 6px 10px; cursor: pointer; flex-shrink: 0; }
+.avatar-clear-btn:active { background: var(--bg); }
+/* 客户卡片头像 */
+.card-avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; background: var(--primary-light); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+.card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.client-card-top { align-items: center; }
+/* 详情页头像 */
+.detail-avatar { width: 58px; height: 58px; border-radius: 50%; overflow: hidden; background: var(--primary-light); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-size: 23px; font-weight: 700; flex-shrink: 0; margin-bottom: 10px; }
+.detail-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== 新增：地图异常提示 ===== */
+.map-error-tip { display: none; margin: 8px 12px; padding: 10px 14px; background: #FEF2F2; border: 1px solid #FECACA; color: #B91C1C; border-radius: 8px; font-size: 13px; line-height: 1.6; }
+.map-error-tip.show { display: block; }
+
+/* ===== 新增：拜访地图弹窗重构（地图70%高度 + 可折叠客户列表） ===== */
+#routeMap { flex: 1 1 70%; min-height: 0; }
+.route-bottom { max-height: 30%; }
+.route-panel { border-top: 1px dashed var(--border); margin-top: 8px; padding-top: 6px; }
+.route-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer; user-select: none; font-size: 13px; font-weight: 700; color: var(--text); }
+.route-panel-head .rp-arrow { transition: transform .2s; color: var(--text-muted); display: flex; }
+.route-panel.open .rp-arrow { transform: rotate(180deg); }
+.route-panel-body { display: none; }
+.route-panel.open .route-panel-body { display: block; }
+.route-checklist { max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; margin-bottom: 8px; background: #F8FAFA; }
+.route-checklist label { display: flex; align-items: center; gap: 8px; padding: 6px 2px; font-size: 13px; cursor: pointer; border-bottom: 1px dashed #EDF1F0; }
+.route-checklist label.route-check-item { display: flex; align-items: center; gap: 8px; }
+.route-checklist label:last-child { border-bottom: none; }
+.route-checklist input { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; }
+.route-checklist .nm { font-weight: 600; color: var(--text); flex-shrink: 0; }
+.route-checklist .ad { color: var(--text-muted); font-size: 12px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 4px; }
+.route-checkall { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); padding: 4px 0 6px; cursor: pointer; }
+.route-checkall input { width: 15px; height: 15px; accent-color: var(--primary); }
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D9488'/%3E%3Cpath d='M32 14l15 5.5V30c0 9.5-6.4 17-15 20-8.6-3-15-10.5-15-20V19.5z' fill='%23fff'/%3E%3Cpath d='M26.5 33l4.5 4.5 7.5-8.5' stroke='%230D9488' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFb0lEQVR4nO3dzXWTRwCFYZvD2lvcGVQAixSQGlJAFlABdIa3NECOzTGxsSV9PzPf/Nzn2WQVoyj31YwwyNdXnXn39fPP1o+Beu4+fLq+6kjTB2PstI7i8F/Y6OkphsN+McOnxxCq/yKGT88hVPvihs8IIRT/oobPSCG8KfnFjJ/aSm+sSE2Gz6inwe4TwPhppcT2dgVg/LS2d4ObAzB+erFni5sCMH56s3WTqwMwfnq1ZZurAjB+erd2o4sDMH5GsWariwIwfkazdLMXAzB+RrVku0X/KASM5mwAXv0Z3aUNnwzA+JnFuS27AhHt1QC8+jObU5t2AhDtRQBe/ZnVa9t2AhDtWQBe/Zndnxt3AhDtdwBe/UnxdOtOAKIJgGgPAbj+kOZx829bP5AE399/3PTv3X77Uvyx8JwAOhj62q8njHIE0HjkpR+DONYRwEDDX/M4hbDMtTfAYw9+KUG8zgkw6eAv/fcJ4pf4AGYf/imuSqEBpA7+lO/hJ0NEAEa/7bm6DYhh6gAMv8zzdztxCFMGYPh1ns/bCUPwh+GIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJoAQN//+0/ohdEkAQeMXwUsCCHMfgRD+J4DJnRq7CH4RwMQujfzG+wIBzGrpuG/Cr0ROAB6kRiCACW0d803gaSCAyZQY8E1QBAKYSKnh/vjr76sUAiB2/PcEMImka0tJApiAq892Ahic8e8jAK7S7v1PCWBg7v37CWBQrj5lCGBAxl+OAEIl3/ufEsBg3PvLEsBAXH3KE8AgjL8OAQRx739JAANw769HAJ2Pz9WnLgF0/Hk6xl+fABaOr/VJsJV7/3kC6PSzdEYNbjQC6PCzdFx9jiOAjZ+lU4vxH0sAG4fX8xXFvX85Aez8HJ2Seo5qVvEB7B1dqdG6+rQRHUAv4zX+dqIDKHlXbn19ce/fJjqAHiJoHU66+ABaRuDq054AKkVw1DfUXH32EUDFMdW+3hj/fgJoEIF7fz8EcHAErj59EcCBERh/fwQw2B27x8c0MgFcYHBzE8BAEfTyOGYigBXjazlA469DAAMM0fjrEcAGBjkPAXQegdjqEkDH4zT++gTQ6UiN/xgCKMBYxyWADiMQ1HEEUFCJ4Rr/sQRQ2KUBn/uGmvEfTwAVLBl46+8s84sAKvlz3JeiEEMbAqho6biNvx0BVGbcfRMA0QRANAEQTQBEEwDRBEA0ARBNAER7ezWh229fHv75/f3H1g9lqudzRlMG8Nr/ODHse/5mNXUATzkV1j1PKWICeCSE889LmrgAHgnh+fOQKjaA9PcJ6cN/FB9A2qlg+M8JICAEoz9NABOHYPiXCWDC9wmGv5wAJjoVDH89AQwegtHvI4BBQzD8MgQw2PsEwy9LAIOcCoZfhwA6D8Hw6xJAhyEY/XEE0NH7BMM/ngA6OBUMvx1/J7gx429LAER7c/fh03XrBwEt3G/fCUA0ARBNAEQTANEeAvBGmDSPm3cCEE0ARPsdgGsQKZ5u3QlAtGcBOAWY3Z8bdwIQ7UUATgFm9dq2nQBEezUApwCzObVpJwDRTgbgFGAW57Z89gQQAaO7tGFXIKJdDMApwKiWbHfRCSACRrN0s4uvQCJgFGu2uuo9gAjo3dqNrn4TLAJ6tWWbm34XSAT0ZusmN/82qAjoxZ4t7vo+gAhobe8Gd38jTAS0UmJ7RT8X9N3Xzz9Lfj2o/aJb9I9COA2orfTGqn0ytNOAEV5cq380uhDo+VZx2M8GEAI9XqcP/+EYQqCn95FNfzqMGGj9myfd/XgkUcztrrMfyfUfAG0kWw6X3VoAAAAASUVORK5CYII=">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFb0lEQVR4nO3dzXWTRwCFYZvD2lvcGVQAixSQGlJAFlABdIa3NECOzTGxsSV9PzPf/Nzn2WQVoyj31YwwyNdXnXn39fPP1o+Beu4+fLq+6kjTB2PstI7i8F/Y6OkphsN+McOnxxCq/yKGT88hVPvihs8IIRT/oobPSCG8KfnFjJ/aSm+sSE2Gz6inwe4TwPhppcT2dgVg/LS2d4ObAzB+erFni5sCMH56s3WTqwMwfnq1ZZurAjB+erd2o4sDMH5GsWariwIwfkazdLMXAzB+RrVku0X/KASM5mwAXv0Z3aUNnwzA+JnFuS27AhHt1QC8+jObU5t2AhDtRQBe/ZnVa9t2AhDtWQBe/Zndnxt3AhDtdwBe/UnxdOtOAKIJgGgPAbj+kOZx829bP5AE399/3PTv3X77Uvyx8JwAOhj62q8njHIE0HjkpR+DONYRwEDDX/M4hbDMtTfAYw9+KUG8zgkw6eAv/fcJ4pf4AGYf/imuSqEBpA7+lO/hJ0NEAEa/7bm6DYhh6gAMv8zzdztxCFMGYPh1ns/bCUPwh+GIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJoAQN//+0/ohdEkAQeMXwUsCCHMfgRD+J4DJnRq7CH4RwMQujfzG+wIBzGrpuG/Cr0ROAB6kRiCACW0d803gaSCAyZQY8E1QBAKYSKnh/vjr76sUAiB2/PcEMImka0tJApiAq892Ahic8e8jAK7S7v1PCWBg7v37CWBQrj5lCGBAxl+OAEIl3/ufEsBg3PvLEsBAXH3KE8AgjL8OAQRx739JAANw769HAJ2Pz9WnLgF0/Hk6xl+fABaOr/VJsJV7/3kC6PSzdEYNbjQC6PCzdFx9jiOAjZ+lU4vxH0sAG4fX8xXFvX85Aez8HJ2Seo5qVvEB7B1dqdG6+rQRHUAv4zX+dqIDKHlXbn19ce/fJjqAHiJoHU66+ABaRuDq054AKkVw1DfUXH32EUDFMdW+3hj/fgJoEIF7fz8EcHAErj59EcCBERh/fwQw2B27x8c0MgFcYHBzE8BAEfTyOGYigBXjazlA469DAAMM0fjrEcAGBjkPAXQegdjqEkDH4zT++gTQ6UiN/xgCKMBYxyWADiMQ1HEEUFCJ4Rr/sQRQ2KUBn/uGmvEfTwAVLBl46+8s84sAKvlz3JeiEEMbAqho6biNvx0BVGbcfRMA0QRANAEQTQBEEwDRBEA0ARBNAER7ezWh229fHv75/f3H1g9lqudzRlMG8Nr/ODHse/5mNXUATzkV1j1PKWICeCSE889LmrgAHgnh+fOQKjaA9PcJ6cN/FB9A2qlg+M8JICAEoz9NABOHYPiXCWDC9wmGv5wAJjoVDH89AQwegtHvI4BBQzD8MgQw2PsEwy9LAIOcCoZfhwA6D8Hw6xJAhyEY/XEE0NH7BMM/ngA6OBUMvx1/J7gx429LAER7c/fh03XrBwEt3G/fCUA0ARBNAEQTANEeAvBGmDSPm3cCEE0ARPsdgGsQKZ5u3QlAtGcBOAWY3Z8bdwIQ7UUATgFm9dq2nQBEezUApwCzObVpJwDRTgbgFGAW57Z89gQQAaO7tGFXIKJdDMApwKiWbHfRCSACRrN0s4uvQCJgFGu2uuo9gAjo3dqNrn4TLAJ6tWWbm34XSAT0ZusmN/82qAjoxZ4t7vo+gAhobe8Gd38jTAS0UmJ7RT8X9N3Xzz9Lfj2o/aJb9I9COA2orfTGqn0ytNOAEV5cq380uhDo+VZx2M8GEAI9XqcP/+EYQqCn95FNfzqMGGj9myfd/XgkUcztrrMfyfUfAG0kWw6X3VoAAAAASUVORK5CYII=">
 </head>
 <body>
+
+<!-- ===== 全局加载遮罩 ===== -->
+<div class="loading-mask" id="loadingMask">
+  <div class="load-spinner"></div>
+  <div class="load-text">数据加载中…</div>
+</div>
 
 <!-- ===== 顶部品牌栏 ===== -->
 <header class="header">
@@ -1728,6 +1781,21 @@ body {
       <div class="form-card-title">
         <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> 基本信息</span>
         <span class="form-card-sub">客户是谁</span>
+      </div>
+      <!-- 客户头像上传 -->
+      <div class="avatar-upload">
+        <label class="field-label">客户头像<span class="field-hint" style="display:inline;margin-left:6px">支持拍照或相册选择，压缩后保存在本机</span></label>
+        <div class="avatar-preview" id="avatarPreview">
+          <div class="no-photo" id="avatarNoPhoto">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            添加头像
+          </div>
+          <img id="avatarPreviewImg" style="display:none" alt="头像预览">
+        </div>
+        <div class="avatar-input-row">
+          <input type="file" id="f-avatar" accept="image/*" capture="environment">
+          <button type="button" class="avatar-clear-btn" id="avatarClearBtn">移除头像</button>
+        </div>
       </div>
       <div class="field-row">
         <div class="field" data-field="name">
@@ -2357,8 +2425,20 @@ body {
     <h3>拜访路线 · 智能排序</h3>
     <button class="btn btn-primary" id="routePlanNowBtn" style="flex-shrink:0">重新规划</button>
   </div>
+  <div class="map-error-tip" id="routeMapErrorTip">地图加载异常：请检查网络连接或确认「设置」中的高德地图 Key / 安全密钥是否正确，然后重新打开。</div>
   <div id="routeMap"></div>
   <div class="route-bottom">
+    <!-- 可折叠客户勾选列表 -->
+    <div class="route-panel open" id="routeClientPanel">
+      <div class="route-panel-head" id="routeClientPanelHead">
+        <span>客户勾选列表（点击展开/收起）</span>
+        <span class="rp-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      </div>
+      <div class="route-panel-body">
+        <label class="route-checkall"><input type="checkbox" id="routeCheckAll"> 全选 / 全不选（重新规划时生效）</label>
+        <div class="route-checklist" id="routeChecklist"></div>
+      </div>
+    </div>
     <div class="route-stats">
       <div class="route-stat"><div class="v" id="routeDist">0</div><div class="k">总里程 (km)</div></div>
       <div class="route-stat"><div class="v" id="routeTime">0</div><div class="k">预计驾驶 (min)</div></div>
@@ -2383,6 +2463,7 @@ body {
   var routeSelected = {};
   var clients = loadClients();
   var editingId = null;   // 当前编辑的客户 id，null 表示新增
+  var avatarBase64 = null; // 当前编辑表单的头像（base64），null 表示无
   var viewingId = null;   // 当前查看的客户 id
   var discAnswers = {};   // 测评答案 {q1:'D', ...}
   var followDraft = [];   // 编辑页临时跟进记录
@@ -2400,6 +2481,8 @@ body {
       var obj = JSON.parse(raw);
       if (obj && obj.v === 2) return [];
       var list = JSON.parse(raw);
+      // 兼容旧版数据：可能是 { clients: [...] } 包裹结构
+      if (!Array.isArray(list) && list && Array.isArray(list.clients)) list = list.clients;
       return Array.isArray(list) ? list : [];
     } catch (e) { return []; }
   }
@@ -3263,9 +3346,13 @@ body {
       if (b.city) meta.push(escapeHtml(b.city));
       if (b.district) meta.push(escapeHtml(b.district));
 
+      var avatarHtml = b.avatarBase64 || b.avatar
+        ? '<div class="card-avatar"><img src="' + escapeHtml(b.avatarBase64 || b.avatar) + '" alt="头像"></div>'
+        : '<div class="card-avatar">' + escapeHtml((b.name || '客').charAt(0)) + '</div>';
       return '<div class="client-card' + (typeof isSel === 'function' && isSel(c.id) ? ' sel' : '') + '" data-id="' + c.id + '">' +
         '<span class="route-check"' + (typeof routeMode === 'boolean' && routeMode ? '' : ' style="display:none"') + '><input type="checkbox" ' + (typeof isSel === 'function' && isSel(c.id) ? 'checked' : '') + ' data-check="' + c.id + '" aria-label="勾选"></span>' +
         '<div class="client-card-top">' +
+          avatarHtml +
           '<div class="client-name">' + escapeHtml(b.name || '未命名') +
             (b.gender ? '<span class="gender-tag">' + escapeHtml(b.gender) + '</span>' : '') +
           '</div>' +
@@ -3938,6 +4025,18 @@ function renderDistrictNav() {
     var h = c.health || {};
     var s = c.service || {};
 
+    // 回填头像
+    avatarBase64 = b.avatarBase64 || b.avatar || null;
+    var _apImg = document.getElementById('avatarPreviewImg');
+    var _apNo = document.getElementById('avatarNoPhoto');
+    if (avatarBase64 && _apImg) {
+      _apImg.src = avatarBase64;
+      _apImg.style.display = 'block';
+      if (_apNo) _apNo.style.display = 'none';
+    } else {
+      if (_apImg) { _apImg.style.display = 'none'; _apImg.removeAttribute('src'); }
+      if (_apNo) _apNo.style.display = 'flex';
+    }
     setVal('f-name', b.name);
     setVal('f-gender', b.gender);
     setVal('f-birth', b.birth);
@@ -4024,6 +4123,14 @@ function renderDistrictNav() {
   function clearForm() {
     var ids = ['f-name', 'f-gender', 'f-birth', 'f-phone', 'f-wechat', 'f-idcard', 'f-occupation', 'f-company', 'f-title', 'f-education', 'f-marital', 'f-children', 'f-city', 'f-district', 'f-source', 'f-address', 'f-budget', 'f-intent', 'f-risk', 'f-needRemark', 'f-income', 'f-mortgage', 'f-debt', 'f-elderly', 'f-height', 'f-weight', 'f-exam', 'f-smoking', 'f-drinking', 'f-exercise', 'f-healthRemark', 'f-nextFollow', 'f-followInput'];
     ids.forEach(function(id) { setVal(id, ''); });
+    // 重置头像
+    avatarBase64 = null;
+    var _apImg = document.getElementById('avatarPreviewImg');
+    var _apNo = document.getElementById('avatarNoPhoto');
+    if (_apImg) { _apImg.style.display = 'none'; _apImg.removeAttribute('src'); }
+    if (_apNo) _apNo.style.display = 'flex';
+    var _af = document.getElementById('f-avatar');
+    if (_af) _af.value = '';
     ['f-needFocus', 'f-insuredTarget', 'f-eduStage', 'f-history', 'f-familyHistory'].forEach(function(cid) {
       setCheckboxes(cid, []);
     });
@@ -4071,6 +4178,7 @@ function renderDistrictNav() {
       visitPlan: document.getElementById('f-visitPlan').value,
       source: document.getElementById('f-source').value,
       address: document.getElementById('f-address').value.trim(),
+      avatarBase64: avatarBase64,
       lat: geoLat,
       lng: geoLng,
       familyId: getFamilyIdForForm(),
@@ -4171,7 +4279,63 @@ function renderDistrictNav() {
     } else {
       clearForm();
     }
+    bindAvatarInput();
     showView('edit');
+  }
+
+  // ================= 头像上传（压缩后存base64） =================
+  function compressImage(file, maxSize, cb) {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var w = img.width, h = img.height;
+        if (w > maxSize) { h = h * maxSize / w; w = maxSize; }
+        if (h > maxSize) { w = w * maxSize / h; h = maxSize; }
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        try { cb(canvas.toDataURL('image/jpeg', 0.72)); }
+        catch (e) { try { cb(canvas.toDataURL('image/png')); } catch (e2) { cb(null); } }
+      };
+      img.onerror = function() { showToast('图片读取失败'); };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function bindAvatarInput() {
+    var input = document.getElementById('f-avatar');
+    var clearBtn = document.getElementById('avatarClearBtn');
+    if (input && !input.__avatarBound) {
+      input.__avatarBound = true;
+      input.addEventListener('change', function() {
+        var file = this.files && this.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) { showToast('图片过大，请选择10MB以内'); return; }
+        compressImage(file, 400, function(base64) {
+          if (!base64) { showToast('图片处理失败，请换一张'); return; }
+          avatarBase64 = base64;
+          var _apImg = document.getElementById('avatarPreviewImg');
+          var _apNo = document.getElementById('avatarNoPhoto');
+          if (_apImg) { _apImg.src = base64; _apImg.style.display = 'block'; }
+          if (_apNo) _apNo.style.display = 'none';
+          showToast('头像已选择，保存客户后生效');
+        });
+      });
+    }
+    if (clearBtn && !clearBtn.__avatarBound) {
+      clearBtn.__avatarBound = true;
+      clearBtn.addEventListener('click', function() {
+        avatarBase64 = null;
+        var _apImg = document.getElementById('avatarPreviewImg');
+        var _apNo = document.getElementById('avatarNoPhoto');
+        if (_apImg) { _apImg.style.display = 'none'; _apImg.removeAttribute('src'); }
+        if (_apNo) _apNo.style.display = 'flex';
+        if (input) input.value = '';
+        showToast('已移除头像');
+      });
+    }
   }
 
   function saveClient() {
@@ -4227,8 +4391,12 @@ function renderDistrictNav() {
     var html = '';
 
     // 头部
+    var _dAvatar = b.avatarBase64 || b.avatar
+      ? '<div class="detail-avatar"><img src="' + escapeHtml(b.avatarBase64 || b.avatar) + '" alt="头像"></div>'
+      : '<div class="detail-avatar">' + escapeHtml((b.name || '客').charAt(0)) + '</div>';
     html += '<div class="detail-head">';
     html += '<div>';
+    html += _dAvatar;
     html += '<div class="detail-name">' + escapeHtml(b.name || '未命名客户') +
       (b.gender ? '<span class="gender-tag" style="font-size:13px;font-weight:400;color:var(--text-secondary);background:#F1F5F4;border-radius:10px;padding:2px 10px">' + escapeHtml(b.gender) + '</span>' : '') +
       '</div>';
@@ -5205,6 +5373,9 @@ function renderDistrictNav() {
   showView('list');
   var _mm0 = document.getElementById('modalMask');
   if (_mm0) _mm0.classList.remove('show');
+  // 加载完成后隐藏加载遮罩
+  var _lm = document.getElementById('loadingMask');
+  if (_lm) { _lm.classList.add('hide'); if (_lm.parentNode) _lm.parentNode.removeChild(_lm); }
   checkLock();
 
 
@@ -5384,15 +5555,65 @@ function _rEnsureAmap(cb) {
   window._AMapSecurityConfig = { securityJsCode: localStorage.getItem('mc_visit_amap_jscode') || _rDefJs };
   var s = document.createElement('script');
   s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(key);
+  function _showMapError(msg) {
+    var tip = _r$('routeMapErrorTip');
+    if (tip) { tip.textContent = msg; tip.classList.add('show'); }
+    var tip2 = document.getElementById('mapErrorTip');
+    if (tip2) { tip2.textContent = msg; tip2.classList.add('show'); }
+  }
   s.onload = function() {
-    if (typeof AMap === 'undefined') { _amapLoading = false; showToast('高德地图加载失败，请检查 Key'); return; }
+    if (typeof AMap === 'undefined') { _amapLoading = false; _showMapError('高德地图加载失败，请检查 Key 是否正确'); showToast('高德地图加载失败，请检查 Key'); return; }
     AMap.plugin(['AMap.Geocoder', 'AMap.Driving', 'AMap.Transfer', 'AMap.Walking', 'AMap.Riding'], function() { _amapReady = true; _amapLoading = false; cb(); });
   };
-  s.onerror = function() { _amapLoading = false; showToast('无法连接高德地图服务，请检查网络'); };
+  s.onerror = function() { _amapLoading = false; _showMapError('无法连接高德地图服务，请检查网络或稍后重试'); showToast('无法连接高德地图服务，请检查网络'); };
   document.head.appendChild(s);
+}
+function renderRouteChecklist() {
+  var box = _r$('routeChecklist');
+  if (!box) return;
+  var withAddr = clients.filter(function(c) { var b = c.basic || {}; return b.address || (b.lat != null && b.lng != null); });
+  if (!withAddr.length) { box.innerHTML = '<div class="vq-empty">暂无带地址的客户，请先录入地址</div>'; return; }
+  box.innerHTML = withAddr.map(function(c) {
+    var b = c.basic || {};
+    var addr = [b.city || '', b.district || '', b.address || ''].join('').trim() || (b.lat != null ? '已定位' : '');
+    var checked = !!routeSelected[c.id];
+    return '<label class="route-check-item"><input type="checkbox" ' + (checked ? 'checked' : '') + ' data-cid="' + c.id + '"><span class="nm">' + _rEsc(b.name || '未命名') + '</span><span class="ad">' + _rEsc(addr) + '</span></label>';
+  }).join('');
+  box.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var id = this.getAttribute('data-cid');
+      if (this.checked) routeSelected[id] = true; else delete routeSelected[id];
+      updateRouteBar(); renderList();
+    });
+  });
+}
+function bindRoutePanel() {
+  var head = _r$('routeClientPanelHead');
+  var panel = _r$('routeClientPanel');
+  if (head && panel && !head.__bound) {
+    head.__bound = true;
+    head.addEventListener('click', function() { panel.classList.toggle('open'); });
+  }
+  var all = _r$('routeCheckAll');
+  if (all && !all.__bound) {
+    all.__bound = true;
+    all.addEventListener('change', function() {
+      var box = _r$('routeChecklist');
+      if (!box) return;
+      var cbs = box.querySelectorAll('input[type=checkbox]');
+      cbs.forEach(function(cb) { cb.checked = all.checked; });
+      routeSelected = {};
+      if (all.checked) {
+        cbs.forEach(function(cb) { routeSelected[cb.getAttribute('data-cid')] = true; });
+      }
+      updateRouteBar(); renderList();
+    });
+  }
 }
 function openRouteModal(ids) {
   _r$('routeModal').classList.add('open');
+  bindRoutePanel();
+  renderRouteChecklist();
   _rEnsureAmap(function() {
     initRouteMap();
     setTimeout(function() { if (_routeMap && _routeMap.resize) _routeMap.resize(); }, 120);
