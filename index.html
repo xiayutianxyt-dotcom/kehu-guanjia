@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>客户资料管家</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 /* ===== 全局重置与基础 ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 body {
   font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #F0F4F3;
+  background: #F0F5F2;
   color: #1A2E2B;
   line-height: 1.6;
   min-height: 100vh;
@@ -21,34 +20,38 @@ body {
 
 /* ===== 品牌色板 ===== */
 :root {
-  --primary: #0D9488;
-  --primary-dark: #0F766E;
-  --primary-light: #CCFBF1;
-  --navy: #1E3A5F;
+  --primary: #0E7C5B;
+  --primary-dark: #0A5F46;
+  --primary-light: #D4EDE2;
+  --navy: #143D2E;
   --accent: #F59E0B;
   --accent-light: #FEF3C7;
-  --bg: #F0F4F3;
+  --bg: #F0F5F2;
   --card: #FFFFFF;
-  --text: #1A2E2B;
-  --text-secondary: #5C7370;
-  --text-muted: #8FA3A0;
-  --border: #E2E8E7;
+  --text: #1B2A24;
+  --text-secondary: #485F56;
+  --text-muted: #7E938B;
+  --border: #DFE8E3;
   --danger: #DC2626;
-  --success: #059669;
+  --success: #0E7C5B;
   --radius: 14px;
   --radius-sm: 8px;
-  --shadow: 0 2px 12px rgba(13, 148, 136, 0.08);
-  --shadow-lg: 0 8px 32px rgba(13, 148, 136, 0.14);
+  --shadow: 0 2px 12px rgba(14, 124, 91, 0.08);
+  --shadow-lg: 0 8px 32px rgba(14, 124, 91, 0.14);
 }
 
 /* ===== 顶部品牌栏 ===== */
 .header {
-  background: linear-gradient(135deg, var(--navy) 0%, #16283F 100%);
+  background: linear-gradient(135deg, var(--navy) 0%, #132821 100%);
   color: #fff;
-  padding: 16px 20px 14px;
+  padding: 12px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   box-shadow: 0 4px 20px rgba(22, 40, 63, 0.25);
 }
 .header-brand {
@@ -81,7 +84,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 .header-btn {
   display: inline-flex;
@@ -142,15 +146,38 @@ body {
 .add-client-btn { margin-bottom: 14px; }
 
 /* ===== 区县横向导航 ===== */
-.district-nav {
+.district-fold { margin-bottom: 10px; }
+.district-fold-head {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 6px 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.district-fold-head .df-title { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+.district-fold-head .df-label { flex: 1; text-align: right; color: var(--primary-dark); font-weight: 700; }
+.district-fold-head .df-arrow { display: flex; transition: transform .2s; color: var(--text-muted); }
+.district-fold.open .district-fold-head .df-arrow { transform: rotate(180deg); }
+.district-nav {
+  display: none;
   gap: 8px;
   overflow-x: auto;
-  padding: 2px 2px 12px;
-  margin-bottom: 4px;
+  padding: 10px 2px 2px;
+  margin-bottom: 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
+.district-fold.open .district-nav { display: flex; }
 .district-nav::-webkit-scrollbar { display: none; }
 .district-tab {
   flex-shrink: 0;
@@ -238,17 +265,90 @@ body {
   border-top: 1px solid var(--border);
 }
 .need-qa-card.open .need-qa-body { display: block; }
+/* 需求分析三个卡片头部统一为深绿渐变白字（与客户性格分析一致） */
+#needQaCard .need-qa-head,
+#faqCard .need-qa-head {
+  background: linear-gradient(135deg, #0A5F46, #0E7C5B);
+  color: #fff;
+}
+#needQaCard .need-qa-title,
+#faqCard .need-qa-title { color: #fff; }
+#needQaCard .need-qa-arrow,
+#faqCard .need-qa-arrow { color: rgba(255,255,255,.8); }
+/* 性格分析卡片与需求分析问答表颜色统一 */
+#discCard { margin-bottom: 12px; }
+#discCard .form-card-title {
+  margin-bottom: 0;
+  padding: 14px 16px;
+  cursor: pointer;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+}
+#discCard .form-card-title .form-card-sub { margin-left: 2px; }
+#discCard #discBody {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border);
+}
 .need-qa-desc {
   font-size: 12px;
   color: var(--text-muted);
   line-height: 1.7;
   margin: 12px 0 4px;
 }
+/* ===== 客户答疑速查 ===== */
+.faq-tabs { display: flex; gap: 8px; margin: 12px 0 4px; }
+.faq-tab {
+  flex: 1;
+  min-height: 38px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #F5F9F7;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.faq-tab.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; }
+.faq-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 2px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.faq-arrow { color: var(--text-muted); transition: transform 0.2s; display: flex; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-item-body { display: none; padding: 0 2px 12px; }
+.faq-item.open .faq-item-body { display: block; }
+.faq-item-body p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0;
+  background: #F2F7F5;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
 .need-qa-q { margin-top: 14px; }
 .need-qa-q .field-label { margin-bottom: 8px; }
 .need-qa-result {
   margin-top: 14px;
-  background: #F7FAF9;
+  background: #F2F7F5;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;
@@ -324,7 +424,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .family-member:last-child { border-bottom: none; }
-.family-member:active { background: #F8FAFA; }
+.family-member:active { background: #F5F9F7; }
 .family-member-left { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--text); flex-wrap: wrap; }
 .family-member-role {
   font-size: 12px;
@@ -347,7 +447,7 @@ body {
 /* ===== 疾病明细（选中疾病后展开） ===== */
 .disease-details { margin-top: 6px; }
 .disease-detail {
-  background: #F7FAF9;
+  background: #F2F7F5;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
@@ -384,7 +484,7 @@ body {
   align-items: end;
   padding: 12px;
   margin-bottom: 8px;
-  background: #F8FAFA;
+  background: #F5F9F7;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
@@ -406,7 +506,7 @@ body {
 .fin-block {
   margin-top: 6px;
   padding: 10px;
-  background: #F8FAFA;
+  background: #F5F9F7;
   border-radius: 8px;
 }
 .fin-block-title {
@@ -428,6 +528,29 @@ body {
   padding-top: 4px;
 }
 
+/* ===== 列表头部与紧凑工具栏 ===== */
+.list-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.btn-sm {
+  min-height: 34px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+.list-tools-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.list-tools-row .search-box { flex: 1 1 180px; min-width: 140px; }
+.list-tools-row .filter-select { flex-shrink: 0; min-height: 38px; }
+.list-tools-row .view-switch .view-switch-tab { min-height: 34px; padding: 6px 12px; font-size: 13px; }
 /* ===== 搜索与筛选 ===== */
 .toolbar {
   display: flex;
@@ -454,7 +577,7 @@ body {
 .search-box input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 124, 91, 0.1);
 }
 .search-box svg {
   position: absolute;
@@ -549,8 +672,8 @@ body {
 .tag-disc-D { background: #FEE2E2; color: #B91C1C; }
 .tag-disc-I { background: #FEF9C3; color: #854D0E; }
 .tag-disc-S { background: #DCFCE7; color: #166534; }
-.tag-disc-C { background: #DBEAFE; color: #1E40AF; }
-.tag-follow { background: #EFF6FF; color: #1D4ED8; }
+.tag-disc-C { background: #D4EDE2; color: #1E40AF; }
+.tag-follow { background: #E9F4EF; color: #0A5F46; }
 .client-empty {
   text-align: center;
   padding: 60px 20px;
@@ -583,7 +706,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.35);
+  box-shadow: 0 8px 24px rgba(14, 124, 91, 0.35);
   cursor: pointer;
   z-index: 90;
   -webkit-tap-highlight-color: transparent;
@@ -618,7 +741,7 @@ body {
   gap: 6px;
 }
 #discHead {
-  background: linear-gradient(135deg, #0F766E, #0D9488);
+  background: linear-gradient(135deg, #0A5F46, #0E7C5B);
   color: #fff;
   border-radius: 12px;
   padding: 12px 14px;
@@ -655,7 +778,7 @@ body {
   font-size: 16px;
   font-family: inherit;
   color: var(--text);
-  background: #F8FAFA;
+  background: #F5F9F7;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
@@ -668,7 +791,7 @@ body {
   outline: none;
   border-color: var(--primary);
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 124, 91, 0.1);
 }
 .field-input::placeholder,
 .field-textarea::placeholder { color: var(--text-muted); font-size: 13px; }
@@ -711,7 +834,7 @@ body {
   font-size: 13px;
   font-weight: 400;
   color: var(--text-secondary);
-  background: #F8FAFA;
+  background: #F5F9F7;
   border: 1.5px solid var(--border);
   border-radius: 20px;
   cursor: pointer;
@@ -736,7 +859,7 @@ body {
   align-items: end;
   padding: 12px;
   margin-bottom: 8px;
-  background: #F8FAFA;
+  background: #F5F9F7;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
@@ -829,7 +952,7 @@ body {
   font-size: 12px;
   font-weight: 400;
   color: var(--text-secondary);
-  background: #F8FAFA;
+  background: #F5F9F7;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -846,7 +969,7 @@ body {
 
 /* ===== 性格画像卡片 ===== */
 .profile-card {
-  background: linear-gradient(135deg, #F0FDFA 0%, #F8FAFA 100%);
+  background: linear-gradient(135deg, #E9F4EF 0%, #F5F9F7 100%);
   border: 1.5px solid var(--primary-light);
   border-radius: var(--radius);
   padding: 16px;
@@ -888,7 +1011,7 @@ body {
 .profile-score-bar {
   flex: 1;
   height: 8px;
-  background: #E8EFEE;
+  background: #E6EDE9;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -903,7 +1026,7 @@ body {
 .ai-port {
   margin-top: 12px;
   padding: 10px 12px;
-  background: #F8FAFC;
+  background: #F3F8F6;
   border: 1px dashed var(--border);
   border-radius: var(--radius-sm);
   font-size: 12px;
@@ -917,7 +1040,7 @@ body {
   font-weight: 500;
   font-family: inherit;
   color: #fff;
-  background: linear-gradient(135deg, var(--navy) 0%, #16283F 100%);
+  background: linear-gradient(135deg, var(--navy) 0%, #132821 100%);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -1009,7 +1132,7 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+  box-shadow: 0 4px 14px rgba(14, 124, 91, 0.3);
 }
 .btn-secondary {
   background: #F1F5F4;
@@ -1097,7 +1220,7 @@ body {
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
   font-size: 12px;
   color: var(--text-muted);
-  background: #F8FAFA;
+  background: #F5F9F7;
   border-top: 1px solid var(--border);
   line-height: 1.6;
 }
@@ -1200,7 +1323,7 @@ body {
   height: 56px;
   margin: 0 auto 14px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #1F4E5F, #2E8B8B);
+  background: linear-gradient(135deg, #1E4D3C, #2E7D66);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1224,6 +1347,9 @@ body {
 
 /* ===== 响应式 ===== */
 @media (max-width: 600px) {
+  .header { flex-wrap: wrap; padding: 10px 12px; }
+  .header-brand { flex: 1 1 auto; }
+  .header-actions { margin-top: 0; }
   .kv-grid { grid-template-columns: repeat(2, 1fr); }
   .policy-row { grid-template-columns: repeat(2, 1fr); }
   .disc-q-options { grid-template-columns: 1fr; }
@@ -1239,7 +1365,7 @@ body {
 .client-card { position: relative; }
 .route-check { position: absolute; top: 8px; right: 8px; z-index: 3; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #fff; border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .route-check input { width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer; margin: 0; }
-.client-card.sel { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(13,148,136,0.12); }
+.client-card.sel { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(14,124,91,0.12); }
 .route-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
 .route-bar .sel-count { font-size: 13px; color: var(--text-secondary); flex: 1; min-width: 0; }
 .route-bar .btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
@@ -1259,7 +1385,8 @@ body {
 .route-no { width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary-dark); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .route-item .nm { font-weight: 600; color: var(--text); }
 .route-item .ad { color: var(--text-muted); font-size: 12px; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 6px; }
-.route-actions { display: flex; gap: 8px; }
+.route-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.route-actions .btn { flex: 1; min-width: 96px; }
 .route-actions .btn { flex: 1; }
 .route-print-only { display: none; }
 .route-print-only h3 { font-size: 16px; margin-bottom: 10px; }
@@ -1301,19 +1428,19 @@ body {
 /* ===== 主导航 ===== */
 .main-nav { display:flex; gap:8px; padding:12px 0 10px; }
 .main-tab { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 2px 10px; border:none; border-radius:14px; background:transparent; color:var(--text-muted); font-size:12px; font-weight:700; cursor:pointer; }
-.main-tab.active { background:var(--card); color:var(--primary); box-shadow:0 2px 12px rgba(13,148,136,.10); }
+.main-tab.active { background:var(--card); color:var(--primary); box-shadow:0 2px 12px rgba(14,124,91,.10); }
 .main-tab .mt-ico { width:40px; height:40px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--text-muted); }
 .main-tab.active .mt-ico { background:var(--primary); color:#fff; }
-.main-tab[data-tab=client].active { color:#0D9488; }
-.main-tab[data-tab=client].active .mt-ico { background:#0D9488; }
-.main-tab[data-tab=qa].active { color:#2563EB; }
-.main-tab[data-tab=qa].active .mt-ico { background:#2563EB; }
+.main-tab[data-tab=client].active { color:#0E7C5B; }
+.main-tab[data-tab=client].active .mt-ico { background:#0E7C5B; }
+.main-tab[data-tab=qa].active { color:#0E7C5B; }
+.main-tab[data-tab=qa].active .mt-ico { background:#0E7C5B; }
 .main-tab[data-tab=visit].active { color:#EA580C; }
 .main-tab[data-tab=visit].active .mt-ico { background:#EA580C; }
 .main-tab[data-tab=map].active { color:#7C3AED; }
 .main-tab[data-tab=map].active .mt-ico { background:#7C3AED; }
-.main-tab[data-tab=client]:not(.active) .mt-ico { background:rgba(13,148,136,.12); color:#0D9488; }
-.main-tab[data-tab=qa]:not(.active) .mt-ico { background:rgba(37,99,235,.12); color:#2563EB; }
+.main-tab[data-tab=client]:not(.active) .mt-ico { background:rgba(14,124,91,.12); color:#0E7C5B; }
+.main-tab[data-tab=qa]:not(.active) .mt-ico { background:rgba(14,124,91,.12); color:#0E7C5B; }
 .main-tab[data-tab=visit]:not(.active) .mt-ico { background:rgba(234,88,12,.12); color:#EA580C; }
 .main-tab[data-tab=map]:not(.active) .mt-ico { background:rgba(124,58,237,.12); color:#7C3AED; }
 .sub-nav { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none; }
@@ -1328,11 +1455,22 @@ body {
 .map-tools { display:flex; gap:8px; margin:10px 0 2px; align-items:center; flex-wrap:wrap; }
 .map-nav-mode { display:flex; gap:6px; background:#EEF6F4; border-radius:10px; padding:4px; flex:1; }
 .mode-tab { flex:1; border:none; background:transparent; padding:8px 4px; border-radius:8px; font-size:13px; font-weight:700; color:var(--text-muted); cursor:pointer; }
-.mode-tab.active { background:#fff; color:#0D9488; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-.vq-nav { flex-shrink:0; font-size:12px; font-weight:700; color:#0D9488; text-decoration:none; border:1px solid rgba(13,148,136,.35); border-radius:8px; padding:4px 10px; }
-.vq-nav:active { background:#0D9488; color:#fff; }
+.mode-tab.active { background:#fff; color:#0E7C5B; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+.vq-nav { flex-shrink:0; font-size:12px; font-weight:700; color:#0E7C5B; text-decoration:none; border:1px solid rgba(14,124,91,.35); border-radius:8px; padding:4px 10px; }
+.vq-nav:active { background:#0E7C5B; color:#fff; }
+#routeMapBox { height: 540px; border-radius: 12px; overflow: hidden; margin-top: 12px; background: #e8f0ee; }
+@media (max-width: 640px) { #routeMapBox { height: 380px; } }
 .routeMapBox-expanded { height: calc(100vh - 250px) !important; }
 #mapVqPanel { margin-top:12px; }
+#mapVqPanel .map-tools { margin:10px 14px 14px; }
+#mapVqHead .vq-head-ops { display:flex; align-items:center; gap:6px; margin-left:auto; flex-shrink:0; }
+#mapVqHead .vq-head-ops .btn { padding:6px 10px; font-size:12px; min-height:32px; }
+#mapVqHead .vq-head-ops .btn svg { margin-right:3px; }
+@media (max-width: 480px) {
+  #mapVqHead { flex-wrap: wrap; }
+  #mapVqHead .vq-head-ops { width:100%; margin-left:0; justify-content:flex-end; padding-top:2px; }
+  #mapVqHead .vq-head-ops .btn { flex:1; }
+}
 .need-qa-result-sub { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; padding-top: 4px; }
 .risk-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 12px; flex-wrap: wrap; }
 .risk-name { width: 92px; flex-shrink: 0; color: var(--text); font-weight: 600; }
@@ -1345,7 +1483,7 @@ body {
 /* ===== 新增：全局加载遮罩 ===== */
 .loading-mask { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; transition: opacity .3s; }
 .loading-mask.hide { opacity: 0; pointer-events: none; }
-.load-spinner { width: 40px; height: 40px; border: 4px solid #CCFBF1; border-top-color: #0D9488; border-radius: 50%; animation: spin .8s linear infinite; }
+.load-spinner { width: 40px; height: 40px; border: 4px solid #D4EDE2; border-top-color: #0E7C5B; border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .load-text { font-size: 14px; color: #1A2E2B; font-weight: 500; }
 
@@ -1380,7 +1518,7 @@ body {
 .route-panel.open .rp-arrow { transform: rotate(180deg); }
 .route-panel-body { display: none; }
 .route-panel.open .route-panel-body { display: block; }
-.route-checklist { max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; margin-bottom: 8px; background: #F8FAFA; }
+.route-checklist { max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; margin-bottom: 8px; background: #F5F9F7; }
 .route-checklist label { display: flex; align-items: center; gap: 8px; padding: 6px 2px; font-size: 13px; cursor: pointer; border-bottom: 1px dashed #EDF1F0; }
 .route-checklist label.route-check-item { display: flex; align-items: center; gap: 8px; }
 .route-checklist label:last-child { border-bottom: none; }
@@ -1450,13 +1588,21 @@ body {
 
   <!-- ===== 视图：客户列表 ===== -->
   <section class="view active" id="view-list">
-    <div class="page-title">客户档案</div>
-    <p class="page-desc">管理您的保险客户资料，点击客户卡片查看详情</p>
-    <button class="btn btn-primary btn-block add-client-btn" id="addClientBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      录入客户信息
-    </button>
-    <div class="district-nav" id="districtNav"></div>
+    <div class="list-head-row">
+      <div class="page-title" style="margin-bottom:0">客户档案</div>
+      <button class="btn btn-primary btn-sm" id="addClientBtn" style="flex-shrink:0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        录入客户
+      </button>
+    </div>
+    <div class="district-fold" id="districtFold">
+      <button type="button" class="district-fold-head" id="districtFoldHead">
+        <span class="df-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 区县筛选</span>
+        <span class="df-label" id="districtFoldLabel">全部区县</span>
+        <span class="df-arrow" id="dfArrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      </button>
+      <div class="district-nav" id="districtNav"></div>
+    </div>
 
     <div class="need-qa-card" id="needQaCard">
       <div class="need-qa-head" id="needQaToggle">
@@ -1680,11 +1826,11 @@ body {
       </div>
     </div>
 
-    <div class="view-switch" id="viewSwitch">
-      <button class="view-switch-tab active" data-v="client">按客户</button>
-      <button class="view-switch-tab" data-v="family">按家庭</button>
-    </div>
-    <div class="toolbar">
+    <div class="list-tools-row">
+      <div class="view-switch" id="viewSwitch" style="margin-bottom:0;flex-shrink:0">
+        <button class="view-switch-tab active" data-v="client">按客户</button>
+        <button class="view-switch-tab" data-v="family">按家庭</button>
+      </div>
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <input type="text" id="searchInput" placeholder="搜索姓名、手机号、企业">
@@ -1696,35 +1842,6 @@ body {
         <option value="低">低意向</option>
         <option value="暂缓">暂缓</option>
       </select>
-    </div>
-        <div class="route-bar">
-      <button class="btn btn-secondary" id="routeModeBtn" style="flex-shrink:0;min-height:40px">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-        勾选客户
-      </button>
-      <span class="sel-count" id="routeSelCount">已选 0 位</span>
-      <button class="btn btn-primary" id="routePlanBtn" disabled style="flex-shrink:0;min-height:40px">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-        规划拜访路线
-      </button>
-    </div>
-    <div class="vq-panel" id="vqPanel">
-      <div class="vq-head" id="vqHead">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg>
-        <span class="vq-title">待拜访客户</span>
-        <span class="vq-count" id="vqCount">0 位</span>
-        <span class="vq-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
-      </div>
-      <div class="vq-body">
-        <div class="vq-list" id="vqList"></div>
-        <div class="vq-foot">
-          <button class="btn btn-primary" id="vqPlanBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-            按此顺序规划路线
-          </button>
-          <button class="btn btn-secondary" id="vqClearBtn">清空</button>
-        </div>
-      </div>
     </div>
 <div id="clientList"></div>
   </section>
@@ -1739,37 +1856,33 @@ body {
 
   <!-- ===== 拜访地图 ===== -->
   <section class="nav-section" id="sec-map">
-    <div class="page-title">拜访地图</div>
-    <p class="page-desc">勾选客户或从待拜访列表一键规划当日路线</p>
-    <div class="map-actions">
-      <button class="btn btn-secondary" id="mapPickBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg> 去勾选客户</button>
-      <button class="btn btn-primary" id="mapPlanSelBtn" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> 规划选中路线</button>
-    </div>
-    <div class="vq-panel open" id="mapVqPanel">
-      <div class="vq-head" id="mapVqHead">
+    <div class="vq-panel" id="mapVqPanel">
+      <div class="vq-head" id="mapVqHead" title="点击展开/折叠客户列表">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg>
         <span class="vq-title">待拜访客户</span>
         <span class="vq-count" id="mapVqCount">0 位</span>
+        <span class="vq-head-ops">
+          <button class="btn btn-secondary" id="mapStartBtn" title="设置拜访起点，规划时从起点串联客户"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> 起点</button>
+          <button class="btn btn-primary" id="mapVqPlanBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> 按此顺序规划路线</button>
+          <button class="btn btn-secondary" id="mapVqClearBtn">清空</button>
+        </span>
+        <span class="vq-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
       </div>
       <div class="vq-body">
         <div class="vq-list" id="mapVqList"></div>
-        <div class="vq-foot">
-          <button class="btn btn-primary" id="mapVqPlanBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> 按此顺序规划路线</button>
-          <button class="btn btn-secondary" id="mapVqClearBtn">清空</button>
+        <div class="map-tools">
+          <div class="map-nav-mode" id="mapNavMode">
+            <button type="button" class="mode-tab active" data-mode="car">驾车</button>
+            <button type="button" class="mode-tab" data-mode="bus">公交</button>
+            <button type="button" class="mode-tab" data-mode="walk">步行</button>
+            <button type="button" class="mode-tab" data-mode="ride">骑行</button>
+          </div>
+          <button type="button" class="btn btn-secondary" id="mapExpandBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">放大地图</button>
+          <button type="button" class="btn btn-primary" id="mapNavLinkBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">高德导航</button>
         </div>
       </div>
     </div>
-    <div class="map-tools">
-      <div class="map-nav-mode" id="mapNavMode">
-        <button type="button" class="mode-tab active" data-mode="car">驾车</button>
-        <button type="button" class="mode-tab" data-mode="bus">公交</button>
-        <button type="button" class="mode-tab" data-mode="walk">步行</button>
-        <button type="button" class="mode-tab" data-mode="ride">骑行</button>
-      </div>
-      <button type="button" class="btn btn-secondary" id="mapExpandBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">放大地图</button>
-      <button type="button" class="btn btn-primary" id="mapNavLinkBtn" style="flex-shrink:0;min-height:42px;padding:0 14px">高德导航</button>
-    </div>
-    <div id="routeMapBox" style="height:340px;border-radius:12px;overflow:hidden;margin-top:12px;background:#e8f0ee"></div>
+    <div id="routeMapBox"></div>
   </section>
 
   <!-- ===== 视图：编辑 ===== -->
@@ -2234,7 +2347,7 @@ body {
         <button type="button" class="btn btn-primary" id="discGenBtn" style="flex:1">生成分析表</button>
         <button type="button" class="btn btn-secondary" id="discSaveToBtn" style="flex:1">录入客户信息</button>
       </div>
-      <div id="discSaveSection" style="display:none;margin-top:10px;padding:10px;background:#f0f7f5;border-radius:10px">
+      <div id="discSaveSection" style="display:none;margin-top:10px;padding:10px;background:#eef4fb;border-radius:10px">
         <label class="field-label">保存测评结果到客户档案</label>
         <div class="field-row" style="gap:8px">
           <input type="text" class="field-input" id="discNewName" placeholder="输入姓名，自动新建客户档案" maxlength="20" style="flex:1">
@@ -2341,8 +2454,6 @@ body {
   <div class="map-modal-hint">拖动地图浏览，点击地图上的目标位置即可选点；搜索到地址后点击结果可跳转。定位信息仅保存在本机。</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-</script>
 
 <!-- ===== 访问密码锁 ===== -->
 <div class="lock-mask" id="lockScreen">
@@ -2447,9 +2558,25 @@ body {
     <div class="route-list" id="routeList"><div style="color:var(--text-muted);font-size:13px;padding:10px 0">正在计算最优拜访顺序…</div></div>
     <div class="route-actions">
       <button class="btn btn-primary" id="routePrintBtn">打印拜访清单</button>
+      <button class="btn btn-secondary" id="routeSendCarBtn">高德App导航</button>
       <button class="btn btn-secondary" id="routeClearBtn">清空勾选</button>
     </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:10px 0 0;line-height:1.7">「高德App导航」会调起手机高德地图App开始导航；发送到车机请在手机高德App内点「发送到汽车」（需车机登录同一高德账号，24小时内有效）。</p>
     <div class="route-print-only" id="routePrintArea"></div>
+  </div>
+</div>
+
+<!-- 起点设置弹窗 -->
+<div class="modal-mask" id="startMask">
+  <div class="modal-box" style="max-width:420px;text-align:left">
+    <div class="modal-title" style="text-align:center">设置拜访起点</div>
+    <p class="modal-text">起点作为路线第一站，从起点出发串联所有待拜访客户（适合填公司、家等实际出发地）。</p>
+    <input type="text" id="startAddrInput" placeholder="输入起点地址，如：杭州市西湖区文三路138号" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;margin-bottom:10px;box-sizing:border-box;outline:none">
+    <div class="modal-actions" style="margin-bottom:8px">
+      <button class="btn btn-secondary" id="startUseCurrentBtn">用我的位置</button>
+      <button class="btn btn-primary" id="startSaveBtn">确定起点</button>
+    </div>
+    <div id="startResult" style="font-size:13px;color:var(--text-secondary);line-height:1.6;min-height:20px;text-align:center"></div>
   </div>
 </div>
 
@@ -2594,27 +2721,21 @@ body {
   function openGeoModal() {
     var modal = document.getElementById('mapModal');
     modal.classList.add('show');
-    if (typeof L === 'undefined') {
-      showToast('地图组件加载失败，请联网后刷新重试');
-      return;
-    }
-    var lat = geoLat != null ? geoLat : 30.2590;
-    var lng = geoLng != null ? geoLng : 120.1650;
-    if (geoMap) { geoMap.remove(); geoMap = null; }
-    geoMap = L.map('geoMap').setView([lat, lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(geoMap);
-    if (geoLat != null && geoLng != null) {
-      geoMarker = L.marker([geoLat, geoLng]).addTo(geoMap);
-    }
-    geoMap.on('click', function(e) {
-      if (geoMarker) { geoMarker.setLatLng(e.latlng); }
-      else { geoMarker = L.marker(e.latlng).addTo(geoMap); }
+    _rEnsureAmap(function() {
+      var lat = geoLat != null ? geoLat : 30.2590;
+      var lng = geoLng != null ? geoLng : 120.1650;
+      if (geoMap) { geoMap.destroy(); geoMap = null; }
+      geoMap = new AMap.Map('geoMap', { zoom: 13, center: [lng, lat], mapStyle: 'amap://styles/fresh' });
+      if (geoLat != null && geoLng != null) {
+        geoMarker = new AMap.Marker({ position: [geoLng, geoLat], map: geoMap });
+      }
+      geoMap.on('click', function(e) {
+        if (geoMarker) { geoMarker.setPosition(e.lnglat); }
+        else { geoMarker = new AMap.Marker({ position: e.lnglat, map: geoMap }); }
+      });
+      document.getElementById('geoSearchResults').style.display = 'none';
+      setTimeout(function() { if (geoMap && geoMap.resize) geoMap.resize(); }, 120);
     });
-    document.getElementById('geoSearchResults').style.display = 'none';
-    setTimeout(function() { if (geoMap) geoMap.invalidateSize(); }, 120);
   }
 
   function closeGeoModal() {
@@ -2627,9 +2748,9 @@ body {
       showToast('请先在地图上点击选择客户家庭位置');
       return;
     }
-    var ll = geoMarker.getLatLng();
-    geoLat = Math.round(ll.lat * 1e6) / 1e6;
-    geoLng = Math.round(ll.lng * 1e6) / 1e6;
+    var pos = geoMarker.getPosition();
+    geoLat = Math.round(pos.lat * 1e6) / 1e6;
+    geoLng = Math.round(pos.lng * 1e6) / 1e6;
     closeGeoModal();
     updateGeoStatus();
     showToast('家庭地址定位成功');
@@ -2641,46 +2762,42 @@ body {
     var box = document.getElementById('geoSearchResults');
     box.style.display = 'block';
     box.innerHTML = '<div class="geo-result-item">搜索中…</div>';
-    fetch('https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=zh-CN&q=' + encodeURIComponent(q))
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!data || !data.length) {
-          box.innerHTML = '<div class="geo-result-item">未找到该地址，请直接在地图上点选位置</div>';
-          return;
-        }
-        box.innerHTML = data.map(function(item) {
-          return '<div class="geo-result-item" data-lat="' + item.lat + '" data-lng="' + item.lon + '">' + escapeHtml(item.display_name) + '</div>';
-        }).join('');
-        box.querySelectorAll('.geo-result-item[data-lat]').forEach(function(el) {
-          el.addEventListener('click', function() {
-            var lat = parseFloat(this.getAttribute('data-lat'));
-            var lng = parseFloat(this.getAttribute('data-lng'));
-            if (geoMap) geoMap.setView([lat, lng], 16);
-            if (geoMarker) { geoMarker.setLatLng([lat, lng]); }
-            else { geoMarker = L.marker([lat, lng]).addTo(geoMap); }
-            box.style.display = 'none';
+    _rEnsureAmap(function() {
+      AMap.plugin('AMap.PlaceSearch', function() {
+        var ps = new AMap.PlaceSearch({ pageSize: 5, pageIndex: 1, city: '全国' });
+        ps.search(q, function(status, result) {
+          if (status !== 'complete' || !result.poiList || !result.poiList.pois || !result.poiList.pois.length) {
+            box.innerHTML = '<div class="geo-result-item">未找到该地址，请直接在地图上点选位置</div>';
+            return;
+          }
+          box.innerHTML = result.poiList.pois.map(function(poi) {
+            return '<div class="geo-result-item" data-lat="' + poi.location.lat + '" data-lng="' + poi.location.lng + '">' + escapeHtml(poi.name) + '<span style="color:#999;font-size:12px;margin-left:6px">' + escapeHtml(poi.address || '') + '</span></div>';
+          }).join('');
+          box.querySelectorAll('.geo-result-item[data-lat]').forEach(function(el) {
+            el.addEventListener('click', function() {
+              var lat = parseFloat(this.getAttribute('data-lat'));
+              var lng = parseFloat(this.getAttribute('data-lng'));
+              if (geoMap) geoMap.setZoomAndCenter(16, [lng, lat]);
+              if (geoMarker) { geoMarker.setPosition([lng, lat]); }
+              else { geoMarker = new AMap.Marker({ position: [lng, lat], map: geoMap }); }
+              box.style.display = 'none';
+            });
           });
         });
-      })
-      .catch(function() {
-        box.innerHTML = '<div class="geo-result-item">搜索服务暂不可用，请直接在地图上点选位置</div>';
       });
+    });
   }
 
   function initDetailMap(lat, lng, label) {
     var el = document.getElementById('detailMap');
     if (!el) return;
-    if (detailMap) { detailMap.remove(); detailMap = null; }
-    if (typeof L === 'undefined' || lat == null || lng == null) return;
-    detailMap = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(detailMap);
-    L.marker([lat, lng]).addTo(detailMap)
-      .bindPopup(escapeHtml(label || '客户家庭地址'))
-      .openPopup();
-    setTimeout(function() { if (detailMap) detailMap.invalidateSize(); }, 120);
+    if (detailMap) { detailMap.destroy(); detailMap = null; }
+    if (lat == null || lng == null) return;
+    _rEnsureAmap(function() {
+      detailMap = new AMap.Map(el, { zoom: 15, center: [lng, lat], mapStyle: 'amap://styles/fresh' });
+      new AMap.Marker({ position: [lng, lat], map: detailMap, title: label || '客户家庭地址' });
+      setTimeout(function() { if (detailMap && detailMap.resize) detailMap.resize(); }, 120);
+    });
   }
 
   // ================= 疾病明细（选中疾病展开） =================
@@ -3229,17 +3346,17 @@ body {
 
     var css =
       'body{font-family:"Microsoft YaHei","PingFang SC","Heiti SC",sans-serif;color:#1F2A44;margin:0;padding:36px;}' +
-      '.report-head{border-bottom:3px solid #1F4E5F;padding-bottom:14px;margin-bottom:18px;}' +
-      'h1{font-size:22px;margin:0 0 6px;color:#1F4E5F;}' +
+      '.report-head{border-bottom:3px solid #1E4D3C;padding-bottom:14px;margin-bottom:18px;}' +
+      'h1{font-size:22px;margin:0 0 6px;color:#1E4D3C;}' +
       '.meta{font-size:12px;color:#6B7A8F;line-height:1.8;}' +
       '.tags{margin-bottom:6px;}' +
-      '.tag{display:inline-block;background:#E8F1F0;color:#1F4E5F;border-radius:12px;padding:4px 12px;font-size:12px;margin:4px 4px 0 0;}' +
-      'h2{font-size:15px;color:#1F4E5F;border-left:4px solid #1F4E5F;padding-left:8px;margin:24px 0 10px;}' +
+      '.tag{display:inline-block;background:#E5EFEA;color:#1E4D3C;border-radius:12px;padding:4px 12px;font-size:12px;margin:4px 4px 0 0;}' +
+      'h2{font-size:15px;color:#1E4D3C;border-left:4px solid #1E4D3C;padding-left:8px;margin:24px 0 10px;}' +
       'p,li{font-size:13px;line-height:1.9;color:#2A3550;margin:4px 0;}' +
       'ul{margin:6px 0;padding-left:20px;}' +
-      '.summary{background:#F5F9F8;border:1px solid #D8E6E4;border-radius:8px;padding:12px 16px;}' +
-      '.plan{background:#F5F9F8;border:1px solid #D8E6E4;border-radius:8px;padding:10px 16px;margin:8px 0;}' +
-      '.premium{background:#1F4E5F;color:#FFFFFF;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.8;}' +
+      '.summary{background:#F0F6F3;border:1px solid #D9E4DE;border-radius:8px;padding:12px 16px;}' +
+      '.plan{background:#F0F6F3;border:1px solid #D9E4DE;border-radius:8px;padding:10px 16px;margin:8px 0;}' +
+      '.premium{background:#1E4D3C;color:#FFFFFF;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.8;}' +
       '.premium strong{color:#FFD58C;}' +
       '.footer{margin-top:30px;border-top:1px dashed #C9D4D8;padding-top:12px;font-size:11px;color:#8A97A8;line-height:1.9;}' +
       '.sign{margin-top:40px;display:flex;justify-content:space-between;font-size:13px;color:#2A3550;}' +
@@ -3467,6 +3584,10 @@ function renderDistrictNav() {
       tabs.push('<button class="district-tab' + (districtFilter === d ? ' active' : '') + '" data-d="' + d + '">' + d + '</button>');
     });
     box.innerHTML = tabs.join('');
+    var _dl = document.getElementById('districtFoldLabel');
+    if (_dl) _dl.textContent = districtFilter ? districtFilter : '全部区县';
+    var _fold = document.getElementById('districtFold');
+    if (_fold && districtFilter) _fold.classList.add('open');
     box.querySelectorAll('.district-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         districtFilter = this.getAttribute('data-d') || '';
@@ -3476,6 +3597,14 @@ function renderDistrictNav() {
         renderList();
       });
     });
+  }
+  function bindDistrictFold() {
+    var head = document.getElementById('districtFoldHead');
+    var fold = document.getElementById('districtFold');
+    if (head && fold && !head.__dfBound) {
+      head.__dfBound = true;
+      head.addEventListener('click', function() { fold.classList.toggle('open'); });
+    }
   }
 
   // ================= 列表视图 =================
@@ -3803,9 +3932,9 @@ function renderDistrictNav() {
     var _rdLabels = _rdT.map(function(t) {
       var pos = { D: '100,13', I: '186,104', S: '100,192', C: '16,104' }[t];
       var anc = { D: 'middle', I: 'start', S: 'middle', C: 'end' }[t];
-      return '<text x="' + pos.split(',')[0] + '" y="' + pos.split(',')[1] + '" text-anchor="' + anc + '" font-size="11" font-weight="700" fill="#0D9488">' + DISC_PROFILES[t].name + ' ' + (calc.scores[t] || 0) + '</text>';
+      return '<text x="' + pos.split(',')[0] + '" y="' + pos.split(',')[1] + '" text-anchor="' + anc + '" font-size="11" font-weight="700" fill="#0E7C5B">' + DISC_PROFILES[t].name + ' ' + (calc.scores[t] || 0) + '</text>';
     }).join('');
-    html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 性格四维雷达</div><div class="disc-radar"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,22 178,100 100,178 22,100" fill="none" stroke="#E2E8F0"/><polygon points="100,61 139,100 100,139 61,100" fill="none" stroke="#EDF1F0"/><line x1="100" y1="100" x2="100" y2="22" stroke="#E2E8F0"/><line x1="100" y1="100" x2="178" y2="100" stroke="#E2E8F0"/><line x1="100" y1="100" x2="100" y2="178" stroke="#E2E8F0"/><line x1="100" y1="100" x2="22" y2="100" stroke="#E2E8F0"/><polygon points="' + _rdData + '" fill="rgba(13,148,136,.22)" stroke="#0D9488" stroke-width="2"/><circle cx="100" cy="100" r="2" fill="#0D9488"/>' + _rdLabels + '</svg></div></div>';
+    html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 性格四维雷达</div><div class="disc-radar"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><polygon points="100,22 178,100 100,178 22,100" fill="none" stroke="#E2E8F0"/><polygon points="100,61 139,100 100,139 61,100" fill="none" stroke="#EDF1F0"/><line x1="100" y1="100" x2="100" y2="22" stroke="#E2E8F0"/><line x1="100" y1="100" x2="178" y2="100" stroke="#E2E8F0"/><line x1="100" y1="100" x2="100" y2="178" stroke="#E2E8F0"/><line x1="100" y1="100" x2="22" y2="100" stroke="#E2E8F0"/><polygon points="' + _rdData + '" fill="rgba(14,124,91,.22)" stroke="#0E7C5B" stroke-width="2"/><circle cx="100" cy="100" r="2" fill="#0E7C5B"/>' + _rdLabels + '</svg></div></div>';
     html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> 经营策略（怎么跟这个客户打交道）</div><p>' + prof.manage + '</p></div>';
     html += '<div class="profile-section"><div class="profile-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 话术示例（可以直接用）</div><ul>' + prof.words.map(function(w) { return '<li>' + w + '</li>'; }).join('') + '</ul></div>';
     order.forEach(function(t) {
@@ -3816,6 +3945,53 @@ function renderDistrictNav() {
 
     box.innerHTML = html;
     renderAiPort(finished);
+  }
+
+  // ===== 客户答疑速查（保险观念 + 客户答疑） =====
+  var FAQ_IDEAS = [
+    { t: '保险的本质', c: '保险是风险转移工具，用确定的小额保费，转移未来不确定的大额损失。它不是投资理财，而是家庭财务的"安全垫"。' },
+    { t: '为什么要买保险', c: '人生风险（疾病、意外、身故、养老）不因个人意愿而消失，一旦发生可能掏空积蓄、拖垮家庭。保险在风险发生时提供经济补偿，让家庭生活不被改变。' },
+    { t: '社保与商保的关系', c: '社保"保而不包"：有起付线、封顶线、目录限制，大病自费部分可能高达几十万。商业保险补充社保之外的自费医疗和收入损失，两者互补不冲突。' },
+    { t: '配置顺序', c: '先保障、后理财；先大人、后小孩（大人才是孩子最大的保障）；先保家庭经济支柱，再保其他成员。重疾、医疗、意外、寿险打底，再考虑教育金、养老金。' },
+    { t: '重疾险的作用', c: '确诊即赔一笔钱，弥补治疗费之外的收入损失：康复费、误工费、家庭日常开支。保额建议为年收入的3-5倍，覆盖康复期3-5年的生活。' },
+    { t: '医疗险的作用', c: '报销大额医疗费用，社保报销后的自费部分（进口药、自费项目）由医疗险补充，几百元保费可撬动百万保额。' },
+    { t: '寿险的作用', c: '防止家庭经济支柱倒下后，房贷、子女教育、父母赡养失去来源。保额建议覆盖家庭负债加5-10年生活开支。' }
+  ];
+  var FAQ_QA = [
+    { q: '客户说"保险是骗人的"', a: '保险本身是合同行为，赔付按条款约定执行。多数纠纷源于买错险种（以为什么都保）、未如实告知健康问题。正规渠道投保、看清条款、如实告知，理赔就有保障。' },
+    { q: '客户说"我有社保，不用买商业保险"', a: '社保有起付线、封顶线和目录限制，一场大病自费部分可能高达几十万。商业医疗险一年几百元就能补充这部分缺口，是社保最好的搭档。' },
+    { q: '客户说"等过两年再买"', a: '保费随年龄增长每年上涨；更重要的是身体指标变化（结节、血压、体检异常）可能导致拒保、加费或除外责任。趁健康时投保，是成本最低的选择。' },
+    { q: '客户说"保险公司会不会倒闭"', a: '保险公司受金融监管部门严格监管，有保证金、责任准备金、保险保障基金、再保险等多重防线。即使极端情况下公司被接管，保单权益也依法照常兑付。' },
+    { q: '客户说"买保险不如存银行"', a: '银行存款解决的是"现在有钱"；保险解决的是"将来需要用钱时有保障"。重疾赔付几十万，是靠存钱很难短期攒到的风险杠杆，两者用途不同。' },
+    { q: '客户说"我身体好，用不上"', a: '意外和疾病的发生不以身体好坏为前提，谁也无法预知明天。保险的意义正是"用不上最好"——买的是安心和家庭财务的确定性。' },
+    { q: '客户说"给孩子买就行，大人不用"', a: '大人是家庭的收入来源，一旦大人倒下，孩子的保费和生活都会失去依靠。正确顺序是先保大人、后保孩子，大人平安才是孩子最大的保障。' },
+    { q: '客户说"太贵了"', a: '保障方案可以按预算定制：先配几百元一年的医疗险和意外险打底，再逐步补充重疾和寿险。贵有贵的配置，便宜有便宜的方案，量力而行、逐步完善。' },
+    { q: '客户说"我再考虑考虑"', a: '理解您需要时间，我把方案留给您参考。同时提醒：年龄和健康状况会影响投保资格和费率，建议在身体和年龄条件最好的时候做决定。' },
+    { q: '客户说"听说理赔很难"', a: '理赔纠纷绝大多数源于投保时未如实告知或不符合条款。只要投保时如实告知、看清保障范围、出险后按流程准备资料，理赔是透明的。' }
+  ];
+  function renderFaq(tab) {
+    var list = document.getElementById('faqList');
+    if (!list) return;
+    var arr = tab === 'idea' ? FAQ_IDEAS : FAQ_QA;
+    list.innerHTML = arr.map(function(it, i) {
+      var q = tab === 'idea' ? it.t : it.q;
+      var a = it.c || it.a;
+      return '<div class="faq-item" data-fi="' + i + '">' +
+        '<button type="button" class="faq-item-head">' +
+        '<span class="faq-q">' + escapeHtml(q) + '</span>' +
+        '<span class="faq-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>' +
+        '</button>' +
+        '<div class="faq-item-body"><p>' + escapeHtml(a) + '</p></div>' +
+        '</div>';
+    }).join('');
+    list.querySelectorAll('.faq-item-head').forEach(function(h) {
+      h.addEventListener('click', function() {
+        this.parentNode.classList.toggle('open');
+      });
+    });
+    document.querySelectorAll('.faq-tab').forEach(function(tb) {
+      tb.classList.toggle('active', tb.getAttribute('data-faq') === tab);
+    });
   }
 
   function renderAiPort(finished) {
@@ -4903,6 +5079,7 @@ function renderDistrictNav() {
   };
 
   // ================= 访问密码锁与备份 =================
+  var APP_DEV_NO_LOCK = true; // ★开发期免密模式：直接进入应用。最终版改回 false 恢复密码锁
   var PASS_KEY = 'mcl_pass_v1';
   var RECOVERY_KEY = 'mcl_recovery_v1';
   var LAST_BACKUP_KEY = 'mcl_last_backup';
@@ -5000,6 +5177,11 @@ function renderDistrictNav() {
     maybeCheckBackup();
   }
   function checkLock() {
+    if (APP_DEV_NO_LOCK) { // 开发期免密：不读加密数据，直接进入
+      clients = loadPlain();
+      enterApp();
+      return;
+    }
     var sp = sessionStorage.getItem(UNLOCK_KEY);
     if (sp && passMeta()) {
       var meta = passMeta();
@@ -5349,13 +5531,45 @@ function renderDistrictNav() {
       if (nn) qa.appendChild(nn);
       if (nq) qa.appendChild(nq);
     }
-    var dnEl = document.getElementById('districtNav');
-    if (dnEl) dnEl.style.display = 'none';
+    // 区县筛选栏由 CSS 折叠控制，不再强制隐藏
     var _qabox = document.getElementById('sec-qa');
     var _dhEl = document.getElementById('discHead');
     var _dbEl = document.getElementById('discBody');
-    if (_qabox && _dhEl) _qabox.appendChild(_dhEl);
-    if (_qabox && _dbEl) _qabox.appendChild(_dbEl);
+    if (_qabox && _dhEl && _dbEl) {
+      var _dcard = document.createElement('div');
+      _dcard.className = 'need-qa-card';
+      _dcard.id = 'discCard';
+      _qabox.appendChild(_dcard);
+      _dcard.appendChild(_dhEl);
+      _dcard.appendChild(_dbEl);
+    }
+    // 客户答疑速查卡片
+    if (_qabox) {
+      var _faqCard = document.createElement('div');
+      _faqCard.className = 'need-qa-card';
+      _faqCard.id = 'faqCard';
+      _faqCard.innerHTML =
+        '<div class="need-qa-head" id="faqToggle">' +
+        '<span class="need-qa-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> 客户答疑速查</span>' +
+        '<svg class="need-qa-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+        '</div>' +
+        '<div class="need-qa-body">' +
+        '<p class="need-qa-desc">保险观念与常见客户答疑速查，展业时临时查看，快速回应客户疑虑。</p>' +
+        '<div class="faq-tabs">' +
+        '<button type="button" class="faq-tab active" data-faq="qa">客户答疑</button>' +
+        '<button type="button" class="faq-tab" data-faq="idea">保险观念</button>' +
+        '</div>' +
+        '<div id="faqList"></div>' +
+        '</div>';
+      _qabox.appendChild(_faqCard);
+      var _faqT = document.getElementById('faqToggle');
+      if (_faqT) _faqT.addEventListener('click', function() { document.getElementById('faqCard').classList.toggle('open'); });
+      var _faqTabs = document.querySelectorAll('.faq-tab');
+      _faqTabs.forEach(function(tb) {
+        tb.addEventListener('click', function() { renderFaq(this.getAttribute('data-faq')); });
+      });
+      renderFaq('qa');
+    }
     var _mapbox2 = document.getElementById('sec-map');
     var _rb = document.querySelector('.route-bar');
     var _vqp = document.getElementById('vqPanel');
@@ -5366,6 +5580,7 @@ function renderDistrictNav() {
     renderSubNav();
   })();
   renderDistrictNav();
+  bindDistrictFold();
   renderNeedNav();
   renderDiscQuestions();
   renderDiscProfile();
@@ -5394,9 +5609,9 @@ var mapMode = 'plan';
 function _subMenuDefs() {
   return {
     qa: [{ k: '', t: '需求分析问答' }],
-    client: [{ k: '', t: '全部' }].concat((typeof DISTRICT_LIST !== 'undefined' && DISTRICT_LIST ? DISTRICT_LIST : []).map(function (d) { return { k: d, t: d }; })),
+    client: [],  // 区县筛选由可折叠区县栏承担
     visit: [{ k: 'month', t: '月拜访' }, { k: 'week', t: '周拜访' }, { k: 'year', t: '年度拜访' }],
-    map: [{ k: 'plan', t: '规划拜访路线' }, { k: 'todo', t: '待拜访客户路线' }]
+    map: [],  // 拜访地图直接展示待拜访面板与地图，无需子导航切换
   };
 }
 function bindMainNav() {
@@ -5418,7 +5633,20 @@ function bindMainNav() {
     openRouteModal(visitQueue.slice());
   });
   var mvqc = document.getElementById('mapVqClearBtn');
-  if (mvqc) mvqc.addEventListener('click', function () { visitQueue = []; vqSave(); vqRenderPanel(); renderMapVq(); showToast('待拜访已清空'); });
+  if (mvqc) mvqc.addEventListener('click', function () { visitQueue = []; vqSave(); vqRenderPanel(); renderMapVq(); refreshMapBox(); showToast('待拜访已清空'); });
+  var mvqh = document.getElementById('mapVqHead');
+  if (mvqh) mvqh.addEventListener('click', function (e) {
+    if (e.target && e.target.closest && e.target.closest('.vq-head-ops')) return;
+    var p = document.getElementById('mapVqPanel');
+    if (p) p.classList.toggle('open');
+  });
+  var rsc = document.getElementById('routeSendCarBtn');
+  if (rsc) rsc.addEventListener('click', function () {
+    if (!_rPlanIds || !_rPlanIds.length) { showToast('请先规划路线'); return; }
+    var first = getClientById(_rPlanIds[0]);
+    if (!first) { showToast('客户不存在'); return; }
+    window.open(_rNavUrl(first), '_blank');
+  });
   var mnm = document.getElementById('mapNavMode');
   if (mnm) mnm.querySelectorAll('.mode-tab').forEach(function (mt) {
     mt.addEventListener('click', function () {
@@ -5471,6 +5699,8 @@ function renderSubNav() {
   var box = document.getElementById('subNav');
   if (!box) return;
   var defs = _subMenuDefs()[mainTab] || [];
+  if (!defs.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = '';
   box.innerHTML = defs.map(function (d) {
     var act = mainTab === 'client' ? d.k === districtFilter
       : mainTab === 'visit' ? d.k === visitFilter
@@ -5487,13 +5717,83 @@ function renderSubNav() {
     });
   });
 }
+/* ===== 拜访起点 ===== */
+var ROUTE_START_KEY = 'mc_route_start_v1';
+var _routeStart = null;
+function rsLoad() {
+  try { var s = localStorage.getItem(ROUTE_START_KEY); if (s) { var o = JSON.parse(s); if (o && o.lng != null && o.lat != null) _routeStart = o; } } catch (e) {}
+  rsRenderBtn();
+}
+function rsSave() {
+  try { if (_routeStart) localStorage.setItem(ROUTE_START_KEY, JSON.stringify(_routeStart)); else localStorage.removeItem(ROUTE_START_KEY); } catch (e) {}
+}
+function rsRenderBtn() {
+  var b = _r$('mapStartBtn');
+  if (!b) return;
+  var icon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
+  b.innerHTML = _routeStart ? icon + ' 起点：' + _routeStart.name : icon + ' 起点';
+  b.setAttribute('title', _routeStart ? '当前起点：' + _routeStart.name + '（点击修改）' : '设置拜访起点，规划时从起点串联客户');
+}
+function openStartModal() {
+  var m = _r$('startMask'); if (!m) return;
+  m.classList.add('show');
+  var r = _r$('startResult'); if (r) r.innerHTML = _routeStart ? '当前起点：' + _routeStart.name + '（重新输入可修改）' : '';
+  var inp = _r$('startAddrInput'); if (inp) inp.value = '';
+}
+function closeStartModal() { var m = _r$('startMask'); if (m) m.classList.remove('show'); }
+function bindStartModal() {
+  var sb = _r$('mapStartBtn');
+  if (sb) sb.addEventListener('click', openStartModal);
+  var mk = _r$('startMask');
+  if (mk) mk.addEventListener('click', function(e) { if (e.target === mk) closeStartModal(); });
+  var sv = _r$('startSaveBtn');
+  if (sv) sv.addEventListener('click', function() {
+    var inp = _r$('startAddrInput');
+    var addr = ((inp && inp.value) || '').trim();
+    var r = _r$('startResult');
+    if (!addr) { if (r) r.innerHTML = '请先输入起点地址'; return; }
+    if (r) r.innerHTML = '正在定位地址…';
+    _rEnsureAmap(function() {
+      var g = new AMap.Geocoder();
+      g.getLocation(addr, function(st, res) {
+        if (st === 'complete' && res.geocodes && res.geocodes.length) {
+          var loc = res.geocodes[0].location;
+          _routeStart = { name: addr, lng: loc.lng, lat: loc.lat };
+          rsSave(); rsRenderBtn(); closeStartModal();
+          showToast('起点已设置：' + addr);
+          refreshMapBox();
+        } else if (r) { r.innerHTML = '未能定位该地址，请补充省市区或检查地址'; }
+      });
+    });
+  });
+  var su = _r$('startUseCurrentBtn');
+  if (su) su.addEventListener('click', function() {
+    var r = _r$('startResult');
+    if (r) r.innerHTML = '正在获取当前位置…';
+    _rEnsureAmap(function() {
+      AMap.plugin('AMap.Geolocation', function() {
+        var gl = new AMap.Geolocation({ enableHighAccuracy: true, timeout: 8000, zoomToAccuracy: false });
+        gl.getCurrentPosition(function(st, res) {
+          if (st === 'complete' && res.position) {
+            _routeStart = { name: '我的位置', lng: res.position.lng, lat: res.position.lat };
+            rsSave(); rsRenderBtn(); closeStartModal();
+            showToast('起点已设置为当前位置');
+            refreshMapBox();
+          } else if (r) { r.innerHTML = '定位失败，请手动输入起点地址'; }
+        });
+      });
+    });
+  });
+}
 function _rNavUrl(c) {
   var b = (c && c.basic) || {};
   var mode = _rNavMode || 'car';
   var to = '';
   if (b.lat != null && b.lng != null) to = b.lng + ',' + b.lat + ',' + encodeURIComponent(b.name || '客户');
   else to = encodeURIComponent(((b.district || '') + (b.address || '')) || (b.name || '客户'));
-  return 'https://uri.amap.com/navigation?to=' + to + '&mode=' + mode + '&coordinate=gaode';
+  var from = '';
+  if (_routeStart) from = '&from=' + encodeURIComponent(_routeStart.name || '起点') + ',' + _routeStart.lng + ',' + _routeStart.lat;
+  return 'https://uri.amap.com/navigation?to=' + to + '&mode=' + mode + '&coordinate=gaode' + from;
 }
 function renderMapVq() {
   var box = document.getElementById('mapVqList');
@@ -5635,37 +5935,64 @@ function refreshMapBox() {
   _rClearLayers();
   var q = [];
   try { q = JSON.parse(localStorage.getItem('mc_visit_queue_v1') || '[]'); } catch (e) {}
-  if (!q.length) { _routeMapBox.setZoomAndCenter(11, [120.1536, 30.2875]); return; }
   var geocoder = new AMap.Geocoder();
   var pts = [];
   var done = 0;
+  if (_routeStart) {
+    pts.push({ idx: -1, name: _routeStart.name || '起点', lnglat: [_routeStart.lng, _routeStart.lat], isStart: true });
+  }
+  if (!q.length) { drawPts(); return; }
   q.forEach(function(item, idx) {
+    var itemId = (typeof item === 'string') ? item : (item && item.id);
     var c = null;
-    try { c = (clients || []).find(function(x) { return x.id === item.id; }); } catch (e) {}
+    try { c = (clients || []).find(function(x) { return x.id === itemId; }); } catch (e) {}
     var addr = (item && item.address) || (c && c.basic && c.basic.address) || '';
     var name = (item && item.name) || (c && c.basic && c.basic.name) || '客户';
+    var tIdx = idx + 1;
     if (c && c.basic && c.basic.lat != null) {
-      pts.push({ idx: idx, name: name, lnglat: [c.basic.lng, c.basic.lat] });
+      pts.push({ idx: tIdx, name: name, lnglat: [c.basic.lng, c.basic.lat] });
       done++; if (done === q.length) drawPts(); return;
     }
     if (!addr) { done++; if (done === q.length) drawPts(); return; }
     geocoder.getLocation(addr, function(status, result) {
       if (status === 'complete' && result.geocodes && result.geocodes.length) {
         var g = result.geocodes[0].location;
-        pts.push({ idx: idx, name: name, lnglat: [g.lng, g.lat] });
+        pts.push({ idx: tIdx, name: name, lnglat: [g.lng, g.lat] });
       }
       done++; if (done === q.length) drawPts();
     });
   });
   function drawPts() {
+    var cust = pts.filter(function(p) { return !p.isStart; });
     if (!pts.length) { _routeMapBox.setZoomAndCenter(11, [120.1536, 30.2875]); return; }
+    if (!cust.length && _routeStart) {
+      var sp = pts[0];
+      var sm = new AMap.Marker({
+        position: sp.lnglat,
+        content: '<div style="background:#1E6FE0;color:#fff;border-radius:50%;width:28px;height:28px;line-height:28px;text-align:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">起</div>',
+        offset: new AMap.Pixel(-14, -14),
+        title: sp.name
+      });
+      _routeMapBox.add(sm);
+      _rMarkers.push(sm);
+      _routeMapBox.setZoomAndCenter(12, sp.lnglat);
+      return;
+    }
     pts.sort(function(a, b) { return a.idx - b.idx; });
     var bounds = new AMap.Bounds();
-    pts.forEach(function(p, i) {
+    pts.forEach(function(p) {
+      var content, off = -14;
+      if (p.isStart) {
+        content = '<div style="background:#1E6FE0;color:#fff;border-radius:50%;width:28px;height:28px;line-height:28px;text-align:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">起</div>';
+        off = -14;
+      } else {
+        content = '<div style="background:#0E7C5B;color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">' + p.idx + '</div>';
+        off = -13;
+      }
       var m = new AMap.Marker({
         position: p.lnglat,
-        content: '<div style="background:#0D9488;color:#fff;border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">' + (i + 1) + '</div>',
-        offset: new AMap.Pixel(-13, -13),
+        content: content,
+        offset: new AMap.Pixel(off, off),
         title: p.name
       });
       _routeMapBox.add(m);
@@ -5759,6 +6086,9 @@ function planIds(ids) {
   if (!list.length) { showToast('请先勾选客户或添加待拜访'); return; }
   showToast('正在定位 ' + list.length + ' 位客户…');
   var pts = [], fails = 0, done = 0;
+  if (_routeStart) {
+    pts.push({ id: '__start__', name: _routeStart.name || '起点', addr: _routeStart.name || '起点', lng: _routeStart.lng, lat: _routeStart.lat, isStart: true });
+  }
   list.forEach(function(c) {
     _rGeo(c).then(function(p) { pts.push(p); next(); }).catch(function() { fails++; next(); });
   });
@@ -5781,18 +6111,30 @@ function _rDrawRoute(order) {
   if (!_routeMap) return;
   _rClearLayers();
   var path = [];
+  var cIdx = 0;
   order.forEach(function(p, i) {
+    var content, off = -13, t;
+    if (p.isStart) {
+      content = '<div style="background:#1E6FE0;color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)">起</div>';
+      off = -15;
+      t = '起点：' + p.name;
+    } else {
+      cIdx++;
+      content = '<div style="background:#fff;border:2px solid #0E7C5B;color:#0A5F46;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.15)">' + cIdx + '</div>';
+      off = -13;
+      t = cIdx + '. ' + p.name + ' ' + p.addr;
+    }
     var m = new AMap.Marker({
       position: [p.lng, p.lat],
-      content: '<div style="background:#fff;border:2px solid #0D9488;color:#0F766E;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.15)">' + (i + 1) + '</div>',
-      offset: new AMap.Pixel(-13, -13),
-      title: (i + 1) + '. ' + p.name + ' ' + p.addr
+      content: content,
+      offset: new AMap.Pixel(off, off),
+      title: t
     });
     _routeMap.add(m);
     _rMarkers.push(m);
     path.push([p.lng, p.lat]);
   });
-  _rLine = new AMap.Polyline({ path: path, strokeColor: '#0D9488', strokeWeight: 3, strokeOpacity: 0.55, strokeStyle: 'dashed', strokeDasharray: [6, 8] });
+  _rLine = new AMap.Polyline({ path: path, strokeColor: '#0E7C5B', strokeWeight: 3, strokeOpacity: 0.55, strokeStyle: 'dashed', strokeDasharray: [6, 8] });
   _routeMap.add(_rLine);
   _routeMap.setFitView(_rMarkers, false, [40, 40, 40, 40]);
 
@@ -5829,16 +6171,28 @@ function _rDrawRoute(order) {
 }
 function _rRenderBottom(order) {
   var html = '';
-  order.forEach(function(p, i) {
-    html += '<div class="route-item"><div class="route-no">' + (i + 1) + '</div><span class="nm">' + _rEsc(p.name) + '</span><span class="ad">' + _rEsc(p.addr) + '</span></div>';
+  var ci = 0;
+  order.forEach(function(p) {
+    if (p.isStart) {
+      html += '<div class="route-item"><div class="route-no" style="background:#1E6FE0;color:#fff;border-radius:50%;width:22px;height:22px;line-height:22px;text-align:center;font-size:12px;font-weight:700;flex-shrink:0">起</div><span class="nm">' + _rEsc(p.name) + '</span><span class="ad">起点</span></div>';
+    } else {
+      ci++;
+      html += '<div class="route-item"><div class="route-no">' + ci + '</div><span class="nm">' + _rEsc(p.name) + '</span><span class="ad">' + _rEsc(p.addr) + '</span></div>';
+    }
   });
   _r$('routeList').innerHTML = html;
   _r$('routeDist').textContent = _rStats.dist.toFixed(1);
   _r$('routeTime').textContent = _rStats.time;
-  _r$('routeStops').textContent = order.length;
-  var ph = '<h3>客户拜访清单</h3><p style="font-size:12px;color:#666;margin-bottom:10px">' + new Date().toLocaleString('zh-CN') + ' · 智能路线图自动排序</p>';
-  order.forEach(function(p, i) {
-    ph += '<div class="rp-item"><b style="margin-right:6px">' + (i + 1) + '.</b>' + _rEsc(p.name) + '<div class="ad">' + _rEsc(p.addr) + '</div></div>';
+  _r$('routeStops').textContent = ci;
+  var ph = '<h3>客户拜访清单</h3><p style="font-size:12px;color:#666;margin-bottom:10px">' + new Date().toLocaleString('zh-CN') + ' · 智能路线图自动排序' + (_routeStart ? ' · 起点：' + _rEsc(_routeStart.name) : '') + '</p>';
+  var pci = 0;
+  order.forEach(function(p) {
+    if (p.isStart) {
+      ph += '<div class="rp-item"><b style="margin-right:6px;color:#1E6FE0">起.</b>' + _rEsc(p.name) + '<div class="ad">起点</div></div>';
+    } else {
+      pci++;
+      ph += '<div class="rp-item"><b style="margin-right:6px">' + pci + '.</b>' + _rEsc(p.name) + '<div class="ad">' + _rEsc(p.addr) + '</div></div>';
+    }
   });
   _r$('routePrintArea').innerHTML = ph;
 }
@@ -5865,12 +6219,12 @@ function vqToggle(id) {
   var i = visitQueue.indexOf(id);
   if (i >= 0) { visitQueue.splice(i, 1); showToast('已移出待拜访'); }
   else { visitQueue.push(id); showToast('已加入待拜访，点列表顶部「待拜访客户」可排序'); }
-  vqSave(); vqRenderBadge(); vqRenderPanel(); renderList();
+  vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox();
   if (viewingId === id) vqRefreshDetailBtn();
 }
 function vqRemove(id) {
   var i = visitQueue.indexOf(id);
-  if (i >= 0) { visitQueue.splice(i, 1); vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); if (viewingId === id) vqRefreshDetailBtn(); }
+  if (i >= 0) { visitQueue.splice(i, 1); vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox(); if (viewingId === id) vqRefreshDetailBtn(); }
 }
 function vqMove(i, dir) {
   var j = i + dir;
@@ -5880,7 +6234,7 @@ function vqMove(i, dir) {
 }
 function vqClear() {
   if (!visitQueue.length) { showToast('待拜访列表已为空'); return; }
-  visitQueue = []; vqSave(); vqRenderBadge(); vqRenderPanel(); renderList();
+  visitQueue = []; vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox();
   showToast('已清空待拜访');
 }
 function vqRenderBadge() { var el = _r$('vqCount'); if (el) el.textContent = vqCount() + ' 位'; }
@@ -5934,9 +6288,9 @@ function vqBind() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { _rBind(); vqBind(); });
+  document.addEventListener('DOMContentLoaded', function() { _rBind(); vqBind(); bindStartModal(); rsLoad(); });
 } else {
-  _rBind(); vqBind();
+  _rBind(); vqBind(); bindStartModal(); rsLoad();
 }
 
 
