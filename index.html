@@ -2732,7 +2732,7 @@ body {
       var lat = geoLat != null ? geoLat : 30.2590;
       var lng = geoLng != null ? geoLng : 120.1650;
       if (geoMap) { geoMap.destroy(); geoMap = null; }
-      geoMap = new AMap.Map('geoMap', { zoom: 13, center: [lng, lat], mapStyle: 'amap://styles/fresh' });
+      geoMap = new AMap.Map('geoMap', { zoom: 13, center: [lng, lat] });
       if (geoLat != null && geoLng != null) {
         geoMarker = new AMap.Marker({ position: [geoLng, geoLat], map: geoMap });
       }
@@ -2784,7 +2784,7 @@ body {
             el.addEventListener('click', function() {
               var lat = parseFloat(this.getAttribute('data-lat'));
               var lng = parseFloat(this.getAttribute('data-lng'));
-              if (geoMap) geoMap.setZoomAndCenter(16, [lng, lat]);
+              if (geoMap) geoMap.setZoomAndCenter(16, new AMap.LngLat(lng, lat));
               if (geoMarker) { geoMarker.setPosition([lng, lat]); }
               else { geoMarker = new AMap.Marker({ position: [lng, lat], map: geoMap }); }
               box.style.display = 'none';
@@ -2801,7 +2801,7 @@ body {
     if (detailMap) { detailMap.destroy(); detailMap = null; }
     if (lat == null || lng == null) return;
     _rEnsureAmap(function() {
-      detailMap = new AMap.Map(el, { zoom: 15, center: [lng, lat], mapStyle: 'amap://styles/fresh' });
+      detailMap = new AMap.Map(el, { zoom: 15, center: [lng, lat] });
       new AMap.Marker({ position: [lng, lat], map: detailMap, title: label || '客户家庭地址' });
       setTimeout(function() { if (detailMap && detailMap.resize) detailMap.resize(); }, 120);
     });
@@ -5857,8 +5857,8 @@ function _rEsc(s) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
   });
 }
-var _rDefKey = '9dade9d00835f87060af323698c78498';
-var _rDefJs = '9b08129bf0618c5394397e8281260f09';
+var _rDefKey = 'a4ea4e274b66d8e0ea2c3f8bde5e4903';
+var _rDefJs = '70c9b0d6cf385ea5b85636969b9121d5';
 function _rEnsureAmap(cb) {
   var key = localStorage.getItem('mc_visit_amap_key') || _rDefKey;
   if (!key) {
@@ -5944,12 +5944,23 @@ function openRouteModal(ids) {
 function closeRouteModal() { _r$('routeModal').classList.remove('open'); }
 function initRouteMap() {
   if (_routeMap) return;
-  _routeMap = new AMap.Map('routeMap', { zoom: 11, center: [120.1536, 30.2875], mapStyle: 'amap://styles/fresh' });
+  var _el = document.getElementById('routeMap');
+  var _w = _el ? _el.offsetWidth : 0;
+  var _h = _el ? _el.offsetHeight : 0;
+  if (_w < 50 || _h < 50) { setTimeout(initRouteMap, 250); return; }
+  _routeMap = new AMap.Map('routeMap', { zoom: 11, center: [120.1536, 30.2875] });
+  setTimeout(function () { if (_routeMap && _routeMap.resize) _routeMap.resize(); }, 200);
 }
 var _routeMapBox = null;
 function initMapBox() {
-  if (_routeMapBox) { if (_routeMapBox.resize) _routeMapBox.resize(); return; }
-  _routeMapBox = new AMap.Map('routeMapBox', { zoom: 11, center: [120.1536, 30.2875], mapStyle: 'amap://styles/fresh' });
+  if (_routeMapBox) { if (_routeMapBox.resize) _routeMapBox.resize(); refreshMapBox(); return; }
+  var _el = document.getElementById('routeMapBox');
+  var _w = _el ? _el.offsetWidth : 0;
+  var _h = _el ? _el.offsetHeight : 0;
+  if (_w < 50 || _h < 50) { setTimeout(initMapBox, 250); return; }
+  _routeMapBox = new AMap.Map('routeMapBox', { zoom: 11, center: [120.1536, 30.2875] });
+  setTimeout(function () { if (_routeMapBox && _routeMapBox.resize) _routeMapBox.resize(); }, 200);
+  setTimeout(function () { refreshMapBox(); }, 120);
 }
 function refreshMapBox() {
   if (!_routeMapBox) return;
@@ -5985,7 +5996,7 @@ function refreshMapBox() {
   });
   function drawPts() {
     var cust = pts.filter(function(p) { return !p.isStart; });
-    if (!pts.length) { _routeMapBox.setZoomAndCenter(11, [120.1536, 30.2875]); return; }
+    if (!pts.length) { _routeMapBox.setZoomAndCenter(11, new AMap.LngLat(120.1536, 30.2875)); return; }
     if (!cust.length && _routeStart) {
       var sp = pts[0];
       var sm = new AMap.Marker({
@@ -5996,11 +6007,11 @@ function refreshMapBox() {
       });
       _routeMapBox.add(sm);
       _rMarkers.push(sm);
-      _routeMapBox.setZoomAndCenter(12, sp.lnglat);
+      _routeMapBox.setZoomAndCenter(12, new AMap.LngLat(sp.lnglat[0], sp.lnglat[1]));
       return;
     }
     pts.sort(function(a, b) { return a.idx - b.idx; });
-    var bounds = new AMap.Bounds();
+    var fv = [];
     pts.forEach(function(p) {
       var content, off = -14;
       if (p.isStart) {
@@ -6018,9 +6029,9 @@ function refreshMapBox() {
       });
       _routeMapBox.add(m);
       _rMarkers.push(m);
-      bounds.extend(p.lnglat);
+      fv.push(m);
     });
-    _routeMapBox.setBounds(bounds, false, [60, 60, 60, 60]);
+    if (fv.length) _routeMapBox.setFitView(fv, false, [60, 60, 60, 60]);
   }
 }
 function _rClearLayers() {
