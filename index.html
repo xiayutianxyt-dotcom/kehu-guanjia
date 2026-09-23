@@ -5872,7 +5872,8 @@ function _rEnsureAmap(cb) {
   if (_amapReady) { cb(); return; }
   if (_amapLoading) { setTimeout(function() { _rEnsureAmap(cb); }, 400); return; }
   _amapLoading = true;
-  window._AMapSecurityConfig = { securityJsCode: localStorage.getItem('mc_visit_amap_jscode') || _rDefJs };
+  var _jsc = (localStorage.getItem('mc_visit_amap_jscode') || '').trim();
+  if (_jsc) { window._AMapSecurityConfig = { securityJsCode: _jsc }; } else { window._AMapSecurityConfig = undefined; }
   var s = document.createElement('script');
   s.src = 'https://webapi.amap.com/maps?v=2.0&key=' + encodeURIComponent(key);
   function _showMapError(msg) {
