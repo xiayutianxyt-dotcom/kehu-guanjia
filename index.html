@@ -2511,6 +2511,13 @@ body {
       <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6">加密导出：文件内容用 AES-256-GCM 加密，即使发到微信传输助手/网盘被人拿到，没有密码也读不出任何内容。密码请牢记，忘记无法找回。明文导出仅建议本机自用。</div>
     </div>
     <div class="field" style="margin-bottom:12px">
+      <label class="field-label">高德地图 Key 配置（地图不显示时换 Key）</label>
+      <input type="text" class="field-input" id="amapKeyInput" placeholder="高德 JS API Key" autocomplete="off" style="margin-bottom:8px">
+      <input type="text" class="field-input" id="amapJsInput" placeholder="安全密钥 securityJsCode" autocomplete="off" style="margin-bottom:8px">
+      <button class="btn btn-primary btn-block" id="amapKeySaveBtn" style="margin-bottom:8px">保存 Key 并重新加载地图</button>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6">申请方法：打开 lbs.amap.com 注册并登录 → 控制台 → 应用管理 → 我的应用 → 创建新应用 → 添加 Key（服务平台选「Web端(JS API)」）→ 保存后复制 Key 与「安全密钥」填到上方。填好后点保存，再刷新页面即可。Key 是你自己独有的，不会像共享 Key 那样被限制。</div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
       <label class="field-label">访问密码</label>
       <button class="btn btn-secondary btn-block" id="setLockBtn" style="margin-bottom:8px">修改访问密码</button>
       <div id="changePassBox" style="display:none">
@@ -5351,6 +5358,10 @@ function renderDistrictNav() {
       if (sel.options[i].value === cur) { sel.selectedIndex = i; break; }
     }
     document.getElementById('changePassBox').style.display = 'none';
+    var kInp = document.getElementById('amapKeyInput');
+    var jInp = document.getElementById('amapJsInput');
+    if (kInp) kInp.value = localStorage.getItem('mc_visit_amap_key') || _rDefKey;
+    if (jInp) jInp.value = localStorage.getItem('mc_visit_amap_jscode') || _rDefJs;
     var rcEl = document.getElementById('recoveryShow');
     if (rcEl) rcEl.textContent = '恢复码：' + (localStorage.getItem(RECOVERY_KEY) || '未设置');
     document.getElementById('settingsMask').classList.add('show');
@@ -5490,6 +5501,15 @@ function renderDistrictNav() {
   });
   document.getElementById('resetPassBtn').addEventListener('click', resetPass);
   document.getElementById('settingsBtn').addEventListener('click', openSettings);
+  document.getElementById('amapKeySaveBtn').addEventListener('click', function() {
+    var k = (document.getElementById('amapKeyInput').value || '').trim();
+    var j = (document.getElementById('amapJsInput').value || '').trim();
+    if (!k) { showToast('请先填写高德 Key'); return; }
+    localStorage.setItem('mc_visit_amap_key', k);
+    localStorage.setItem('mc_visit_amap_jscode', j);
+    showToast('Key 已保存，正在重新加载地图…');
+    setTimeout(function() { location.reload(); }, 800);
+  });
   document.getElementById('setCloseBtn').addEventListener('click', closeSettings);
   document.getElementById('backupIntervalSel').addEventListener('change', function() {
     localStorage.setItem(INTERVAL_KEY, this.value);
