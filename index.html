@@ -1403,6 +1403,11 @@ body {
 .visit-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 14px; background: #fff; color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
 .visit-btn:hover { border-color: var(--primary); color: var(--primary); }
 .visit-btn.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.visit-stats { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 12px; padding: 9px 14px; background: #F2F8F5; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary); }
+.visit-stats b { color: var(--primary); font-size: 15px; margin: 0 1px; }
+.mine-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--primary); border-radius: 14px; background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.mine-btn:hover { opacity: .85; }
+.tag-mine { background: var(--primary); color: #fff; border-color: var(--primary); }
 .icon-btn.on { background: var(--primary); color: #fff; border-color: var(--primary); }
 .vq-panel { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); overflow: hidden; }
 .vq-head { display: flex; align-items: center; gap: 8px; padding: 11px 14px; cursor: pointer; user-select: none; }
@@ -1575,7 +1580,7 @@ body {
   <nav class="main-nav" id="mainNav">
     <button class="main-tab active" data-tab="client"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>客户信息</button>
     <button class="main-tab" data-tab="qa"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>需求分析</button>
-    <button class="main-tab" data-tab="visit"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>拜访客户</button>
+    <button class="main-tab" data-tab="visit"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>我的客户</button>
     <button class="main-tab" data-tab="map"><span class="mt-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg></span>拜访地图</button>
   </nav>
   <div class="sub-nav" id="subNav"></div>
@@ -1590,9 +1595,9 @@ body {
   <section class="view active" id="view-list">
     <div class="list-head-row">
       <div class="page-title" style="margin-bottom:0">客户档案</div>
-      <button class="btn btn-primary btn-sm" id="addClientBtn" style="flex-shrink:0">
+      <button class="btn btn-primary btn-sm" id="fabBtn" title="新增客户" style="flex-shrink:0">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        录入客户
+        新增客户
       </button>
     </div>
     <div class="district-fold" id="districtFold">
@@ -1847,11 +1852,11 @@ body {
   </section>
   </section>
 
-  <!-- ===== 拜访客户 ===== -->
+  <!-- ===== 我的客户 ===== -->
   <section class="nav-section" id="sec-visit">
-    <div class="page-title">拜访客户</div>
-    <p class="page-desc">按拜访安排筛选客户，方便安排展业节奏</p>
-    <div id="visitList"></div>
+    <div class="page-title">我的客户</div>
+    <p class="page-desc">我名下保单的客户</p>
+    <div id="myClientList"></div>
   </section>
 
   <!-- ===== 拜访地图 ===== -->
@@ -2023,7 +2028,6 @@ body {
           <select class="field-select" id="f-visitPlan">
             <option value="">未安排</option>
             <option value="month">月拜访</option>
-            <option value="week">周拜访</option>
             <option value="year">年度拜访</option>
           </select>
         </div>
@@ -2410,11 +2414,6 @@ body {
 
 </div>
 
-<!-- ===== 悬浮新增按钮 ===== -->
-<button class="fab" id="fabBtn" title="新增客户">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-</button>
-
 <!-- ===== 底部保存栏（编辑视图） ===== -->
 <div class="save-bar" id="saveBar" style="display:none">
   <button class="btn btn-secondary" id="cancelEditBtn">取消</button>
@@ -2703,7 +2702,6 @@ body {
     document.getElementById('view-' + name).classList.add('active');
     var homeBtn = document.getElementById('backToHomeBtn');
     homeBtn.style.display = (name === 'list') ? 'none' : 'inline-flex';
-    document.getElementById('fabBtn').style.display = (name === 'list') ? 'flex' : 'none';
     document.getElementById('saveBar').style.display = (name === 'edit') ? 'flex' : 'none';
     window.scrollTo({ top: 0 });
   }
@@ -3438,7 +3436,7 @@ body {
   }
 
   function renderClientCards(filtered) {
-    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'myClientList' : mainTab === 'qa' ? 'visitList' : 'clientList');
     box.innerHTML = filtered.map(function(c) {
       var b = c.basic || {};
       var s = c.service || {};
@@ -3463,6 +3461,20 @@ body {
         if (finfo) familyTag = '<span class="tag">' + escapeHtml(finfo.name) + '</span>';
       }
 
+      var polTag = '';
+      var _mine = (c.policies || []).filter(function(pp) { return !pp.owner || pp.owner === '我'; });
+      var _pc = _mine.length;
+      if (_pc > 0) polTag = '<span class="tag" style="background:#E8F5EC;color:#0E7C5B;font-weight:700">' + _pc + ' 份保单</span>';
+
+      var isMine = c.mine === true || _mine.length > 0;
+      var mineBtnHtml = '';
+      var mineTag = '';
+      if (mainTab === 'client' && !isMine) {
+        mineBtnHtml = '<span class="mine-btn" data-mine="' + c.id + '" title="客户已在我这里成交，一键转入我的客户"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg> 转入我的客户</span>';
+      } else if (isMine) {
+        mineTag = '<span class="tag tag-mine">我的客户</span>';
+      }
+
       var meta = [];
       if (b.gender || b.age) meta.push(escapeHtml((b.gender || '') + (b.age ? ' ' + b.age + '岁' : '')));
       if (b.phone) meta.push('<span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>' + escapeHtml(b.phone) + '</span>');
@@ -3480,10 +3492,11 @@ body {
           '<div class="client-name">' + escapeHtml(b.name || '未命名') +
             (b.gender ? '<span class="gender-tag">' + escapeHtml(b.gender) + '</span>' : '') +
           '</div>' +
+          mineBtnHtml +
           '<span class="visit-btn' + (typeof vqHas === 'function' && vqHas(c.id) ? ' on' : '') + '" data-vq="' + c.id + '" title="' + (typeof vqHas === 'function' && vqHas(c.id) ? '移出待拜访' : '加入待拜访') + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg>' + (typeof vqHas === 'function' && vqHas(c.id) ? '已排' : '拜访') + '</span>' +
         '</div>' +
         '<div class="client-meta">' + meta.join('') + '</div>' +
-        '<div class="client-tags">' + intentTag + discTag + familyTag + followTag + '</div>' +
+        '<div class="client-tags">' + intentTag + discTag + familyTag + followTag + polTag + mineTag + '</div>' +
       '</div>';
     }).join('');
 
@@ -3510,10 +3523,22 @@ body {
         vqToggle(this.getAttribute('data-vq'));
       });
     });
+    box.querySelectorAll('.mine-btn').forEach(function(mb) {
+      mb.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var c = getClientById(this.getAttribute('data-mine'));
+        if (!c) return;
+        c.mine = true;
+        c.updatedAt = nowText();
+        saveClients();
+        renderList();
+        showToast('已转入「我的客户」');
+      });
+    });
   }
 
   function renderFamilyGroups(filtered) {
-    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'myClientList' : mainTab === 'qa' ? 'visitList' : 'clientList');
     var families = {};
     var singles = [];
     filtered.forEach(function(c) {
@@ -3614,8 +3639,22 @@ function renderDistrictNav() {
     }
   }
 
+  // 拜访统计：本年度最后几个月（月拜访）与年度拜访人数
+  function renderVisitStats() {
+    var el = document.getElementById('visitStats');
+    if (!el) return;
+    var m = 0, y = 0;
+    clients.forEach(function(c) {
+      var vp = c.visitPlan || '';
+      if (vp === 'month' || vp === 'appoint' || vp === 'week') m++;
+      if (vp === 'year') y++;
+    });
+    el.innerHTML = '本年度最后几个月 · 月拜访 <b>' + m + '</b> 人　|　年度拜访 <b>' + y + '</b> 人';
+  }
+
   // ================= 列表视图 =================
   function renderList() {
+    renderVisitStats();
     if (followMode) { renderFollowLedger(); return; }
     var keyword = document.getElementById('searchInput').value.trim().toLowerCase();
     var intent = document.getElementById('intentFilter').value;
@@ -3625,7 +3664,10 @@ function renderDistrictNav() {
 
     var filtered = list.filter(function(c) {
       var hit = true;
-      if (keyword) {
+      if (mainTab === 'visit') {
+        hit = c.mine === true || (c.policies || []).some(function(pp) { return !pp.owner || pp.owner === '我'; });
+      }
+      if (hit && keyword) {
         var hay = (c.basic.name + c.basic.phone + c.basic.company + c.basic.city + (c.basic.district || '')).toLowerCase();
         hit = hay.indexOf(keyword) !== -1;
       }
@@ -3638,20 +3680,23 @@ function renderDistrictNav() {
       if (hit && needFilter) {
         hit = ((c.needs && c.needs.focus) || []).indexOf(needFilter) !== -1;
       }
-      if (hit && mainTab === 'visit' && visitFilter) {
-        hit = (c.visitPlan || '') === visitFilter || (visitFilter === 'month' && c.visitPlan === 'appoint');
+      if (hit && mainTab === 'qa' && visitFilter) {
+        hit = (c.visitPlan || '') === visitFilter || (visitFilter === 'month' && (c.visitPlan === 'appoint' || c.visitPlan === 'week'));
       }
       return hit;
     });
 
     document.getElementById('clientCount').textContent = clients.length;
 
-    var box = document.getElementById(mainTab === 'visit' ? 'visitList' : 'clientList');
+    var box = document.getElementById(mainTab === 'visit' ? 'myClientList' : mainTab === 'qa' ? 'visitList' : 'clientList');
     if (filtered.length === 0) {
+      var _emptyTxt = clients.length === 0 ? '还没有客户档案，点击右上角「新增客户」开始录入'
+        : mainTab === 'visit' ? '暂无名下保单客户，在客户信息中为客户录入保单后显示'
+        : '没有匹配的客户，换个关键词试试';
       box.innerHTML =
         '<div class="client-empty">' +
         '<div class="empty-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8FA3A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>' +
-        '<p>' + (clients.length === 0 ? '还没有客户档案，点击右下角 + 新增第一位客户' : '没有匹配的客户，换个关键词试试') + '</p>' +
+        '<p>' + _emptyTxt + '</p>' +
         '</div>';
       return;
     }
@@ -4109,6 +4154,10 @@ function renderDistrictNav() {
         '<option value="子女"' + (p.insured === '子女' ? ' selected' : '') + '>子女</option>' +
         '<option value="父母"' + (p.insured === '父母' ? ' selected' : '') + '>父母</option>' +
       '</select></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">出单人</label><select class="field-select p-owner" style="font-size:14px;padding:9px 30px 9px 10px">' +
+        '<option value="我"' + ((p.owner || '我') === '我' ? ' selected' : '') + '>我</option>' +
+        '<option value="其他"' + (p.owner === '其他' ? ' selected' : '') + '>其他</option>' +
+      '</select></div>' +
       '<button class="p-del" type="button">删除此保单</button>' +
     '</div>';
   }
@@ -4145,7 +4194,8 @@ function renderDistrictNav() {
         premium: row.querySelector('.p-premium').value,
         period: row.querySelector('.p-period').value,
         status: row.querySelector('.p-status').value,
-        insured: row.querySelector('.p-insured').value
+        insured: row.querySelector('.p-insured').value,
+        owner: row.querySelector('.p-owner').value || '我'
       };
       if (p.type || p.insurer || p.amount || p.premium) rows.push(p);
     });
@@ -4656,6 +4706,7 @@ function renderDistrictNav() {
           (pol.period ? ' · ' + escapeHtml(pol.period) : '') +
           (pol.status ? ' · ' + escapeHtml(pol.status) : '') +
           (pol.insured ? ' · 被保人：' + escapeHtml(pol.insured) : '') +
+          (pol.owner === '其他' ? ' · 其他业务员出单' : ' · 我出单') +
           '</span></div>';
       });
     }
@@ -4921,7 +4972,6 @@ function renderDistrictNav() {
 
   // ================= 事件绑定 =================
   document.getElementById('fabBtn').addEventListener('click', function() { openEdit(null); });
-  document.getElementById('addClientBtn').addEventListener('click', function() { openEdit(null); });
   // 家庭地址地图事件
   document.getElementById('geoPickBtn').addEventListener('click', openGeoModal);
   document.getElementById('geoCloseBtn').addEventListener('click', closeGeoModal);
@@ -5590,6 +5640,10 @@ function renderDistrictNav() {
       });
       renderFaq('qa');
     }
+    // 拜访客户列表合并进需求分析
+    var _visitBlock = document.createElement('div');
+    _visitBlock.innerHTML = '<div class="page-title">拜访客户</div><p class="page-desc">按拜访安排筛选客户，方便安排展业节奏</p><div class="visit-stats" id="visitStats"></div><div id="visitList"></div>';
+    if (qa) qa.appendChild(_visitBlock);
     var _mapbox2 = document.getElementById('sec-map');
     var _rb = document.querySelector('.route-bar');
     var _vqp = document.getElementById('vqPanel');
@@ -5628,9 +5682,9 @@ var visitFilter = '';
 var mapMode = 'plan';
 function _subMenuDefs() {
   return {
-    qa: [{ k: '', t: '需求分析问答' }],
+    qa: [{ k: 'month', t: '月拜访' }, { k: 'year', t: '年度拜访' }],
     client: [],  // 区县筛选由可折叠区县栏承担
-    visit: [{ k: 'month', t: '月拜访' }, { k: 'week', t: '周拜访' }, { k: 'year', t: '年度拜访' }],
+    visit: [],  // 我的客户：名下保单客户，无二级菜单
     map: [],  // 拜访地图直接展示待拜访面板与地图，无需子导航切换
   };
 }
@@ -5712,6 +5766,7 @@ function switchMain(tab) {
   });
   renderSubNav();
   if (tab === 'client') { renderDistrictNav(); renderNeedNav(); renderList(); }
+  if (tab === 'qa') { renderList(); }
   if (tab === 'visit') { renderList(); }
   if (tab === 'map') { renderMapVq(); updateRouteBar(); _rEnsureAmap(function () { initMapBox(); refreshMapBox(); }); }
 }
@@ -5723,7 +5778,8 @@ function renderSubNav() {
   box.style.display = '';
   box.innerHTML = defs.map(function (d) {
     var act = mainTab === 'client' ? d.k === districtFilter
-      : mainTab === 'visit' ? d.k === visitFilter
+      : mainTab === 'qa' ? d.k === visitFilter
+      : mainTab === 'visit' ? false
       : mainTab === 'map' ? d.k === mapMode
       : d.k === '';
     return '<button class="sub-tab' + (act ? ' active' : '') + '" data-k="' + d.k + '">' + d.t + '</button>';
@@ -5732,7 +5788,8 @@ function renderSubNav() {
     tab.addEventListener('click', function () {
       var k = this.getAttribute('data-k') || '';
       if (mainTab === 'client') { districtFilter = k; renderSubNav(); renderList(); }
-      if (mainTab === 'visit') { visitFilter = k; renderSubNav(); renderList(); }
+      if (mainTab === 'qa') { visitFilter = k; renderSubNav(); renderList(); }
+      if (mainTab === 'visit') { renderSubNav(); renderList(); }
       if (mainTab === 'map') { mapMode = k; renderSubNav(); }
     });
   });
