@@ -102,6 +102,7 @@ body {
   cursor: pointer;
   transition: background 0.2s;
   -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
 }
 .header-btn:active { background: rgba(255,255,255,0.28); }
 .header-btn .count-badge {
@@ -489,6 +490,54 @@ body {
   border-radius: var(--radius-sm);
 }
 .fin-row .field { margin-bottom: 0; }
+.member-policy {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 6px;
+  background: #fff;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+}
+.member-policy .field { margin-bottom: 0; }
+.member-policy .mp-del {
+  grid-column: 1 / -1;
+  justify-self: end;
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 12px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+.add-policy-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  background: none;
+  border: 1px dashed var(--primary);
+  color: var(--primary);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.head-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  min-height: 42px;
+  background: #F5F9F7;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.head-check input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 .fin-row .f-del {
   grid-column: 1 / -1;
   justify-self: end;
@@ -621,7 +670,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px 10px;
   margin-bottom: 10px;
 }
 .client-name {
@@ -854,10 +904,10 @@ body {
 /* ===== 动态行（保单/跟进） ===== */
 .policy-row {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   align-items: end;
-  padding: 12px;
+  padding: 14px 12px;
   margin-bottom: 8px;
   background: #F5F9F7;
   border: 1px solid var(--border);
@@ -1292,6 +1342,8 @@ body {
   max-width: 340px;
   text-align: center;
   box-shadow: var(--shadow-lg);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
 }
 .modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
 .modal-text { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 18px; }
@@ -1347,11 +1399,18 @@ body {
 
 /* ===== 响应式 ===== */
 @media (max-width: 600px) {
-  .header { flex-wrap: nowrap; padding: 7px 10px; gap: 8px; }
+  .header { flex-wrap: nowrap; padding: 7px 10px; gap: 6px; }
   .header-brand { flex: 1 1 auto; min-width: 0; }
   .header-brand .header-subtitle { display: none; }
-  .header-brand .header-title { white-space: nowrap; font-size: 15px; }
-  .header-actions { margin-top: 0; flex-shrink: 0; }
+  .header-brand .header-title { white-space: nowrap; font-size: 14px; letter-spacing: 0; }
+  .header-logo { width: 26px; height: 26px; border-radius: 8px; }
+  .header-actions { margin-top: 0; flex-shrink: 0; gap: 5px; }
+  .header-btn { padding: 5px 8px; font-size: 11px; gap: 4px; }
+}
+@media (max-width: 380px) {
+  .header-brand { flex: 0 0 auto; }
+  .header-logo { display: none; }
+  .header-btn { padding: 5px 7px; }
   .kv-grid { grid-template-columns: repeat(2, 1fr); }
   .policy-row { grid-template-columns: repeat(2, 1fr); }
   .disc-q-options { grid-template-columns: 1fr; }
@@ -1408,6 +1467,10 @@ body {
 .visit-stats { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 12px; padding: 9px 14px; background: #F2F8F5; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary); }
 .visit-stats b { color: var(--primary); font-size: 15px; margin: 0 1px; }
 .mine-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--primary); border-radius: 14px; background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.trash-item-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid #E5A0A0; border-radius: 14px; background: #fff; color: #C0392B; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.trash-item-btn:active { background: #FDEBEB; }
+.quick-follow-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid #B9D5E8; border-radius: 14px; background: #fff; color: #1E6091; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.quick-follow-btn:active { background: #EAF3FA; }
 .mine-btn:hover { opacity: .85; }
 .tag-mine { background: var(--primary); color: #fff; border-color: var(--primary); }
 .icon-btn.on { background: var(--primary); color: #fff; border-color: var(--primary); }
@@ -1561,6 +1624,11 @@ body {
     </div>
   </div>
   <div class="header-actions">
+    <button class="header-btn" id="trashBtn" title="回收站">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+      回收站
+      <span class="count-badge" id="trashCount" style="display:none">0</span>
+    </button>
     <button class="header-btn" id="settingsBtn" title="设置与备份">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
     </button>
@@ -1572,6 +1640,10 @@ body {
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       备份全部
       <span class="count-badge" id="clientCount">0</span>
+    </button>
+    <button class="header-btn ai-btn" id="aiBtn" title="AI 答疑（本地大模型）">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"></path><path d="M19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z"></path></svg>
+      AI 答疑
     </button>
   </div>
 </header>
@@ -2025,14 +2097,6 @@ body {
             <option value="建德市">建德市</option>
           </select>
         </div>
-        <div class="field">
-          <label class="field-label">拜访安排</label>
-          <select class="field-select" id="f-visitPlan">
-            <option value="">未安排</option>
-            <option value="month">月拜访</option>
-            <option value="year">年度拜访</option>
-          </select>
-        </div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -2063,39 +2127,36 @@ body {
       <div class="field-row">
         <div class="field">
           <label class="field-label">家庭归属</label>
-          <select class="field-select" id="f-familyMode">
-            <option value="new">新建家庭（本人为户主）</option>
-            <option value="existing">加入已有家庭</option>
-            <option value="none">暂不设置</option>
-          </select>
+          <label class="head-check"><input type="checkbox" id="f-familyHead"> 户主（本人为户主，勾选即成立家庭）</label>
         </div>
-        <div class="field" id="f-familySelectWrap" style="display:none">
-          <label class="field-label">选择已有家庭</label>
-          <select class="field-select" id="f-familySelect"></select>
+        <div class="field">
+          <label class="field-label">&nbsp;</label>
+          <button type="button" class="add-row-btn" id="addFamilyMemberBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            增加家庭成员
+          </button>
         </div>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label class="field-label">家庭角色</label>
-          <select class="field-select" id="f-familyRole">
-            <option value="本人">本人（户主）</option>
-            <option value="配偶">配偶</option>
-            <option value="子女">子女</option>
-            <option value="父母">父母</option>
-            <option value="其他亲属">其他亲属</option>
-          </select>
+      <div class="field-row" id="f-familyMembersWrap" style="display:none">
+        <div class="field" style="grid-column:1/-1">
+          <label class="field-label">家庭成员信息</label>
+          <div id="familyMemberRows"></div>
+          <button type="button" class="add-row-btn" id="addMemberRowBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            添加成员
+          </button>
         </div>
-        <div class="field">
-          <label class="field-label">家庭备注</label>
-          <input type="text" class="field-input" id="f-familyNote" placeholder="如：一家三口" maxlength="40">
-        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">家庭备注</label>
+        <input type="text" class="field-input" id="f-familyNote" placeholder="如：一家三口" maxlength="40">
       </div>
     </div>
 
     <div class="form-card">
       <div class="form-card-title">
-        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg> 保单档案</span>
-        <span class="form-card-sub">已有保障情况</span>
+        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg> 保单信息</span>
+        <span class="form-card-sub">已有保单情况</span>
       </div>
       <div id="policyRows"></div>
       <button class="add-row-btn" id="addPolicyBtn">
@@ -2107,72 +2168,7 @@ body {
 
     <div class="form-card">
       <div class="form-card-title">
-        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 保障需求</span>
-        <span class="form-card-sub">客户想解决什么</span>
-      </div>
-      <div class="field">
-        <label class="field-label">关注保障方向（可多选）</label>
-        <div class="checkbox-group" id="f-needFocus">
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf1" value="重疾保障"><label for="nf1">重疾保障</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf2" value="医疗报销"><label for="nf2">医疗报销</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf3" value="意外保障"><label for="nf3">意外保障</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf4" value="养老规划"><label for="nf4">养老规划</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf5" value="子女教育金"><label for="nf5">子女教育金</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf6" value="财富传承"><label for="nf6">财富传承</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf7" value="储蓄理财"><label for="nf7">储蓄理财</label></div>
-        </div>
-      </div>
-      <div class="field-row-3">
-        <div class="field">
-          <label class="field-label">年缴预算区间</label>
-          <select class="field-select" id="f-budget">
-            <option value="">请选择</option>
-            <option value="5000元以下">5000元以下</option>
-            <option value="5000-1万">5000-1万</option>
-            <option value="1-3万">1-3万</option>
-            <option value="3-5万">3-5万</option>
-            <option value="5万以上">5万以上</option>
-          </select>
-        </div>
-        <div class="field">
-          <label class="field-label">意向等级</label>
-          <select class="field-select" id="f-intent">
-            <option value="">请选择</option>
-            <option value="高">高意向</option>
-            <option value="中">中意向</option>
-            <option value="低">低意向</option>
-            <option value="暂缓">暂缓</option>
-          </select>
-        </div>
-        <div class="field">
-          <label class="field-label">风险偏好</label>
-          <select class="field-select" id="f-risk">
-            <option value="">请选择</option>
-            <option value="保守">保守</option>
-            <option value="稳健">稳健</option>
-            <option value="进取">进取</option>
-            <option value="不清楚">不清楚</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label class="field-label">投保对象（可多选）</label>
-        <div class="checkbox-group" id="f-insuredTarget">
-          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it1" value="本人"><label for="it1">本人</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it2" value="配偶"><label for="it2">配偶</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it3" value="子女"><label for="it3">子女</label></div>
-          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it4" value="父母"><label for="it4">父母</label></div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="field-label">需求备注</label>
-        <textarea class="field-textarea" id="f-needRemark" placeholder="客户口头需求、关注点、顾虑等"></textarea>
-      </div>
-    </div>
-
-    <div class="form-card">
-      <div class="form-card-title">
-        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> 家庭财务画像</span>
+        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> 家庭财务信息</span>
         <span class="form-card-sub">经济能力评估</span>
       </div>
       <div class="field-row-3">
@@ -2247,11 +2243,94 @@ body {
         </button>
       </div>
       <div class="policy-summary" id="familyFinanceSummary"></div>
+      <div class="field">
+        <label class="field-label">其他情况（可多选）</label>
+        <div class="checkbox-group" id="f-otherCases">
+          <div class="checkbox-item"><input type="checkbox" name="otherCase" id="oc1" value="有外债/贷款"><label for="oc1">有外债/贷款</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="otherCase" id="oc2" value="涉及诉讼/纠纷"><label for="oc2">涉及诉讼/纠纷</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="otherCase" id="oc3" value="有投资/资产"><label for="oc3">有投资/资产</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="otherCase" id="oc4" value="其他特殊情况"><label for="oc4">其他特殊情况</label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">情况说明</label>
+        <textarea class="field-textarea" id="f-otherNote" placeholder="如：房贷80万；2024年因合伙纠纷诉讼；持有股票基金约50万等"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">存款情况（用于客户分析，可多条）</label>
+        <div id="depositRows"></div>
+        <button class="btn btn-secondary" id="addDepositBtn" style="margin-top:2px;width:100%"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> 添加存款</button>
+      </div>
     </div>
 
     <div class="form-card">
       <div class="form-card-title">
-        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> 健康情况</span>
+        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> 保障需求信息</span>
+        <span class="form-card-sub">客户想解决什么</span>
+      </div>
+      <div class="field">
+        <label class="field-label">关注保障方向（可多选）</label>
+        <div class="checkbox-group" id="f-needFocus">
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf1" value="重疾保障"><label for="nf1">重疾保障</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf2" value="医疗报销"><label for="nf2">医疗报销</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf3" value="意外保障"><label for="nf3">意外保障</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf4" value="养老规划"><label for="nf4">养老规划</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf5" value="子女教育金"><label for="nf5">子女教育金</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf6" value="财富传承"><label for="nf6">财富传承</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="needFocus" id="nf7" value="储蓄理财"><label for="nf7">储蓄理财</label></div>
+        </div>
+      </div>
+      <div class="field-row-3">
+        <div class="field">
+          <label class="field-label">年缴预算区间</label>
+          <select class="field-select" id="f-budget">
+            <option value="">请选择</option>
+            <option value="5000元以下">5000元以下</option>
+            <option value="5000-1万">5000-1万</option>
+            <option value="1-3万">1-3万</option>
+            <option value="3-5万">3-5万</option>
+            <option value="5万以上">5万以上</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">意向等级</label>
+          <select class="field-select" id="f-intent">
+            <option value="">请选择</option>
+            <option value="高">高意向</option>
+            <option value="中">中意向</option>
+            <option value="低">低意向</option>
+            <option value="暂缓">暂缓</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">风险偏好</label>
+          <select class="field-select" id="f-risk">
+            <option value="">请选择</option>
+            <option value="保守">保守</option>
+            <option value="稳健">稳健</option>
+            <option value="进取">进取</option>
+            <option value="不清楚">不清楚</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">投保对象（可多选）</label>
+        <div class="checkbox-group" id="f-insuredTarget">
+          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it1" value="本人"><label for="it1">本人</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it2" value="配偶"><label for="it2">配偶</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it3" value="子女"><label for="it3">子女</label></div>
+          <div class="checkbox-item"><input type="checkbox" name="insuredTarget" id="it4" value="父母"><label for="it4">父母</label></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">需求备注</label>
+        <textarea class="field-textarea" id="f-needRemark" placeholder="客户口头需求、关注点、顾虑等"></textarea>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">
+        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> 健康信息</span>
         <span class="form-card-sub">投保核保与健康服务依据</span>
       </div>
       <div class="field-row-3">
@@ -2369,13 +2448,28 @@ body {
 
     <div class="form-card">
       <div class="form-card-title">
-        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 服务跟进</span>
-        <span class="form-card-sub">展业过程留痕</span>
+        <span class="title-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> 拜访时间信息</span>
+        <span class="form-card-sub">按客户画像自动排程，可手动调整</span>
       </div>
       <div class="field-row">
         <div class="field">
-          <label class="field-label">下次跟进日期</label>
-          <input type="date" class="field-input" id="f-nextFollow">
+          <label class="field-label">拜访安排</label>
+          <select class="field-select" id="f-visitPlan">
+            <option value="">未安排</option>
+            <option value="month">月拜访</option>
+            <option value="year">年度拜访</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">下次拜访时间</label>
+          <input type="date" class="field-input" id="f-nextFollowDate">
+          <div class="field-hint">按客户画像自动生成：高意向3天/中意向7天/低意向14天/暂缓30天，可在此手动调整</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">当前计划时间</label>
+          <div style="font-size:13px;color:var(--text);line-height:1.6">当前：<span id="f-nextFollow" style="font-weight:700;color:var(--primary)">未设置</span></div>
         </div>
         <div class="field">
           <label class="field-label">跟进历史记录</label>
@@ -2383,11 +2477,11 @@ body {
         </div>
       </div>
       <div class="field">
-        <label class="field-label">跟进记录（追加）</label>
-        <div class="field-row" style="gap:8px">
-          <input type="text" class="field-input" id="f-followInput" placeholder="记录本次沟通内容，回车或点添加" style="flex:1">
-          <button class="btn btn-secondary" id="addFollowBtn" style="flex-shrink:0;min-height:46px;padding:10px 16px">添加</button>
-        </div>
+        <label class="field-label">本次拜访</label>
+        <button type="button" class="btn btn-primary" id="finishVisitBtn" style="width:100%;min-height:46px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>记录本次拜访完成
+        </button>
+        <div class="field-hint">点击后自动生成跟进记录，并按客户画像顺延下次拜访时间（高意向3天/中7天/低14天/暂缓30天）</div>
       </div>
     </div>
 
@@ -2455,6 +2549,32 @@ body {
   <div class="map-modal-hint">拖动地图浏览，点击地图上的目标位置即可选点；搜索到地址后点击结果可跳转。定位信息仅保存在本机。</div>
 </div>
 
+<!-- ===== 完成拜访弹窗 ===== -->
+<div class="map-modal" id="visitDoneModal">
+  <div class="map-modal-head">
+    <span style="font-weight:700;font-size:15px">完成拜访 · 生成拜访记录</span>
+    <button class="icon-btn" id="vdCloseBtn" style="flex-shrink:0" title="关闭">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div style="padding:14px;display:flex;flex-direction:column;gap:10px;overflow:auto">
+    <div class="field" style="margin:0">
+      <label class="field-label">客户</label>
+      <div style="font-size:15px;font-weight:700" id="vdName"></div>
+    </div>
+    <div class="field" style="margin:0">
+      <label class="field-label">拜访地点</label>
+      <div style="font-size:13px;color:var(--text-secondary)" id="vdPlace"></div>
+    </div>
+    <div class="field" style="margin:0">
+      <label class="field-label">拜访内容</label>
+      <textarea class="field-textarea" id="vdContent" rows="4" placeholder="填写本次拜访内容：聊了什么、客户反馈、异议点、下一步计划…"></textarea>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.6" id="vdNext"></div>
+    <button class="btn btn-primary" id="vdSaveBtn" style="width:100%;min-height:46px">保存拜访记录</button>
+  </div>
+</div>
+
 
 <!-- ===== 访问密码锁 ===== -->
 <div class="lock-mask" id="lockScreen">
@@ -2487,6 +2607,44 @@ body {
   </div>
 </div>
 
+<!-- ===== 快捷记录拜访/跟进弹层 ===== -->
+<div class="modal-mask" id="quickFollowMask">
+  <div class="modal-box settings-modal-box" style="text-align:left;max-width:420px">
+    <div class="modal-title" style="text-align:center">记录拜访 / 跟进</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px" id="qfClientName"></div>
+    <div class="field" style="margin-bottom:8px">
+      <button class="btn btn-secondary" id="qfAutoBtn" style="width:100%"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 自动生成跟进计划（基于客户分析）</button>
+    </div>
+    <div id="qfReason" style="display:none;font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.6;background:var(--primary-light);padding:8px 10px;border-radius:8px"></div>
+    <div class="field" style="margin-bottom:10px">
+      <label class="field-label">本次拜访 / 沟通内容</label>
+      <textarea class="field-input" id="qfText" rows="3" placeholder="记录本次拜访内容、客户反馈、需跟进事项等"></textarea>
+    </div>
+    <div class="field" style="margin-bottom:10px">
+      <label class="field-label">下次跟进</label>
+      <input type="text" class="field-input" id="qfNext" placeholder="自动生成后自动填写，可修改">
+    </div>
+    <div id="qfRecent" style="max-height:160px;overflow-y:auto;border-top:1px dashed var(--border);padding-top:8px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="qfCloseBtn">取消</button>
+      <button class="btn btn-primary" id="qfSaveBtn">保存记录</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 回收站弹层 ===== -->
+<div class="modal-mask" id="trashMask">
+  <div class="modal-box settings-modal-box" style="text-align:left;max-width:420px">
+    <div class="modal-title" style="text-align:center">回收站</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.6">删除的客户会先进入回收站，可随时恢复或彻底删除。</div>
+    <div id="trashList" style="max-height:52vh;overflow-y:auto"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="trashEmptyBtn">清空回收站</button>
+      <button class="btn btn-primary" id="trashCloseBtn">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 设置与备份弹层 ===== -->
 <div class="modal-mask" id="settingsMask">
   <div class="modal-box settings-modal-box" style="text-align:left;max-width:380px">
@@ -2510,6 +2668,7 @@ body {
       <button class="btn btn-secondary btn-block" id="setImportBtn">导入备份（自动识别加密/明文）</button>
       <input type="file" id="importFileInput" accept=".json,application/json" style="display:none">
       <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6">加密导出：文件内容用 AES-256-GCM 加密，即使发到微信传输助手/网盘被人拿到，没有密码也读不出任何内容。密码请牢记，忘记无法找回。明文导出仅建议本机自用。</div>
+      <div id="autoBackupInfo" style="font-size:11px;color:#0E7C5B;margin-top:4px;line-height:1.6"></div>
     </div>
     <div class="field" style="margin-bottom:12px">
       <label class="field-label">高德地图 Key 配置（地图不显示时换 Key）</label>
@@ -2517,6 +2676,17 @@ body {
       <input type="text" class="field-input" id="amapJsInput" placeholder="安全密钥 securityJsCode" autocomplete="off" style="margin-bottom:8px">
       <button class="btn btn-primary btn-block" id="amapKeySaveBtn" style="margin-bottom:8px">保存 Key 并重新加载地图</button>
       <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6">申请方法：打开 lbs.amap.com 注册并登录 → 控制台 → 应用管理 → 我的应用 → 创建新应用 → 添加 Key（服务平台选「Web端(JS API)」）→ 保存后复制 Key 与「安全密钥」填到上方。填好后点保存，再刷新页面即可。Key 是你自己独有的，不会像共享 Key 那样被限制。</div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label class="field-label">AI 答疑（本地大模型）</label>
+      <input type="text" class="field-input" id="aiUrlInput" placeholder="API 地址（默认 http://localhost:11434）" autocomplete="off" style="margin-bottom:8px">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <select class="field-input" id="aiModelSel" style="flex:1"><option value="">选择模型（点击刷新拉取）</option></select>
+        <button class="btn btn-secondary" id="aiModelReloadBtn" style="flex-shrink:0">刷新</button>
+      </div>
+      <button class="btn btn-primary btn-block" id="aiCfgSaveBtn" style="margin-bottom:8px">保存 AI 配置</button>
+      <button class="btn btn-secondary btn-block" id="aiTestBtn">测试连接（问一句"什么是重疾险"）</button>
+      <div id="aiCfgInfo" style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6">用于连接你电脑上运行的本地大模型（Ollama）。页面在电脑上直接打开即可使用；若提示跨域被拦，需要把 Ollama 的跨域开关打开（设置环境变量 OLLAMA_ORIGINS=* 后重启 Ollama），我也可以帮你配置。生成速度受电脑硬件限制，耐心等待或把问题拆短。</div>
     </div>
     <div class="field" style="margin-bottom:12px">
       <label class="field-label">访问密码</label>
@@ -2536,6 +2706,24 @@ body {
   </div>
 </div>
 
+
+<!-- ===== AI 答疑弹窗 ===== -->
+<div class="modal-mask" id="aiMask">
+  <div class="modal-box ai-modal-box" style="text-align:left;max-width:520px;display:flex;flex-direction:column;height:78vh">
+    <div class="modal-title" style="text-align:center">AI 答疑 · 保险顾问助手
+      <span style="float:right;cursor:pointer" id="aiCloseBtn" title="关闭">&times;</span>
+    </div>
+    <div id="aiMsgs" style="flex:1;overflow-y:auto;padding:10px 2px;display:flex;flex-direction:column;gap:8px;font-size:14px"></div>
+    <div style="border-top:1px solid var(--border);padding-top:8px">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" class="field-input" id="aiInput" placeholder="输入客户问题，如：50岁客户买什么保险合适？" style="flex:1" autocomplete="off">
+        <button class="btn btn-primary" id="aiSendBtn" style="flex-shrink:0">发送</button>
+        <button class="btn btn-secondary" id="aiStopBtn" style="flex-shrink:0;display:none">停止</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.6">AI 回答仅供参考，具体以保险合同条款为准。想换模型或改地址，到「设置 → AI 答疑」配置。</div>
+    </div>
+  </div>
+</div>
 
 <!-- ===== 拜访路线规划弹窗（智能路线图） ===== -->
 <div class="route-modal" id="routeModal">
@@ -2609,6 +2797,19 @@ body {
   var listMode = 'client'; // client 按客户 | family 按家庭
   var followMode = false; // true 显示跟进历史台账
 
+  // ================= 数据自动备份（更新网页不清客户数据） =================
+  // 客户数据保存在浏览器本地存储（localStorage），与网页文件无关；
+  // 每次上传新版本只是替换代码，客户信息原样保留。以下为双保险：
+  // 1) 保存时自动写一份备份副本；2) 主数据意外损坏时自动从备份恢复。
+  var BACKUP_KEY = 'meican_clients_autobackup_v1';
+  function autoBackup() {
+    try {
+      var bk = localStorage.getItem(BACKUP_KEY);
+      var last = bk ? (JSON.parse(bk).t || 0) : 0;
+      if (Date.now() - last < 60000) return; // 60秒内不重复写
+      localStorage.setItem(BACKUP_KEY, JSON.stringify({ t: Date.now(), clients: clients }));
+    } catch (e) {}
+  }
   function loadClients() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
@@ -2619,7 +2820,21 @@ body {
       // 兼容旧版数据：可能是 { clients: [...] } 包裹结构
       if (!Array.isArray(list) && list && Array.isArray(list.clients)) list = list.clients;
       return Array.isArray(list) ? list : [];
-    } catch (e) { return []; }
+    } catch (e) {
+      // 主数据损坏：尝试从自动备份恢复，绝不静默清空
+      try {
+        var bkRaw = localStorage.getItem(BACKUP_KEY);
+        if (bkRaw) {
+          var bk = JSON.parse(bkRaw);
+          if (bk && Array.isArray(bk.clients) && bk.clients.length) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bk.clients));
+            showToast('客户数据已从自动备份恢复');
+            return bk.clients;
+          }
+        }
+      } catch (e2) {}
+      return [];
+    }
   }
 
   function saveClients() {
@@ -2629,11 +2844,28 @@ body {
         return true;
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+      autoBackup();
       return true;
     } catch (e) {
       showToast('保存失败：存储空间不足或隐私模式');
       return false;
     }
+  }
+
+  // ================= 回收站 =================
+  var TRASH_KEY = 'meican_trash_v1';
+  var trash = loadTrash();
+  function loadTrash() {
+    try {
+      var raw = localStorage.getItem(TRASH_KEY);
+      if (!raw) return [];
+      var list = JSON.parse(raw);
+      return Array.isArray(list) ? list : [];
+    } catch (e) { return []; }
+  }
+  function saveTrash() {
+    try { localStorage.setItem(TRASH_KEY, JSON.stringify(trash)); return true; }
+    catch (e) { showToast('回收站保存失败'); return false; }
   }
 
   function genId() {
@@ -2713,6 +2945,7 @@ body {
   var geoLng = null;
   var geoMap = null;
   var geoMarker = null;
+  var _geoCb = null;
   var detailMap = null;
 
   function updateGeoStatus() {
@@ -2725,10 +2958,12 @@ body {
     }
   }
 
-  function openGeoModal() {
+  function openGeoModal(initLng, initLat, cb) {
+    _geoCb = cb || null;
     var modal = document.getElementById('mapModal');
     modal.classList.add('show');
     _rEnsureAmap(function() {
+      if (initLng != null && initLat != null) { geoLng = initLng; geoLat = initLat; }
       var lat = geoLat != null ? geoLat : 30.2590;
       var lng = geoLng != null ? geoLng : 120.1650;
       if (geoMap) { geoMap.destroy(); geoMap = null; }
@@ -2752,13 +2987,18 @@ body {
 
   function confirmGeo() {
     if (!geoMarker) {
-      showToast('请先在地图上点击选择客户家庭位置');
+      showToast('请先在地图上点击选择位置');
       return;
     }
     var pos = geoMarker.getPosition();
     geoLat = Math.round(pos.lat * 1e6) / 1e6;
     geoLng = Math.round(pos.lng * 1e6) / 1e6;
     closeGeoModal();
+    if (_geoCb) {
+      var _cb = _geoCb; _geoCb = null;
+      _cb({ lng: geoLng, lat: geoLat });
+      return;
+    }
     updateGeoStatus();
     showToast('家庭地址定位成功');
   }
@@ -2908,6 +3148,87 @@ body {
       '</div>';
   }
 
+  var MEMBER_POLICY_TYPES = ['寿险', '重疾', '医疗', '意外', '年金/养老', '理财储蓄', '车险', '其他'];
+  var MEMBER_POLICY_PERIODS = ['趸交', '5年', '10年', '20年', '30年', '终身'];
+  var MEMBER_POLICY_STATUS = ['在保', '已失效', '待投保'];
+  function memberPolicyHtml(pp) {
+    pp = pp || {};
+    var typeOpts = '<option value="">请选择</option>' + MEMBER_POLICY_TYPES.map(function(t) {
+      return '<option value="' + t + '"' + (pp.type === t ? ' selected' : '') + '>' + t + '</option>';
+    }).join('');
+    var periodOpts = '<option value="">请选择</option>' + MEMBER_POLICY_PERIODS.map(function(t) {
+      return '<option value="' + t + '"' + (pp.period === t ? ' selected' : '') + '>' + t + '</option>';
+    }).join('');
+    var statusOpts = '<option value="">请选择</option>' + MEMBER_POLICY_STATUS.map(function(t) {
+      return '<option value="' + t + '"' + (pp.status === t ? ' selected' : '') + '>' + t + '</option>';
+    }).join('');
+    return '<div class="member-policy" data-k="member-policy">' +
+      '<div class="field" style="grid-column:1/-1"><label class="field-label" style="font-size:11px;color:var(--text-muted)">保单名称</label><input type="text" class="field-input" data-k="pname" placeholder="如 平安福20" maxlength="30" value="' + escapeHtml(pp.name || '') + '"></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">险种</label><select class="field-select" data-k="ptype">' + typeOpts + '</select></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">保险公司</label><input type="text" class="field-input" data-k="pinsurer" placeholder="公司名" maxlength="20" value="' + escapeHtml(pp.insurer || '') + '"></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">保额(万)</label><input type="number" class="field-input" data-k="pamount" placeholder="0" min="0" inputmode="numeric" value="' + escapeHtml(pp.amount == null ? '' : pp.amount) + '"></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">年缴(元)</label><input type="number" class="field-input" data-k="ppremium" placeholder="0" min="0" inputmode="numeric" value="' + escapeHtml(pp.premium == null ? '' : pp.premium) + '"></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">缴费期</label><select class="field-select" data-k="pperiod">' + periodOpts + '</select></div>' +
+      '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">状态</label><select class="field-select" data-k="pstatus">' + statusOpts + '</select></div>' +
+      '<button type="button" class="mp-del"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> 删除此保单</button>' +
+      '</div>';
+  }
+  function familyMemberRowHtml(r) {
+    r = r || {};
+    var relOpts = '<option value="">关系</option>';
+    ['父母', '子女', '兄弟姐妹', '配偶', '其他亲属'].forEach(function(t) {
+      relOpts += '<option value="' + t + '"' + (r.rel === t ? ' selected' : '') + '>' + t + '</option>';
+    });
+    var pols = r.policies;
+    if ((!pols || !pols.length) && r.policy) pols = [{ name: r.policy }];
+    var polArea = '<div class="field" style="grid-column:1/-1"><label class="field-label">名下保单</label>' +
+      '<div class="member-policies">' + (pols && pols.length ? pols.map(function(pp) { return memberPolicyHtml(pp); }).join('') : '') + '</div>' +
+      '<button type="button" class="add-policy-mini" data-k="addpolicy"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> 添加保单</button>' +
+      '</div>';
+    return '<div class="fin-row" data-k="member">' +
+      '<div class="field"><label class="field-label">姓名</label><input type="text" class="field-input" data-k="name" placeholder="如 王小明" maxlength="10" value="' + escapeHtml(r.name || '') + '"></div>' +
+      '<div class="field"><label class="field-label">与本人关系</label><select class="field-select" data-k="rel">' + relOpts + '</select></div>' +
+      '<div class="field"><label class="field-label">出生年月</label><input type="month" class="field-input" data-k="birth" value="' + escapeHtml(r.birth || '') + '"></div>' +
+      '<div class="field"><label class="field-label">年龄</label><input type="number" class="field-input" data-k="age" placeholder="如 35" min="0" inputmode="numeric" value="' + escapeHtml(r.age == null ? '' : r.age) + '"></div>' +
+      '<div class="field"><label class="field-label">工作单位</label><input type="text" class="field-input" data-k="work" placeholder="如 XX公司" maxlength="30" value="' + escapeHtml(r.work || '') + '"></div>' +
+      '<div class="field"><label class="field-label">月收入（元）</label><input type="number" class="field-input" data-k="income" placeholder="如 8000" min="0" inputmode="numeric" value="' + escapeHtml(r.income == null ? '' : r.income) + '"></div>' +
+      polArea +
+      '<button type="button" class="f-del"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> 删除成员</button>' +
+      '</div>';
+  }
+  function renderFamilyMemberRows(data) {
+    var box = document.getElementById('familyMemberRows');
+    if (!box) return;
+    box.innerHTML = (data || []).map(function(r) { return familyMemberRowHtml(r); }).join('');
+  }
+  function collectFamilyMemberRows() {
+    var out = [];
+    document.querySelectorAll('#familyMemberRows .fin-row').forEach(function(row) {
+      var name = row.querySelector('[data-k="name"]').value.trim();
+      var rel = row.querySelector('[data-k="rel"]').value;
+      var age = row.querySelector('[data-k="age"]').value.trim();
+      var birth = row.querySelector('[data-k="birth"]').value;
+      var work = row.querySelector('[data-k="work"]').value.trim();
+      var income = row.querySelector('[data-k="income"]').value.trim();
+      var policies = [];
+      row.querySelectorAll('.member-policy').forEach(function(pr) {
+        var pp = {
+          name: pr.querySelector('[data-k="pname"]').value.trim(),
+          type: pr.querySelector('[data-k="ptype"]').value,
+          insurer: pr.querySelector('[data-k="pinsurer"]').value.trim(),
+          amount: pr.querySelector('[data-k="pamount"]').value,
+          premium: pr.querySelector('[data-k="ppremium"]').value,
+          period: pr.querySelector('[data-k="pperiod"]').value,
+          status: pr.querySelector('[data-k="pstatus"]').value
+        };
+        if (pp.name || pp.type || pp.insurer || pp.amount || pp.premium) policies.push(pp);
+      });
+      if (!name && !rel) return;
+      out.push({ name: name || '成员', rel: rel, age: age, birth: birth, work: work, income: income, policies: policies });
+    });
+    return out;
+  }
+
   function renderIncomeRows(data) {
     var box = document.getElementById('memberIncomeRows');
     if (!box) return;
@@ -2996,6 +3317,16 @@ body {
     var incomeMid = { '10万以下': 8, '10-30万': 20, '30-50万': 40, '50-100万': 75, '100万以上': 150 }[income] || 20;
     var personalMid = { '10万以下': 8, '10-30万': 20, '30-50万': 40, '50-100万': 75, '100万以上': 150 }[personalIncome] || incomeMid;
     var noExisting = !existing.length || existing.indexOf('无') !== -1;
+    // 客户档案资产/存款画像（投资、外债、诉讼、活期/大额存款）
+    var _c0 = null;
+    var _cid = editingId || viewingId;
+    if (_cid) { for (var _i0 = 0; _i0 < clients.length; _i0++) { if (clients[_i0].id === _cid) { _c0 = clients[_i0]; break; } } }
+    var _needs0 = (_c0 && _c0.needs) || {};
+    var _oc = _needs0.otherCases || [];
+    var _hasInvest = _oc.indexOf('有投资/资产') !== -1;
+    var _hasDebt = _oc.indexOf('有外债/贷款') !== -1;
+    var _hasLawsuit = _oc.indexOf('涉及诉讼/纠纷') !== -1;
+    var _deps = getDeposits(_needs0);
 
     var tags = [];
     var ageTag = '';
@@ -3019,9 +3350,37 @@ body {
     if (disease.indexOf('没想过') !== -1 || disease.indexOf('不愿面对') !== -1) tags.push('保障意识待唤醒');
     if (attitude === '不太信任') tags.push('需先建立信任');
     if (attitude === '想买但不知买什么') tags.push('意向明确缺方案');
+    if (_hasInvest) tags.push('有投资/资产');
+    if (_hasDebt) tags.push('有外债/贷款');
+    if (_hasLawsuit) tags.push('涉及诉讼');
+    if (_deps.length) tags.push('有存款');
 
     var plans = [];
-    if (risks.indexOf('大病重疾') !== -1) {
+    if (age === '60岁以上') {
+      // ===== 60 岁以上老年专属方案 =====
+      if (risks.indexOf('大额医疗') !== -1 || noExisting) {
+        plans.push({ type: '防癌医疗/百万医疗', detail: '60 岁以上优先选健康告知宽松的防癌医疗或百万医疗（注意承保年龄上限），覆盖大额医疗费用' });
+      }
+      if (risks.indexOf('意外伤残') !== -1 || noExisting) {
+        plans.push({ type: '老年意外险', detail: '含意外骨折/住院津贴责任，保费低，老年人优先配置' });
+      }
+      if (existing.indexOf('防癌险') === -1 && existing.indexOf('防癌医疗') === -1) {
+        plans.push({ type: '防癌险', detail: '给付型防癌险，确诊即赔，核保比重疾宽松，适合老年补充' });
+      }
+      if (risks.indexOf('养老规划') !== -1) {
+        plans.push({ type: '养老年金', detail: '高龄阶段更需确定现金流，即交即领/快返年金可快速补充养老' });
+      }
+      if (risks.indexOf('财富传承') !== -1) {
+        plans.push({ type: '增额终身寿', detail: '稳健增值 + 定向传承，适合老年资产安排，注意投保年龄上限' });
+      }
+      if (risks.indexOf('储蓄理财') !== -1) {
+        plans.push({ type: '储蓄型保险/年金', detail: '锁定长期确定收益，对冲利率下行' });
+      }
+      if (!plans.length) {
+        plans.push({ type: '老年保障组合', detail: '建议以 老年意外险 + 防癌医疗/防癌险 为核心组合，优先覆盖大额医疗与意外风险' });
+      }
+    } else {
+      if (risks.indexOf('大病重疾') !== -1) {
       var ci = Math.round(personalMid * 3);
       plans.push({ type: '重疾险', detail: '建议保额 ' + ci + ' 万元（约个人年收入3倍）' + (existing.indexOf('商业重疾') !== -1 ? '；已有重疾保障，请评估保额是否充足' : '') });
     }
@@ -3043,11 +3402,12 @@ body {
     if (risks.indexOf('子女教育') !== -1) {
       plans.push({ type: '教育金', detail: '按目标阶段（高中/大学/留学）测算教育金储备，锁定确定给付' });
     }
-    if (risks.indexOf('财富传承') !== -1) {
-      plans.push({ type: '增额终身寿', detail: '稳健增值 + 定向传承，可对接保单信托做资产隔离' });
-    }
-    if (!plans.length) {
-      plans.push({ type: '基础保障', detail: '建议从医疗险 + 意外险起步，再逐步补充重疾与寿险' });
+      if (risks.indexOf('财富传承') !== -1) {
+        plans.push({ type: '增额终身寿', detail: '稳健增值 + 定向传承，可对接保单信托做资产隔离' });
+      }
+      if (!plans.length) {
+        plans.push({ type: '基础保障', detail: '建议从医疗险 + 意外险起步，再逐步补充重疾与寿险' });
+      }
     }
 
     var premLow = Math.round(incomeMid * 0.1 * 10) / 10;
@@ -3055,7 +3415,8 @@ body {
     var premiumTip = '建议家庭年保费支出 ' + premLow + '万 ~ ' + premHigh + ' 万元（家庭年收入 10%-15%）';
     if (budget) premiumTip += '；客户预算 ' + budget + '，需按优先级分配';
 
-    var summary = role + '客户，个人年收入' + (personalIncome || '未填') + '，家庭年收入' + income + '。' + (noExisting ? '目前保障空白，需优先搭建基础保障。' : '已有部分保障，需查漏补缺。') + '建议按 重疾 → 医疗 → 意外 → 寿险 → 储蓄 的顺序规划。';
+    var _cName = (_c0 && _c0.basic && _c0.basic.name) ? '客户「' + _c0.basic.name + '」· ' : '';
+    var summary = _cName + role + '客户，个人年收入' + (personalIncome || '未填') + '，家庭年收入' + income + '。' + (noExisting ? '目前保障空白，需优先搭建基础保障。' : '已有部分保障，需查漏补缺。') + '建议按 重疾 → 医疗 → 意外 → 寿险 → 储蓄 的顺序规划。';
 
     // ===== 保障风险图（多维风险评估）=====
     var riskDims = [];
@@ -3217,6 +3578,16 @@ body {
     } else if (money === '倾向未来储蓄') {
       insight.push('倾向未来储蓄——年金/增额寿接受度高，可优先推中长期确定给付产品');
     }
+    // 资产/存款画像洞察（投资、外债、诉讼、存款作为分析重要部分）
+    var _assetTip = '';
+    if (_hasInvest) _assetTip += '客户名下有投资/资产——有资产配置意识，增额终身寿/年金是「稳健增值+定向传承」的沟通切入点；';
+    if (_hasDebt) _assetTip += '存在外债/贷款——需用定期寿险覆盖债务风险，避免突发状况让家庭背债；';
+    if (_hasLawsuit) _assetTip += '涉及诉讼/纠纷——有资产隔离与定向传承需求，增额终身寿+保单架构可作方案核心；';
+    _deps.forEach(function(_d) {
+      if (_d.type === '大额存款') _assetTip += '大额存款（' + (_d.bank || '') + (_d.rate ? '，利率' + _d.rate + '%' : '') + '）——大额资金求稳，到期后可引导转投年金/增额寿锁定更高确定性收益；';
+      else _assetTip += '活期存款（' + (_d.bank || '') + (_d.rate ? '，利率' + _d.rate + '%' : '') + '）——活期利率低、资金闲置，利率下行周期可引导锁定长期收益；';
+    });
+    if (_assetTip) insight.push('资产/存款画像：' + _assetTip);
 
     var result = {
       date: nowText(),
@@ -3232,6 +3603,7 @@ body {
       '<div class="need-qa-result-title">需求分析结果</div>' +
       '<div class="fin-row-line">' + escapeHtml(summary) + '</div>' +
       '<div style="margin-top:6px">' + tags.map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>' +
+      (_assetTip ? '<div class="fin-row-line" style="margin-top:8px;background:#E5EFEA;border-left:3px solid var(--primary);padding:6px 10px;border-radius:6px">资产/存款画像：' + escapeHtml(_assetTip) + '</div>' : '') +
       '<div style="margin-top:8px">' + plans.map(function(p) {
         return '<div class="fin-row-line">• <strong>' + escapeHtml(p.type) + '</strong>：' + escapeHtml(p.detail) + '</div>';
       }).join('') + '</div>' +
@@ -3261,6 +3633,395 @@ body {
     document.getElementById('nqSaveNewBtn').addEventListener('click', function() { saveNeedAnalysisNew(result); });
     document.getElementById('nqSaveBtn').addEventListener('click', function() { saveNeedAnalysis(result); });
     document.getElementById('nqPrintBtn').addEventListener('click', function() { printReport(result); });
+  }
+
+  // ===== 客户档案一键分析（详情页本地规则分析） =====
+  function analyzeClientProfile(c) {
+    c = c || {};
+    var b = c.basic || {}, n = c.needs || {}, f = c.finance || {}, h = c.health || {};
+    var pols = c.policies || [];
+    var tags = [], plans = [], insight = [];
+    var role = (function() {
+      if (b.familyRole) return b.familyRole;
+      if (b.familyHead) return '户主';
+      var _ms = b.familyMembers || [];
+      var _self = _ms.filter(function(m) { return m.rel === '本人'; })[0];
+      return _self ? '本人' : '';
+    })();
+    var income = f.income || '';
+    var incomeMid = { '10万以下': 8, '10-30万': 20, '30-50万': 40, '50-100万': 75, '100万以上': 150 }[income] || 20;
+    var existing = pols.map(function(p) { return p.type; });
+    var noExisting = !existing.length;
+    var age = parseInt(b.age, 10) || 0;
+    if (!age && b.birth) { try { var _abT = new Date(b.birth); if (_abT.getTime()) age = Math.floor((Date.now() - _abT.getTime()) / 31536000000); } catch (e) {} }
+    var isSenior = age >= 60;
+    if (isSenior) tags.push('老年客户');
+    var focus = n.focus || [];
+    var risks = [];
+    if (focus.indexOf('重疾保障') !== -1) risks.push('大病重疾');
+    if (focus.indexOf('医疗报销') !== -1) risks.push('大额医疗');
+    if (focus.indexOf('意外保障') !== -1) risks.push('意外伤残');
+    if (focus.indexOf('养老规划') !== -1) risks.push('养老规划');
+    if (focus.indexOf('子女教育金') !== -1) risks.push('子女教育');
+    if (focus.indexOf('财富传承') !== -1) risks.push('财富传承');
+    if (focus.indexOf('储蓄理财') !== -1) risks.push('储蓄理财');
+    var debts = [];
+    if (f.mortgage) debts.push('房贷');
+    if (f.debt) debts.push('其他负债');
+    var oc = n.otherCases || [];
+    if (oc.indexOf('有外债/贷款') !== -1 && debts.indexOf('其他负债') === -1) debts.push('其他负债');
+    var cares = [];
+    if (f.elderly) cares.push('父母赡养');
+    if ((n.insured || []).indexOf('子女') !== -1 || b.children) cares.push('子女教育');
+    var healthSelf = h.exam || '';
+    var hasInvest = oc.indexOf('有投资/资产') !== -1;
+    var hasDebt = oc.indexOf('有外债/贷款') !== -1;
+    var hasLawsuit = oc.indexOf('涉及诉讼/纠纷') !== -1;
+    var deps = getDeposits(n);
+    var hasSave = deps.length > 0;
+
+    if (noExisting) tags.push('保障空白'); else tags.push('已有' + existing.length + '类保障');
+    if (role && role !== '本人') tags.push(role);
+    if (debts.length) tags.push('有' + debts.join('、'));
+    if (cares.length) tags.push('承担' + cares.join('、'));
+    if (hasInvest) tags.push('有投资/资产');
+    if (hasDebt) tags.push('有外债/贷款');
+    if (hasLawsuit) tags.push('涉及诉讼');
+    if (hasSave) tags.push('有存款');
+
+    if (isSenior) {
+      // ===== 60 岁以上老年专属方案：重疾/定期寿险易保费倒挂、核保受限，不主推 =====
+      if (risks.indexOf('大额医疗') !== -1 || noExisting) {
+        plans.push({ type: '防癌医疗/百万医疗', detail: '60 岁以上优先选健康告知宽松的防癌医疗或百万医疗（注意承保年龄上限），覆盖大额医疗费用' });
+      }
+      if (risks.indexOf('意外伤残') !== -1 || noExisting) {
+        plans.push({ type: '老年意外险', detail: '含意外骨折/住院津贴责任，保费低，老年人优先配置' });
+      }
+      if (existing.indexOf('防癌险') === -1 && existing.indexOf('防癌医疗') === -1) {
+        plans.push({ type: '防癌险', detail: '给付型防癌险，确诊即赔，核保比重疾宽松，适合老年补充' });
+      }
+      if (risks.indexOf('养老规划') !== -1) {
+        plans.push({ type: '养老年金', detail: '高龄阶段更需确定现金流，即交即领/快返年金可快速补充养老' });
+      }
+      if (risks.indexOf('财富传承') !== -1 || hasInvest || hasLawsuit) {
+        plans.push({ type: '增额终身寿', detail: '稳健增值 + 定向传承，适合老年资产安排，注意投保年龄上限' });
+      }
+      if (risks.indexOf('储蓄理财') !== -1 || hasSave) {
+        plans.push({ type: '储蓄型保险/年金', detail: '锁定长期确定收益，对冲利率下行' });
+      }
+      if (!plans.length) {
+        plans.push({ type: '老年保障组合', detail: '建议以 老年意外险 + 防癌医疗/防癌险 为核心组合，优先覆盖大额医疗与意外风险' });
+      }
+    } else {
+      if (risks.indexOf('大病重疾') !== -1 || noExisting) {
+      var ci = Math.round(incomeMid * 3);
+      plans.push({ type: '重疾险', detail: '建议保额 ' + ci + ' 万元（约年收入3倍）' + (existing.indexOf('重疾') !== -1 ? '；已有重疾保障，评估保额是否充足' : '') });
+    }
+    if (risks.indexOf('大额医疗') !== -1 || noExisting) {
+      plans.push({ type: '百万医疗险', detail: '建议保额 200 万以上，覆盖大额医疗费用，注意续保条件' });
+    }
+    if (risks.indexOf('意外伤残') !== -1 || noExisting) {
+      plans.push({ type: '意外险', detail: '建议保额 100 万元，含意外医疗与伤残责任，保费低杠杆高' });
+    }
+    if (risks.indexOf('身故风险') !== -1 || (role === '本人' && (debts.length || cares.length))) {
+      var mortgage = debts.indexOf('房贷') !== -1 ? 100 : 0;
+      var care = cares.indexOf('子女教育') !== -1 ? 50 : (cares.indexOf('父母赡养') !== -1 ? 30 : 0);
+      var life = Math.round((mortgage + care + incomeMid * 2) / 10) * 10;
+      plans.push({ type: '定期寿险', detail: '建议保额 ' + life + ' 万元，覆盖家庭负债与责任期' });
+    }
+    if (risks.indexOf('养老规划') !== -1) {
+      plans.push({ type: '养老年金', detail: '建议按 60 岁起领测算，月领金额覆盖基本生活开支，越早规划成本越低' });
+    }
+    if (risks.indexOf('子女教育') !== -1) {
+      plans.push({ type: '教育金', detail: '按目标阶段（高中/大学/留学）测算教育金储备，锁定确定给付' });
+    }
+    if (risks.indexOf('财富传承') !== -1 || hasInvest || hasLawsuit) {
+      plans.push({ type: '增额终身寿', detail: '稳健增值 + 定向传承，可对接保单信托做资产隔离' });
+    }
+      if (risks.indexOf('储蓄理财') !== -1 || hasSave) {
+        plans.push({ type: '储蓄型保险/年金', detail: '锁定长期确定收益，对冲利率下行' });
+      }
+      if (!plans.length) {
+        plans.push({ type: '基础保障', detail: '建议从医疗险 + 意外险起步，再逐步补充重疾与寿险' });
+      }
+    }
+
+    if (isSenior) insight.unshift('60 岁以上客户：重疾险易保费倒挂且核保受限，不建议主推；优先用 老年意外 + 防癌医疗/防癌险 覆盖风险，养老年金补现金流、增额终身寿做传承，定期寿险一般不必再买');
+    if (noExisting) insight.push('目前保障空白——优先搭建 重疾+医疗+意外 基础保障');
+    if (debts.length) insight.push('家庭有' + debts.join('、') + '——寿险保额需覆盖负债，避免风险来临时家庭背债');
+    if (cares.length) insight.push('承担' + cares.join('、') + '——家庭责任重，支柱的寿险+重疾保额要足');
+    if (hasInvest) insight.push('客户名下有投资/资产——有资产配置意识，增额终身寿/年金是「稳健增值+定向传承」的沟通切入点');
+    if (hasDebt) insight.push('存在外债/贷款——需用定期寿险覆盖债务风险，避免突发状况让家庭背债');
+    if (hasLawsuit) insight.push('涉及诉讼/纠纷——有资产隔离与定向传承需求，增额终身寿+保单架构可作方案核心');
+    deps.forEach(function(_d) {
+      if (_d.type === '大额存款') insight.push('大额存款（' + (_d.bank || '') + (_d.rate ? '，利率' + _d.rate + '%' : '') + '）——大额资金求稳，到期后可引导转投年金/增额寿锁定更高确定性收益');
+      else insight.push('活期存款（' + (_d.bank || '') + (_d.rate ? '，利率' + _d.rate + '%' : '') + '）——活期利率低、资金闲置，利率下行周期可引导锁定长期收益');
+    });
+
+    var premLow = Math.round(incomeMid * 0.1 * 10) / 10;
+    var premHigh = Math.round(incomeMid * 0.15 * 10) / 10;
+    var premiumTip = '建议家庭年保费支出 ' + premLow + '万 ~ ' + premHigh + ' 万元（年收入10%-15%）';
+    if (n.budget) premiumTip += '；客户预算 ' + n.budget + '，需按优先级分配';
+
+    var summary = '客户「' + (b.name || '未命名') + '」' + (role ? '（' + role + '）' : '') + (income ? '，家庭年收入' + income : '') + '。' + (noExisting ? '目前保障空白，需优先搭建基础保障。' : '已有' + existing.length + '类保障，需查漏补缺。') + '建议按 重疾 → 医疗 → 意外 → 寿险 → 储蓄 的顺序规划。';
+
+    return { date: nowText(), tags: tags, summary: summary, insight: insight, plans: plans, premiumTip: premiumTip };
+  }
+  function needAnalysisBlockHtml(na, c) {
+    na = na || {};
+    var _c = c || {};
+    var _f = _c.finance || {}, _n = _c.needs || {}, _b = _c.basic || {};
+    var h = '<div class="fin-block"><div class="fin-block-title">客户分析（' + escapeHtml(na.date || '') + '）</div>';
+    // ===== 财力概况 =====
+    h += '<div class="fin-block-title" style="margin-top:8px">财力概况</div>';
+    h += '<div class="kv-grid">' +
+      kv('家庭年收入', _f.income) + kv('房贷负债', _f.mortgage) + kv('其他负债', _f.debt) +
+      kv('赡养老人', _f.elderly) + kv('子女教育阶段', (_f.eduStage && _f.eduStage.length) ? _f.eduStage.join('、') : '') +
+      '</div>';
+    (_f.memberIncome || []).forEach(function(r) {
+      h += '<div class="fin-row-line">成员收入 ' + escapeHtml(r.name || '成员') + (r.type ? '（' + escapeHtml(r.type) + '）' : '') + '：' + (r.amount ? escapeHtml(r.amount) + ' 元/年' : '未填金额') + '</div>';
+    });
+    (_f.expenses || []).forEach(function(r) {
+      h += '<div class="fin-row-line">支出 ' + escapeHtml(r.item || '其他') + (r.note ? '（' + escapeHtml(r.note) + '）' : '') + '：' + (r.amount ? escapeHtml(r.amount) + ' 元/年' : '未填金额') + '</div>';
+    });
+    var _dep = getDeposits(_n);
+    if (_dep.length) {
+      h += '<div style="margin-top:4px">' + _dep.map(function(_d) {
+        return '<span class="family-member-role">存款：' + escapeHtml((_d.type || '存款') + (_d.bank ? '·' + _d.bank : '') + (_d.rate ? '（利率' + _d.rate + '）' : '')) + '</span>';
+      }).join(' ') + '</div>';
+    }
+    if ((_n.otherCases || []).length) {
+      h += '<div style="margin-top:4px">' + (_n.otherCases || []).map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>';
+      if (_n.otherNote) h += '<div class="fin-row-line" style="color:var(--text-secondary)">' + escapeHtml(_n.otherNote) + '</div>';
+    }
+    // ===== 保单情况 =====
+    var _pols = _c.policies || [];
+    h += '<div class="fin-block-title" style="margin-top:8px">保单情况（' + _pols.length + '份）</div>';
+    if (!_pols.length) {
+      h += '<div class="fin-row-line" style="color:var(--text-muted)">暂无保单，保障空白</div>';
+    } else {
+      _pols.forEach(function(p) {
+        h += '<div class="fin-row-line" style="margin-top:3px">• <strong>' + escapeHtml(p.name || '未命名保单') + '</strong>' +
+          (p.type ? '（' + escapeHtml(p.type) + '）' : '') +
+          (p.insurer ? ' · ' + escapeHtml(p.insurer) : '') +
+          (p.amount ? ' · 保额' + escapeHtml(p.amount) : '') +
+          (p.premium ? ' · 保费' + escapeHtml(p.premium) + '/年' : '') +
+          (p.period ? ' · ' + escapeHtml(p.period) : '') +
+          (p.status ? ' · ' + escapeHtml(p.status) : '') +
+          (p.insured ? ' · 被保人' + escapeHtml(p.insured) : '') + '</div>';
+      });
+      var _premSum = 0;
+      _pols.forEach(function(p) { var _pp = parseFloat(p.premium); if (!isNaN(_pp)) _premSum += _pp; });
+      if (_premSum > 0) h += '<div class="fin-row-line fin-total">现有保单年缴保费合计：' + _premSum.toLocaleString() + ' 元</div>';
+    }
+    // ===== 客户概述与建议（原有内容保留在下方） =====
+    h += '<div class="fin-row-line" style="margin-top:8px">' + escapeHtml(na.summary || '') + '</div>';
+    if (na.tags && na.tags.length) {
+      h += '<div style="margin-top:6px">' + na.tags.map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>';
+    }
+    if (na.insight && na.insight.length) {
+      h += '<div style="margin-top:6px;border-top:1px dashed var(--border);padding-top:6px">' + na.insight.map(function(t) {
+        return '<div class="fin-row-line" style="margin-top:3px">✦ ' + escapeHtml(t) + '</div>';
+      }).join('') + '</div>';
+    }
+    (na.plans || []).forEach(function(p) {
+      h += '<div class="fin-row-line" style="margin-top:4px">• <strong>' + escapeHtml(p.type) + '</strong>：' + escapeHtml(p.detail) + '</div>';
+    });
+    if (na.premiumTip) h += '<div class="fin-row-line fin-total" style="margin-top:6px">' + escapeHtml(na.premiumTip) + '</div>';
+    h += '</div>';
+    return h;
+  }
+
+  // ================= 回收站操作 =================
+  function moveToTrash(id) {
+    var idx = -1;
+    for (var i = 0; i < clients.length; i++) { if (clients[i].id === id) { idx = i; break; } }
+    if (idx < 0) { showToast('客户不存在'); return; }
+    var c = clients.splice(idx, 1)[0];
+    trash.unshift({ data: c, deletedAt: nowText() });
+    saveClients(); saveTrash();
+    if (typeof vqRemove === 'function') vqRemove(id);
+    updateTrashBadge();
+    renderList();
+    if (viewingId === id) showView('list');
+    showToast('已移入回收站');
+  }
+  function restoreTrash(index) {
+    var item = trash[index];
+    if (!item) return;
+    clients.unshift(item.data);
+    trash.splice(index, 1);
+    saveClients(); saveTrash();
+    updateTrashBadge();
+    renderTrash();
+    renderList();
+    showToast('已恢复客户');
+  }
+  function deleteForever(index) {
+    trash.splice(index, 1);
+    saveTrash();
+    updateTrashBadge();
+    renderTrash();
+    showToast('已彻底删除');
+  }
+  function emptyTrash() {
+    if (!trash.length) { showToast('回收站为空'); return; }
+    confirmDialog('清空回收站', '确定彻底删除回收站中的 ' + trash.length + ' 位客户吗？此操作不可恢复。', '彻底删除', function() {
+      trash = [];
+      saveTrash();
+      updateTrashBadge();
+      renderTrash();
+      showToast('回收站已清空');
+    });
+  }
+  function updateTrashBadge() {
+    var el = document.getElementById('trashCount');
+    if (el) { el.textContent = trash.length; el.style.display = trash.length ? '' : 'none'; }
+  }
+  function renderTrash() {
+    var box = document.getElementById('trashList');
+    if (!box) return;
+    if (!trash.length) {
+      box.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center">回收站是空的</div>';
+      return;
+    }
+    box.innerHTML = trash.map(function(item, idx) {
+      var c = item.data || {}, b = c.basic || {};
+      return '<div style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--border)">' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-weight:600;font-size:14px">' + escapeHtml(b.name || '未命名') + (b.phone ? ' <span style="color:var(--text-muted);font-weight:400;font-size:12px">' + escapeHtml(b.phone) + '</span>' : '') + '</div>' +
+          '<div style="color:var(--text-muted);font-size:11px;margin-top:2px">删除于 ' + escapeHtml(item.deletedAt || '') + '</div>' +
+        '</div>' +
+        '<button class="btn btn-secondary" style="padding:6px 12px;font-size:12px" data-restore="' + idx + '">恢复</button>' +
+        '<button class="btn btn-primary" style="padding:6px 12px;font-size:12px;background:#C0392B;border-color:#C0392B" data-forever="' + idx + '">彻底删除</button>' +
+      '</div>';
+    }).join('');
+    box.querySelectorAll('[data-restore]').forEach(function(b) {
+      b.addEventListener('click', function() { restoreTrash(parseInt(this.getAttribute('data-restore'), 10)); });
+    });
+    box.querySelectorAll('[data-forever]').forEach(function(b) {
+      b.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-forever'), 10);
+        var item = trash[idx];
+        confirmDialog('彻底删除', '确定彻底删除客户「' + (item && item.data && item.data.basic ? item.data.basic.name : '') + '」吗？此操作不可恢复。', '彻底删除', function() { deleteForever(idx); });
+      });
+    });
+  }
+  function openTrash() { renderTrash(); document.getElementById('trashMask').classList.add('show'); }
+  function closeTrash() { document.getElementById('trashMask').classList.remove('show'); }
+
+  // ================= 自动生成跟进计划（本地规则，预留AI智能体端口） =================
+  function generateFollowPlan(c) {
+    c = c || {};
+    var b = c.basic || {}, n = c.needs || {}, s = c.service || {};
+    var oc = n.otherCases || [];
+    var focus = n.focus || [];
+    var intent = s.intent || '';
+    var pols = c.policies || [];
+    var items = [];
+    var reason = [];
+    var days = { '高': 3, '中': 7, '低': 14, '暂缓': 30 }[intent] || 7;
+
+    if (intent === '高') { items.push('推进方案呈现与促成：发送投保建议书，争取本周内明确投保意向'); reason.push('高意向客户，趁热打铁'); }
+    else if (intent === '中') { items.push('方案沟通与答疑：发送方案资料，预约电话/见面，收集异议点'); reason.push('中意向客户，处于方案沟通阶段'); }
+    else if (intent === '低') { items.push('低频维护：发送保险科普/行业动态，节日问候，保持存在感'); reason.push('低意向客户，长期培育'); }
+    else if (intent === '暂缓') { items.push('暂缓跟进：仅生日/续期/政策变化等节点问候一次，不主动推销'); reason.push('客户暂缓，降低打扰频次'); }
+    else { items.push('破冰沟通：发送家庭保障科普或需求小问卷，了解客户顾虑'); reason.push('意向未定，先建立信任'); }
+
+    var types = pols.map(function(p) { return p.type; });
+    if (!pols.length) { items.push('客户暂无保单——发送「家庭保障缺口清单」，预约 20 分钟需求梳理'); reason.push('保障空白，优先搭建基础保障'); }
+    else {
+      if (types.indexOf('重疾险') === -1) { items.push('补重疾缺口：发送重疾险保额测算，评估保额是否充足'); reason.push('已有保障缺重疾'); }
+      if (types.indexOf('医疗险') === -1 && types.indexOf('百万医疗险') === -1) { items.push('补医疗缺口：介绍百万医疗，强调保费低杠杆高'); reason.push('已有保障缺医疗报销'); }
+      if (types.indexOf('意外险') === -1) { items.push('补意外缺口：补充意外险，意外医疗+伤残责任'); reason.push('已有保障缺意外'); }
+    }
+
+    if (focus.indexOf('养老规划') !== -1) { items.push('养老规划：测算 60 岁领取额，发送年金领取演示表'); reason.push('客户关注养老'); }
+    if (focus.indexOf('子女教育金') !== -1) { items.push('子女教育金：按目标阶段测算储备，发送教育金计划书'); reason.push('客户关注子女教育'); }
+    if (focus.indexOf('财富传承') !== -1) { items.push('财富传承：整理增额终身寿+保单架构方案，讨论受益人安排'); reason.push('客户关注传承'); }
+    if (oc.indexOf('有投资/资产') !== -1) { items.push('资产配置：发送增额终身寿「稳健增值+定向传承」对比表'); reason.push('客户有投资/资产'); }
+    if (oc.indexOf('有外债/贷款') !== -1) { items.push('债务覆盖：强调定期寿险保额覆盖负债，出具体方案'); reason.push('客户有外债/贷款'); }
+    if (oc.indexOf('涉及诉讼/纠纷') !== -1) { items.push('资产隔离：提供保单架构/受益人设计建议，预约面谈'); reason.push('客户涉及诉讼/纠纷'); }
+    var depsP = getDeposits(n);
+    if (depsP.some(function(_d) { return _d.type === '大额存款'; })) { items.push('大额存款：提示利率下行，发送「锁定长期收益」年金对比'); reason.push('客户有大额存款'); }
+    if (depsP.some(function(_d) { return _d.type === '活期存款'; })) { items.push('活期资金：发送稳健增值方案，引导闲钱长期规划'); reason.push('客户有活期存款'); }
+    if (pols.length) { items.push('保单服务：检查续期/缴费提醒，做保单周年检视，顺带问候家人保障'); reason.push('已有保单，做好服务维护'); }
+
+    items = items.filter(function(v, i) { return items.indexOf(v) === i; });
+    if (items.length > 5) items = items.slice(0, 5);
+
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + days);
+    function _pad2(x) { return x < 10 ? '0' + x : '' + x; }
+    var dateStr = nextDate.getFullYear() + '-' + _pad2(nextDate.getMonth() + 1) + '-' + _pad2(nextDate.getDate());
+    return {
+      items: items,
+      days: days,
+      nextDate: dateStr,
+      nextFollow: days + '天后（' + dateStr + '）',
+      reason: reason,
+      planText: items.map(function(t, i) { return (i + 1) + '. ' + t; }).join('\n')
+    };
+  }
+
+  // ================= 快捷记录拜访/跟进 =================
+  var quickFollowId = null;
+  function openQuickFollow(id) {
+    var c = getClientById(id);
+    if (!c) { showToast('客户不存在'); return; }
+    quickFollowId = id;
+    document.getElementById('qfClientName').textContent = '客户：' + (c.basic.name || '未命名') + (c.basic.phone ? '（' + c.basic.phone + '）' : '');
+    document.getElementById('qfText').value = '';
+    document.getElementById('qfNext').value = (c.service && c.service.nextFollow) || '';
+    var rs = document.getElementById('qfReason');
+    if (rs) rs.style.display = 'none';
+    renderQfRecent(c);
+    document.getElementById('quickFollowMask').classList.add('show');
+  }
+  function closeQuickFollow() { document.getElementById('quickFollowMask').classList.remove('show'); }
+  function renderQfRecent(c) {
+    var box = document.getElementById('qfRecent');
+    if (!box) return;
+    var notes = (c.service && c.service.notes) || [];
+    if (!notes.length) {
+      box.innerHTML = '<div style="font-size:12px;color:var(--text-muted)">暂无跟进记录</div>';
+      return;
+    }
+    box.innerHTML = '<div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:4px">最近记录（最近5条）</div>' +
+      notes.slice(0, 5).map(function(n) {
+        return '<div style="font-size:12px;padding:4px 0;border-bottom:1px dashed var(--border);line-height:1.5"><span style="color:var(--text-muted)">' + escapeHtml(n.time) + '</span> ' + escapeHtml(n.text) + '</div>';
+      }).join('');
+  }
+  function autoFollowPlan() {
+    var c = getClientById(quickFollowId);
+    if (!c) { showToast('客户不存在'); return; }
+    var plan = generateFollowPlan(c);
+    var txt = document.getElementById('qfText');
+    var nxt = document.getElementById('qfNext');
+    var rs = document.getElementById('qfReason');
+    if (txt) txt.value = plan.planText;
+    if (nxt) nxt.value = plan.nextFollow;
+    if (rs) {
+      rs.style.display = 'block';
+      rs.textContent = '生成依据：' + (plan.reason.join('；') || '常规维护') + '。建议 ' + plan.days + ' 天后（' + plan.nextDate + '）跟进，可修改后保存。';
+    }
+    showToast('已生成跟进计划，可修改后保存');
+  }
+  function saveQuickFollow() {
+    var c = getClientById(quickFollowId);
+    if (!c) { showToast('客户不存在'); return; }
+    var text = document.getElementById('qfText').value.trim();
+    var nxt = document.getElementById('qfNext').value.trim();
+    if (!text && !nxt) { showToast('请填写拜访内容'); return; }
+    c.service = c.service || {};
+    c.service.notes = c.service.notes || [];
+    if (text) c.service.notes.unshift({ time: nowText(), text: text });
+    if (nxt) c.service.nextFollow = nxt;
+    c.updatedAt = nowText();
+    saveClients();
+    renderList();
+    closeQuickFollow();
+    showToast('拜访记录已保存');
   }
 
   // 根据问答表方案自动同步保障需求标签（追加，不清空手动勾选）
@@ -3400,7 +4161,7 @@ body {
     var members = clients.filter(function(c) { return c.basic.familyId === familyId; });
     if (!members.length) return null;
     var head = null;
-    members.forEach(function(c) { if (c.basic.familyRole === '本人') head = c; });
+    members.forEach(function(c) { if (c.basic.familyHead === true || c.basic.familyRole === '本人' || c.basic.familyRole === '户主') head = c; });
     if (!head) head = members[0];
     var name = (head.basic.name || '未知') + '家庭';
     return { id: familyId, name: name, members: members, head: head };
@@ -3471,9 +4232,7 @@ body {
       var isMine = c.mine === true || _mine.length > 0;
       var mineBtnHtml = '';
       var mineTag = '';
-      if (mainTab === 'client' && !isMine) {
-        mineBtnHtml = '<span class="mine-btn" data-mine="' + c.id + '" title="客户已在我这里成交，一键转入我的客户"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg> 转入我的客户</span>';
-      } else if (isMine) {
+      if (isMine) {
         mineTag = '<span class="tag tag-mine">我的客户</span>';
       }
 
@@ -3496,6 +4255,8 @@ body {
           '</div>' +
           mineBtnHtml +
           '<span class="visit-btn' + (typeof vqHas === 'function' && vqHas(c.id) ? ' on' : '') + '" data-vq="' + c.id + '" title="' + (typeof vqHas === 'function' && vqHas(c.id) ? '移出待拜访' : '加入待拜访') + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg>' + (typeof vqHas === 'function' && vqHas(c.id) ? '已排' : '拜访') + '</span>' +
+        '<span class="quick-follow-btn" data-follow="' + c.id + '" title="记录拜访/跟进"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg> 记录</span>' +
+        '<span class="trash-item-btn" data-trash="' + c.id + '" title="移入回收站"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg> 删除</span>' +
         '</div>' +
         '<div class="client-meta">' + meta.join('') + '</div>' +
         '<div class="client-tags">' + intentTag + discTag + familyTag + followTag + polTag + mineTag + '</div>' +
@@ -3523,18 +4284,23 @@ body {
       vb.addEventListener('click', function(e) {
         e.stopPropagation();
         vqToggle(this.getAttribute('data-vq'));
+        switchMain('map');
       });
     });
-    box.querySelectorAll('.mine-btn').forEach(function(mb) {
-      mb.addEventListener('click', function(e) {
+    box.querySelectorAll('.quick-follow-btn').forEach(function(qb) {
+      qb.addEventListener('click', function(e) {
         e.stopPropagation();
-        var c = getClientById(this.getAttribute('data-mine'));
-        if (!c) return;
-        c.mine = true;
-        c.updatedAt = nowText();
-        saveClients();
-        renderList();
-        showToast('已转入「我的客户」');
+        openQuickFollow(this.getAttribute('data-follow'));
+      });
+    });
+    box.querySelectorAll('.trash-item-btn').forEach(function(tb) {
+      tb.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var id = this.getAttribute('data-trash');
+        var c = getClientById(id);
+        confirmDialog('移入回收站', '确定将客户「' + (c && c.basic ? c.basic.name : '') + '」移入回收站吗？可从回收站恢复。', '移入回收站', function() {
+          moveToTrash(id);
+        });
       });
     });
   }
@@ -3656,8 +4422,8 @@ function renderDistrictNav() {
 
   // ================= 列表视图 =================
   function renderList() {
-    renderVisitStats();
     if (followMode) { renderFollowLedger(); return; }
+    if (mainTab === 'qa') return;  // 需求分析页仅展示答疑卡，不渲染客户列表
     var keyword = document.getElementById('searchInput').value.trim().toLowerCase();
     var intent = document.getElementById('intentFilter').value;
     var list = clients.slice().sort(function(a, b) {
@@ -3682,6 +4448,10 @@ function renderDistrictNav() {
       if (hit && needFilter) {
         hit = ((c.needs && c.needs.focus) || []).indexOf(needFilter) !== -1;
       }
+      if (mainTab === 'qa' && !visitFilter) {
+        // 需求分析页默认不自动列出客户：创建客户不会自动出现在这里
+        hit = false;
+      }
       if (hit && mainTab === 'qa' && visitFilter) {
         hit = (c.visitPlan || '') === visitFilter || (visitFilter === 'month' && (c.visitPlan === 'appoint' || c.visitPlan === 'week'));
       }
@@ -3694,6 +4464,7 @@ function renderDistrictNav() {
     if (filtered.length === 0) {
       var _emptyTxt = clients.length === 0 ? '还没有客户档案，点击右上角「新增客户」开始录入'
         : mainTab === 'visit' ? '暂无名下保单客户，在客户信息中为客户录入保单后显示'
+        : (mainTab === 'qa' && !visitFilter) ? '客户不会自动出现在这里。选择上方「月拜访 / 年度拜访」查看对应拜访客户'
         : '没有匹配的客户，换个关键词试试';
       box.innerHTML =
         '<div class="client-empty">' +
@@ -4120,6 +4891,7 @@ function renderDistrictNav() {
   function policyRowHtml(p) {
     p = p || {};
     return '<div class="policy-row">' +
+      '<div class="field" style="grid-column:1/-1"><label class="field-label" style="font-size:11px;color:var(--text-muted)">保单名称</label><input type="text" class="field-input p-name" style="font-size:14px;padding:9px 10px" value="' + escapeHtml(p.name || '') + '" placeholder="如 平安福20 / 国寿康宁终身"></div>' +
       '<div class="field"><label class="field-label" style="font-size:11px;color:var(--text-muted)">险种</label><select class="field-select p-type" style="font-size:14px;padding:9px 30px 9px 10px">' +
         '<option value="">请选择</option>' +
         '<option value="寿险"' + (p.type === '寿险' ? ' selected' : '') + '>寿险</option>' +
@@ -4164,6 +4936,47 @@ function renderDistrictNav() {
     '</div>';
   }
 
+  // ================= 存款情况（多条） =================
+  function getDeposits(n) {
+    n = n || {};
+    if (Array.isArray(n.deposits) && n.deposits.length) return n.deposits;
+    var arr = [];
+    if (n.saveBank || n.saveRate) arr.push({ type: '活期存款', bank: n.saveBank || '', rate: n.saveRate || '' });
+    if (n.cdBank || n.cdRate) arr.push({ type: '大额存款', bank: n.cdBank || '', rate: n.cdRate || '' });
+    return arr;
+  }
+  function depositRowHtml(d) {
+    d = d || {};
+    return '<div class="deposit-row" style="display:flex;gap:6px;margin-bottom:6px;align-items:center">' +
+      '<select class="field-select d-type" style="flex:1.2;min-width:0"><option value="活期存款"' + (d.type === '大额存款' ? '' : ' selected') + '>活期存款</option><option value="大额存款"' + (d.type === '大额存款' ? ' selected' : '') + '>大额存款</option></select>' +
+      '<input type="text" class="field-input d-bank" placeholder="银行" maxlength="20" value="' + escapeHtml(d.bank || '') + '" style="flex:1.6;min-width:0">' +
+      '<input type="text" class="field-input d-rate" placeholder="利率%" inputmode="decimal" value="' + escapeHtml(d.rate || '') + '" style="flex:1;min-width:0">' +
+      '<button type="button" class="icon-btn d-del" title="删除" style="flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>' +
+      '</div>';
+  }
+  function renderDepositRows(deposits) {
+    var box = document.getElementById('depositRows');
+    if (!box) return;
+    deposits = deposits || [];
+    box.innerHTML = deposits.length === 0 ? '' : deposits.map(function(d) { return depositRowHtml(d); }).join('');
+    bindDepositEvents();
+  }
+  function bindDepositEvents() {
+    var box = document.getElementById('depositRows');
+    if (!box) return;
+    box.querySelectorAll('.d-del').forEach(function(btn) {
+      btn.addEventListener('click', function() { this.closest('.deposit-row').remove(); });
+    });
+  }
+  function getDepositRows() {
+    var rows = [];
+    document.querySelectorAll('#depositRows .deposit-row').forEach(function(row) {
+      var d = { type: row.querySelector('.d-type').value, bank: row.querySelector('.d-bank').value.trim(), rate: row.querySelector('.d-rate').value.trim() };
+      if (d.bank || d.rate) rows.push(d);
+    });
+    return rows;
+  }
+
   function renderPolicyRows(policies) {
     var box = document.getElementById('policyRows');
     policies = policies || [];
@@ -4190,6 +5003,7 @@ function renderDistrictNav() {
     var rows = [];
     document.querySelectorAll('#policyRows .policy-row').forEach(function(row) {
       var p = {
+        name: row.querySelector('.p-name').value.trim(),
         type: row.querySelector('.p-type').value,
         insurer: row.querySelector('.p-insurer').value.trim(),
         amount: row.querySelector('.p-amount').value,
@@ -4199,7 +5013,7 @@ function renderDistrictNav() {
         insured: row.querySelector('.p-insured').value,
         owner: row.querySelector('.p-owner').value || '我'
       };
-      if (p.type || p.insurer || p.amount || p.premium) rows.push(p);
+      if (p.name || p.type || p.insurer || p.amount || p.premium) rows.push(p);
     });
     return rows;
   }
@@ -4293,17 +5107,11 @@ function renderDistrictNav() {
     geoLng = (b.lng != null) ? b.lng : null;
     updateGeoStatus();
     // 家庭情况
-    if (b.familyId) {
-      setVal('f-familyMode', 'existing');
-      renderFamilySelect(b.familyId);
-      document.getElementById('f-familySelectWrap').style.display = 'block';
-    } else {
-      setVal('f-familyMode', 'new');
-      renderFamilySelect('');
-      document.getElementById('f-familySelectWrap').style.display = 'none';
-    }
-    setVal('f-familyRole', b.familyRole || '本人');
+    document.getElementById('f-familyHead').checked = !!b.familyHead;
+    document.getElementById('f-familyMembersWrap').style.display = (b.familyMembers && b.familyMembers.length) ? 'block' : 'none';
+
     setVal('f-familyNote', b.familyNote || '');
+    renderFamilyMemberRows(b.familyMembers || []);
     renderPolicyRows(c.policies || []);
     setCheckboxes('f-needFocus', n.focus);
     setVal('f-budget', n.budget);
@@ -4311,6 +5119,9 @@ function renderDistrictNav() {
     setVal('f-risk', s.riskPref);
     setCheckboxes('f-insuredTarget', n.insured);
     setVal('f-needRemark', n.remark);
+    setCheckboxes('f-otherCases', n.otherCases);
+    setVal('f-otherNote', n.otherNote);
+    renderDepositRows(getDeposits(n));
 
     setVal('f-income', f.income);
     renderIncomeRows(f.memberIncome || []);
@@ -4344,7 +5155,13 @@ function renderDistrictNav() {
     renderDiscProfile();
 
     followDraft = (c.service && c.service.notes) ? c.service.notes.slice() : [];
-    setVal('f-nextFollow', s.nextFollow);
+    var _nfEl = document.getElementById('f-nextFollow');
+    if (_nfEl) _nfEl.textContent = s.nextFollow || '未设置';
+    var _nfD = document.getElementById('f-nextFollowDate');
+    if (_nfD) {
+      var _m = /(\d{4}-\d{2}-\d{2})/.exec(s.nextFollow || '');
+      _nfD.value = _m ? _m[1] : '';
+    }
     renderFollowList();
 
     var agree = document.getElementById('f-privacy');
@@ -4356,8 +5173,9 @@ function renderDistrictNav() {
   }
 
   function clearForm() {
-    var ids = ['f-name', 'f-gender', 'f-birth', 'f-phone', 'f-wechat', 'f-idcard', 'f-occupation', 'f-company', 'f-title', 'f-education', 'f-marital', 'f-children', 'f-city', 'f-district', 'f-source', 'f-address', 'f-budget', 'f-intent', 'f-risk', 'f-needRemark', 'f-income', 'f-mortgage', 'f-debt', 'f-elderly', 'f-height', 'f-weight', 'f-exam', 'f-smoking', 'f-drinking', 'f-exercise', 'f-healthRemark', 'f-nextFollow', 'f-followInput'];
+    var ids = ['f-name', 'f-gender', 'f-birth', 'f-phone', 'f-wechat', 'f-idcard', 'f-occupation', 'f-company', 'f-title', 'f-education', 'f-marital', 'f-children', 'f-city', 'f-district', 'f-source', 'f-address', 'f-budget', 'f-intent', 'f-risk', 'f-needRemark', 'f-otherNote', 'f-income', 'f-mortgage', 'f-debt', 'f-elderly', 'f-height', 'f-weight', 'f-exam', 'f-smoking', 'f-drinking', 'f-exercise', 'f-healthRemark', 'f-nextFollowDate'];
     ids.forEach(function(id) { setVal(id, ''); });
+    renderDepositRows([]);
     // 重置头像
     avatarBase64 = null;
     var _apImg = document.getElementById('avatarPreviewImg');
@@ -4366,7 +5184,7 @@ function renderDistrictNav() {
     if (_apNo) _apNo.style.display = 'flex';
     var _af = document.getElementById('f-avatar');
     if (_af) _af.value = '';
-    ['f-needFocus', 'f-insuredTarget', 'f-eduStage', 'f-history', 'f-familyHistory'].forEach(function(cid) {
+    ['f-needFocus', 'f-insuredTarget', 'f-otherCases', 'f-eduStage', 'f-history', 'f-familyHistory'].forEach(function(cid) {
       setCheckboxes(cid, []);
     });
     document.getElementById('historyDetailBox').innerHTML = '';
@@ -4385,11 +5203,11 @@ function renderDistrictNav() {
     geoLat = null;
     geoLng = null;
     updateGeoStatus();
-    setVal('f-familyMode', 'new');
-    setVal('f-familyRole', '本人');
+    document.getElementById('f-familyHead').checked = false;
+
     setVal('f-familyNote', '');
-    renderFamilySelect('');
-    document.getElementById('f-familySelectWrap').style.display = 'none';
+    document.getElementById('f-familyMembersWrap').style.display = 'none';
+    document.getElementById('familyMemberRows').innerHTML = '';
     document.querySelectorAll('#view-edit .field.has-error').forEach(function(f) { f.classList.remove('has-error'); });
   }
 
@@ -4416,16 +5234,19 @@ function renderDistrictNav() {
       avatarBase64: avatarBase64,
       lat: geoLat,
       lng: geoLng,
-      familyId: getFamilyIdForForm(),
-      familyRole: document.getElementById('f-familyRole').value,
-      familyNote: document.getElementById('f-familyNote').value.trim()
+      familyHead: document.getElementById('f-familyHead').checked,
+      familyNote: document.getElementById('f-familyNote').value.trim(),
+      familyMembers: collectFamilyMemberRows()
     };
     var needs = {
       focus: getCheckboxValues('f-needFocus'),
       budget: document.getElementById('f-budget').value,
       intent: document.getElementById('f-intent').value,
       insured: getCheckboxValues('f-insuredTarget'),
-      remark: document.getElementById('f-needRemark').value.trim()
+      remark: document.getElementById('f-needRemark').value.trim(),
+      otherCases: getCheckboxValues('f-otherCases'),
+      otherNote: document.getElementById('f-otherNote').value.trim(),
+      deposits: getDepositRows()
     };
     var finance = {
       income: document.getElementById('f-income').value,
@@ -4454,7 +5275,17 @@ function renderDistrictNav() {
       riskPref: document.getElementById('f-risk').value,
       intent: needs.intent,
       notes: followDraft.slice(),
-      nextFollow: document.getElementById('f-nextFollow').value
+      nextFollow: (function() {
+        var _md = document.getElementById('f-nextFollowDate').value;
+        if (_md) return _md;
+        var _cX = editingId ? getClientById(editingId) : null;
+        if (_cX && _cX.service && _cX.service.nextFollow) return _cX.service.nextFollow;
+        var _intent = document.getElementById('f-intent').value;
+        var _days = { '高': 3, '中': 7, '低': 14, '暂缓': 30 }[_intent] || 7;
+        var _d = new Date(); _d.setDate(_d.getDate() + _days);
+        var _ds = _d.getFullYear() + '-' + String(_d.getMonth()+1).padStart(2,'0') + '-' + String(_d.getDate()).padStart(2,'0');
+        return _days + '天后（' + _ds + '）';
+      })()
     };
 
     if (forAI) {
@@ -4643,9 +5474,11 @@ function renderDistrictNav() {
     if (b.source) sub.push('<span>来源：' + escapeHtml(b.source) + '</span>');
     html += '<div class="detail-sub">' + sub.join('') + '</div>';
     html += '</div>';
+    var _isMine = c.mine === true || (c.policies || []).some(function(pp) { return !pp.owner || pp.owner === '我'; });
     html += '<div class="detail-actions">';
     html += '<button class="icon-btn" id="visitQueueBtn" title="加入待拜访"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4l13-13a2 2 0 0 1 3 3L6 21H3z"></path><path d="M16 5l3 3"></path></svg></button>';
     html += '<button class="icon-btn" id="editDetailBtn" title="编辑"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>';
+    html += '<button class="icon-btn' + (_isMine ? ' on' : '') + '" id="mineDetailBtn" title="' + (_isMine ? '已是我的客户' : '客户成交后转入我的客户') + '">' + (_isMine ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>') + '</button>';
     html += '<button class="icon-btn" id="exportOneBtn" title="导出JSON"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>';
     html += '<button class="icon-btn danger" id="delDetailBtn" title="删除"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>';
     html += '</div></div>';
@@ -4666,7 +5499,14 @@ function renderDistrictNav() {
       var finfo = familyInfo(b.familyId);
       html += '<div class="kv-grid">' +
         kv('家庭名称', finfo ? finfo.name : '') +
-        kv('我的角色', b.familyRole) +
+        kv('我的角色', (function() {
+          var _r = b.familyRole;
+          if (_r) return _r;
+          if (b.familyHead) return '户主';
+          var _ms = b.familyMembers || [];
+          var _s = _ms.filter(function(m) { return m.rel === '本人'; })[0];
+          return _s ? '本人' : '';
+        })()) +
         kv('家庭备注', b.familyNote, true) +
         '</div>';
       if (finfo) {
@@ -4722,26 +5562,32 @@ function renderDistrictNav() {
       kv('意向等级', n.intent) +
       kv('投保对象', (n.insured && n.insured.length) ? n.insured.join('、') : '') +
       kv('需求备注', n.remark, true) +
+      kv('存款情况', (function() { var _ds = getDeposits(n); return _ds.length ? _ds.map(function(_d) { return _d.type + ' ' + (_d.bank || '') + (_d.rate ? ' ' + _d.rate + '%' : ''); }).join('；') : ''; })(), true) +
       '</div>';
-    // 需求分析结果
-    if (n.analysis) {
-      var na = n.analysis;
-      html += '<div class="fin-block"><div class="fin-block-title">需求分析（' + escapeHtml(na.date || '') + '）</div>';
-      html += '<div class="fin-row-line">' + escapeHtml(na.summary || '') + '</div>';
-      if (na.tags && na.tags.length) {
-        html += '<div style="margin-top:6px">' + na.tags.map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>';
-      }
-      if (na.insight && na.insight.length) {
-        html += '<div style="margin-top:6px;border-top:1px dashed var(--border);padding-top:6px">' + na.insight.map(function(t) {
-          return '<div class="fin-row-line" style="margin-top:3px">✦ ' + escapeHtml(t) + '</div>';
-        }).join('') + '</div>';
-      }
-      (na.plans || []).forEach(function(p) {
-        html += '<div class="fin-row-line" style="margin-top:4px">• <strong>' + escapeHtml(p.type) + '</strong>：' + escapeHtml(p.detail) + '</div>';
-      });
-      if (na.premiumTip) html += '<div class="fin-row-line fin-total" style="margin-top:6px">' + escapeHtml(na.premiumTip) + '</div>';
-      html += '</div>';
+    // 家庭财务画像（需求分析=财力+观念：财力决定买不买得起，观念决定想不想买）
+    html += '<div class="fin-block" style="margin-top:10px"><div class="fin-block-title">家庭财务画像</div>';
+    html += '<div class="kv-grid">' +
+      kv('家庭年收入', f.income) + kv('房贷负债', f.mortgage) + kv('其他负债', f.debt) +
+      kv('赡养老人', f.elderly) + kv('子女教育阶段', (f.eduStage && f.eduStage.length) ? f.eduStage.join('、') : '') +
+      '</div>';
+    (f.memberIncome || []).forEach(function(r) {
+      html += '<div class="fin-row-line">成员收入 ' + escapeHtml(r.name || '成员') + (r.type ? '（' + escapeHtml(r.type) + '）' : '') + '：' + (r.amount ? escapeHtml(r.amount) + ' 元/年' : '未填金额') + '</div>';
+    });
+    (f.expenses || []).forEach(function(r) {
+      html += '<div class="fin-row-line">支出 ' + escapeHtml(r.item || '其他') + (r.note ? '（' + escapeHtml(r.note) + '）' : '') + '：' + (r.amount ? escapeHtml(r.amount) + ' 元/年' : '未填金额') + '</div>';
+    });
+    var _oc2 = n.otherCases || [];
+    if (_oc2.length) {
+      html += '<div style="margin-top:4px">' + _oc2.map(function(t) { return '<span class="family-member-role">' + escapeHtml(t) + '</span>'; }).join(' ') + '</div>';
+      if (n.otherNote) html += '<div class="fin-row-line" style="color:var(--text-secondary)">' + escapeHtml(n.otherNote) + '</div>';
     }
+    if (!f.income && !(f.memberIncome || []).length && !(f.expenses || []).length && !_oc2.length) {
+      html += '<div style="font-size:12px;color:var(--text-muted)">暂无家庭财务信息，可编辑补充</div>';
+    }
+    html += '</div>';
+    // 客户分析（本地规则一键生成）
+    html += '<button class="ai-btn" id="clientAnalyzeBtn" style="margin-top:10px">' + (n.analysis ? '重新生成客户分析' : '生成客户分析') + '</button>';
+    html += '<div id="clientAnalyzeResult">' + (n.analysis ? needAnalysisBlockHtml(n.analysis, c) : '') + '</div>';
     html += '</div>';
 
     // 家庭财务
@@ -4881,6 +5727,21 @@ function renderDistrictNav() {
       });
     });
 
+    var caBtn = document.getElementById('clientAnalyzeBtn');
+    if (caBtn) {
+      caBtn.addEventListener('click', function() {
+        var _c = getClientById(viewingId);
+        if (!_c) { showToast('客户不存在'); return; }
+        var _na = analyzeClientProfile(_c);
+        _c.needs = _c.needs || {};
+        _c.needs.analysis = _na;
+        saveClients();
+        var _box = document.getElementById('clientAnalyzeResult');
+        if (_box) _box.innerHTML = needAnalysisBlockHtml(_na, _c);
+        this.textContent = '重新生成客户分析';
+        showToast('客户分析已生成并保存');
+      });
+    }
     var vqBtn = document.getElementById('visitQueueBtn');
     if (vqBtn) {
       vqBtn.addEventListener('click', function() { vqToggle(viewingId); });
@@ -4888,16 +5749,21 @@ function renderDistrictNav() {
     }
     document.getElementById('editDetailBtn').addEventListener('click', function() { openEdit(viewingId); });
     document.getElementById('exportOneBtn').addEventListener('click', function() { exportOne(viewingId); });
+    var mdBtn = document.getElementById('mineDetailBtn');
+    if (mdBtn) mdBtn.addEventListener('click', function() {
+      var c = getClientById(viewingId);
+      if (!c) return;
+      if (c.mine === true) { showToast('该客户已是「我的客户」'); return; }
+      c.mine = true;
+      c.updatedAt = nowText();
+      saveClients();
+      showToast('已转入「我的客户」');
+      openDetail(viewingId);
+      renderList();
+    });
     document.getElementById('delDetailBtn').addEventListener('click', function() {
-      confirmDialog('删除客户', '确定删除客户「' + (b.name || '未命名') + '」的全部资料吗？此操作不可恢复。', '删除', function() {
-        for (var i = 0; i < clients.length; i++) {
-          if (clients[i].id === viewingId) { clients.splice(i, 1); break; }
-        }
-        vqRemove(viewingId);
-        saveClients();
-        renderList();
-        showView('list');
-        showToast('客户已删除');
+      confirmDialog('移入回收站', '确定将客户「' + (b.name || '未命名') + '」移入回收站吗？可从回收站恢复。', '移入回收站', function() {
+        moveToTrash(viewingId);
       });
     });
     var aiDetailBtn = document.getElementById('aiDetailBtn');
@@ -4975,7 +5841,8 @@ function renderDistrictNav() {
   // ================= 事件绑定 =================
   document.getElementById('fabBtn').addEventListener('click', function() { openEdit(null); });
   // 家庭地址地图事件
-  document.getElementById('geoPickBtn').addEventListener('click', openGeoModal);
+  document.getElementById('geoPickBtn').addEventListener('click', function() { openGeoModal(); });
+  window.openGeoModal = openGeoModal;
   document.getElementById('geoCloseBtn').addEventListener('click', closeGeoModal);
   document.getElementById('geoConfirmBtn').addEventListener('click', confirmGeo);
   document.getElementById('geoSearchBtn').addEventListener('click', geoSearch);
@@ -4993,10 +5860,27 @@ function renderDistrictNav() {
       renderList();
     });
   });
-  // 家庭归属切换
-  document.getElementById('f-familyMode').addEventListener('change', function() {
-    document.getElementById('f-familySelectWrap').style.display = this.value === 'existing' ? 'block' : 'none';
-    if (this.value === 'existing') renderFamilySelect('');
+  // 家庭归属：增加家庭成员（展开/收起）
+  document.getElementById('addFamilyMemberBtn').addEventListener('click', function() {
+    var wrap = document.getElementById('f-familyMembersWrap');
+    var show = wrap.style.display === 'none';
+    wrap.style.display = show ? 'block' : 'none';
+    if (show && !document.querySelector('#familyMemberRows .fin-row')) {
+      document.getElementById('familyMemberRows').insertAdjacentHTML('beforeend', familyMemberRowHtml({}));
+    }
+  });
+  // 添加成员（可多条）
+  document.getElementById('addMemberRowBtn').addEventListener('click', function() {
+    document.getElementById('familyMemberRows').insertAdjacentHTML('beforeend', familyMemberRowHtml({}));
+  });
+  document.getElementById('familyMemberRows').addEventListener('click', function(e) {
+    if (e.target.closest('.f-del')) { e.target.closest('.fin-row').remove(); return; }
+    if (e.target.closest('.add-policy-mini')) {
+      var box = e.target.closest('.fin-row').querySelector('.member-policies');
+      if (box) box.insertAdjacentHTML('beforeend', memberPolicyHtml({}));
+      return;
+    }
+    if (e.target.closest('.mp-del')) e.target.closest('.member-policy').remove();
   });
   // 疾病明细联动
   document.getElementById('f-history').addEventListener('change', function() { syncNoOption('f-history'); renderHistoryDetail(); });
@@ -5020,10 +5904,11 @@ function renderDistrictNav() {
     });
   });
   document.getElementById('f-income').addEventListener('change', updateFinanceSummary);
-  // 需求分析问答表
+  // 需求分析问答表（默认展开）
   document.getElementById('needQaToggle').addEventListener('click', function() {
     document.getElementById('needQaCard').classList.toggle('open');
   });
+  document.getElementById('needQaCard').classList.add('open');
   document.getElementById('needQaBtn').addEventListener('click', analyzeNeeds);
   document.getElementById('nqSaveToBtn').addEventListener('click', function() { analyzeNeeds(); var r = document.getElementById('needQaResult'); if (r) { setTimeout(function() { r.scrollIntoView({ behavior: 'smooth', block: 'start' }); var inp = document.getElementById('nqNewName'); if (inp) inp.focus(); }, 120); } });
   // 性格分析折叠
@@ -5073,20 +5958,25 @@ function renderDistrictNav() {
       window.scrollTo({ top: top < 0 ? 0 : top, behavior: 'smooth' });
     }
   });
-  document.getElementById('addFollowBtn').addEventListener('click', addFollow);
-  var followInput = document.getElementById('f-followInput');
-  followInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); addFollow(); }
-  });
-  function addFollow() {
-    var input = document.getElementById('f-followInput');
-    var text = input.value.trim();
-    if (!text) { showToast('请输入跟进内容'); return; }
-    followDraft.unshift({ time: nowText(), text: text });
-    input.value = '';
+  document.getElementById('finishVisitBtn').addEventListener('click', function() {
+    var _intent = document.getElementById('f-intent').value || '中';
+    var _days = { '高': 3, '中': 7, '低': 14, '暂缓': 30 }[_intent] || 7;
+    var _txtMap = {
+      '高': '本次拜访完成：方案沟通推进顺利，建议尽快促成，下次' + _days + '天内跟进',
+      '中': '本次拜访完成：已沟通方案/解答疑问，持续培育，下次' + _days + '天内跟进',
+      '低': '本次拜访完成：日常维护保持联系，下次' + _days + '天内跟进',
+      '暂缓': '本次拜访完成：客户暂缓考虑，定期关注，下次' + _days + '天内跟进'
+    };
+    var _d = new Date(); _d.setDate(_d.getDate() + _days);
+    var _ds = _d.getFullYear() + '-' + String(_d.getMonth() + 1).padStart(2, '0') + '-' + String(_d.getDate()).padStart(2, '0');
+    followDraft.unshift({ time: nowText(), text: _txtMap[_intent] || ('本次拜访完成，下次' + _days + '天内跟进') });
+    var _nfD = document.getElementById('f-nextFollowDate');
+    if (_nfD) _nfD.value = _ds;
+    var _nfEl = document.getElementById('f-nextFollow');
+    if (_nfEl) _nfEl.textContent = _days + '天后（' + _ds + '）';
     renderFollowList();
-    showToast('跟进记录已添加');
-  }
+    showToast('已生成拜访记录，下次拜访顺延至 ' + _ds);
+  });
   document.getElementById('f-birth').addEventListener('change', updateAgeHint);
   document.getElementById('searchInput').addEventListener('input', renderList);
   document.getElementById('intentFilter').addEventListener('change', renderList);
@@ -5403,6 +6293,138 @@ function renderDistrictNav() {
     }
   }
 
+  var AI_SET_KEY = 'mc_ai_set_v1';
+  var AICtx = null;
+  var AIAbort = null;
+  var AISYSTEM_PROMPT = '你是保险顾问的随身答疑助手，帮他专业、合规地回答客户关于保险的问题。回答要求：1. 通俗易懂：用客户能听懂的大白话，少用术语；必须用术语时先解释。2. 合规底线：不承诺收益、不夸大、不贬低同业、不保证理赔结果、不代客决策；涉及具体产品条款一律以保险合同为准。3. 专业框架：先保障后理财、家庭经济支柱优先、保额要足额（重疾建议3-5倍年收入、寿险覆盖家庭负债）、投保要如实告知、先大人后小孩。4. 场景化：结合客户年龄和家庭情况给配置思路，例如老人重疾易保费倒挂，可改推防癌医疗+老年意外；小孩先配医疗和意外。5. 结尾引导：需要测算保费或定制方案时，引导客户找顾问本人面对面沟通。回答保持简洁，一般不超过300字。';
+
+  function loadAISet() {
+    try { return JSON.parse(localStorage.getItem(AI_SET_KEY)) || { url: 'http://localhost:11434', model: '' }; } catch (e) { return { url: 'http://localhost:11434', model: '' }; }
+  }
+  function saveAICfg() {
+    var url = (document.getElementById('aiUrlInput').value || '').trim() || 'http://localhost:11434';
+    var model = document.getElementById('aiModelSel').value;
+    localStorage.setItem(AI_SET_KEY, JSON.stringify({ url: url, model: model }));
+    showToast('AI 配置已保存');
+  }
+  function openAIBox() {
+    var set = loadAISet();
+    document.getElementById('aiUrlInput').value = set.url || 'http://localhost:11434';
+    AICtx = [{ role: 'system', content: AISYSTEM_PROMPT }];
+    var box = document.getElementById('aiMsgs');
+    box.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;padding:14px">你好，我是保险顾问答疑助手。直接输入客户的问题即可，例如：<br>"40岁男性年收入30万，重疾保额买多少合适？"<br>"家里老人70岁还能买什么保险？"</div>';
+    document.getElementById('aiModelSel').innerHTML = '<option value="">选择模型（点击刷新拉取）</option>';
+    if (set.model) {
+      var o = document.createElement('option');
+      o.value = set.model; o.textContent = set.model; o.selected = true;
+      document.getElementById('aiModelSel').appendChild(o);
+    }
+    loadAIModels();
+    document.getElementById('aiMask').classList.add('show');
+  }
+  function closeAIBox() { stopAIMsg(); document.getElementById('aiMask').classList.remove('show'); }
+  function loadAIModels() {
+    var set = loadAISet();
+    var url = (set.url || 'http://localhost:11434').replace(/\/+$/, '');
+    fetch(url + '/api/tags').then(function(r) { return r.json(); }).then(function(j) {
+      var list = (j.models || []).map(function(m) { return m.name; }).filter(function(n) { return n.indexOf('embed') === -1 && n.indexOf('minilm') === -1; });
+      var sel = document.getElementById('aiModelSel');
+      var cur = sel.value;
+      sel.innerHTML = '<option value="">选择模型</option>';
+      list.forEach(function(n) {
+        var o = document.createElement('option');
+        o.value = n; o.textContent = n;
+        if (n === cur) o.selected = true;
+        sel.appendChild(o);
+      });
+      if (cur) { sel.value = cur; } else if (list.length === 1) { sel.value = list[0]; }
+      document.getElementById('aiCfgInfo').textContent = '已连接本地大模型，可用模型：' + (list.join('、') || '未获取到');
+      document.getElementById('aiCfgInfo').style.color = '#0E7C5B';
+    }).catch(function(e) {
+      document.getElementById('aiCfgInfo').textContent = '连接失败：' + e.message + '。请确认本地大模型已启动（Ollama 运行中），或检查 API 地址。';
+      document.getElementById('aiCfgInfo').style.color = '#C0392B';
+    });
+  }
+  function appendAIMsg(role, text, streaming) {
+    var box = document.getElementById('aiMsgs');
+    if (!streaming) box.innerHTML = '';
+    var d = document.createElement('div');
+    d.style.cssText = 'max-width:92%;padding:8px 12px;border-radius:10px;line-height:1.6;white-space:pre-wrap;word-break:break-word;' + (role === 'user' ? 'align-self:flex-end;background:var(--primary);color:#fff' : 'align-self:flex-start;background:#F2F6F4;color:#23302A');
+    d.textContent = text;
+    box.appendChild(d);
+    box.scrollTop = box.scrollHeight;
+    return d;
+  }
+  function testAIConn() {
+    var set = loadAISet();
+    var url = (set.url || 'http://localhost:11434').replace(/\/+$/, '');
+    var model = document.getElementById('aiModelSel').value || set.model;
+    if (!model) { showToast('请先选择模型'); return; }
+    document.getElementById('aiCfgInfo').textContent = '测试中……';
+    document.getElementById('aiCfgInfo').style.color = 'var(--text-muted)';
+    fetch(url + '/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: model, messages: [{ role: 'user', content: '用一句话回答：什么是重疾险？' }], stream: false, options: { num_predict: 120 } }) })
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(j) {
+        document.getElementById('aiCfgInfo').textContent = '连接成功，模型回答：' + (j.message && j.message.content || '').slice(0, 80);
+        document.getElementById('aiCfgInfo').style.color = '#0E7C5B';
+      })
+      .catch(function(e) {
+        document.getElementById('aiCfgInfo').textContent = '测试失败：' + e.message + '。确认模型已启动、地址正确；若提示跨域被拦，需把 Ollama 跨域开关打开（OLLAMA_ORIGINS=* 后重启）。';
+        document.getElementById('aiCfgInfo').style.color = '#C0392B';
+      });
+  }
+  function stopAIMsg() {
+    if (AIAbort) { try { AIAbort.abort(); } catch (e) {} AIAbort = null; }
+    var st = document.getElementById('aiStopBtn');
+    var sd = document.getElementById('aiSendBtn');
+    if (st) st.style.display = 'none';
+    if (sd) sd.disabled = false;
+  }
+  async function sendAIMsg() {
+    var inp = document.getElementById('aiInput');
+    var text = inp.value.trim();
+    if (!text) return;
+    var set = loadAISet();
+    if (!set.model) { showToast('请先在「设置 → AI 答疑」选择模型并保存'); return; }
+    var url = (set.url || 'http://localhost:11434').replace(/\/+$/, '');
+    var box = document.getElementById('aiMsgs');
+    box.querySelector('.ai-placeholder') && box.removeChild(box.querySelector('.ai-placeholder'));
+    appendAIMsg('user', text);
+    inp.value = '';
+    var aiEl = appendAIMsg('ai', '正在思考…', true);
+    var msgs = (AICtx || []).concat([{ role: 'user', content: text }]);
+    var st = document.getElementById('aiStopBtn');
+    var sd = document.getElementById('aiSendBtn');
+    st.style.display = 'inline-block';
+    sd.disabled = true;
+    AIAbort = new AbortController();
+    var acc = '';
+    try {
+      var resp = await fetch(url + '/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: set.model, messages: msgs, stream: true, options: { num_predict: 600 } }), signal: AIAbort.signal });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var reader = resp.body.getReader();
+      var dec = new TextDecoder();
+      while (true) {
+        var chunk = await reader.read();
+        if (chunk.done) break;
+        var s = dec.decode(chunk.value, { stream: true });
+        var lines = s.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+          var ln = lines[i].trim();
+          if (!ln) continue;
+          try { var j = JSON.parse(ln); var piece = (j.message && j.message.content) || ''; if (piece) { acc += piece; aiEl.textContent = acc; box.scrollTop = box.scrollHeight; } } catch (e) {}
+        }
+      }
+      if (!acc) aiEl.textContent = '（模型没有返回内容，请重试或换模型）';
+      if (AICtx) AICtx.push({ role: 'user', content: text }, { role: 'assistant', content: acc });
+      if (AICtx && AICtx.length > 16) AICtx = [AICtx[0]].concat(AICtx.slice(-14));
+    } catch (e) {
+      if (e.name === 'AbortError') { aiEl.textContent = '（已停止）'; }
+      else { aiEl.textContent = '连接失败：' + e.message + '。请确认本地大模型已启动，或到设置里检查 API 地址与模型。'; }
+    }
+    stopAIMsg();
+  }
+
   function openSettings() {
     var sel = document.getElementById('backupIntervalSel');
     var cur = String(localStorage.getItem(INTERVAL_KEY) || '7');
@@ -5416,6 +6438,13 @@ function renderDistrictNav() {
     if (jInp) jInp.value = localStorage.getItem('mc_visit_amap_jscode') || _rDefJs;
     var rcEl = document.getElementById('recoveryShow');
     if (rcEl) rcEl.textContent = '恢复码：' + (localStorage.getItem(RECOVERY_KEY) || '未设置');
+    var abi = document.getElementById('autoBackupInfo');
+    if (abi) {
+      try {
+        var _bk = JSON.parse(localStorage.getItem(BACKUP_KEY) || 'null');
+        abi.textContent = _bk && _bk.t ? '自动备份：' + new Date(_bk.t).toLocaleString() + '（每次保存客户时自动记录，更新网页不会丢失客户数据）' : '自动备份：暂无记录（保存客户后自动生成）';
+      } catch (e2) { abi.textContent = ''; }
+    }
     document.getElementById('settingsMask').classList.add('show');
   }
   function closeSettings() { document.getElementById('settingsMask').classList.remove('show'); }
@@ -5553,6 +6582,29 @@ function renderDistrictNav() {
   });
   document.getElementById('resetPassBtn').addEventListener('click', resetPass);
   document.getElementById('settingsBtn').addEventListener('click', openSettings);
+  document.getElementById('aiBtn').addEventListener('click', openAIBox);
+  document.getElementById('aiCloseBtn').addEventListener('click', closeAIBox);
+  document.getElementById('aiSendBtn').addEventListener('click', sendAIMsg);
+  document.getElementById('aiStopBtn').addEventListener('click', stopAIMsg);
+  document.getElementById('aiInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); sendAIMsg(); } });
+  document.getElementById('aiCfgSaveBtn').addEventListener('click', saveAICfg);
+  document.getElementById('aiTestBtn').addEventListener('click', testAIConn);
+  document.getElementById('aiModelReloadBtn').addEventListener('click', loadAIModels);
+  document.getElementById('trashBtn').addEventListener('click', openTrash);
+  document.getElementById('trashCloseBtn').addEventListener('click', closeTrash);
+  document.getElementById('qfCloseBtn').addEventListener('click', closeQuickFollow);
+  document.getElementById('qfSaveBtn').addEventListener('click', saveQuickFollow);
+  document.getElementById('qfAutoBtn').addEventListener('click', autoFollowPlan);
+  document.getElementById('addDepositBtn').addEventListener('click', function() {
+    var box = document.getElementById('depositRows');
+    if (!box) return;
+    var div = document.createElement('div');
+    div.innerHTML = depositRowHtml({ type: '活期存款' });
+    box.appendChild(div.firstChild);
+    bindDepositEvents();
+  });
+  document.getElementById('trashEmptyBtn').addEventListener('click', emptyTrash);
+  updateTrashBadge();
   document.getElementById('amapKeySaveBtn').addEventListener('click', function() {
     var k = (document.getElementById('amapKeyInput').value || '').trim();
     var j = (document.getElementById('amapJsInput').value || '').trim();
@@ -5563,6 +6615,53 @@ function renderDistrictNav() {
     setTimeout(function() { location.reload(); }, 800);
   });
   document.getElementById('setCloseBtn').addEventListener('click', closeSettings);
+  /* 设置弹窗：按住标题可拖动 */
+  (function () {
+    var mask = document.getElementById('settingsMask');
+    var box = mask.querySelector('.settings-modal-box');
+    var head = box.querySelector('.modal-title');
+    var sx = 0, sy = 0, ox = 0, oy = 0, dragging = false;
+    if (!head) return;
+    head.style.cursor = 'move';
+    head.addEventListener('mousedown', function (e) {
+      if (e.target.closest('button')) return;
+      dragging = true;
+      sx = e.clientX; sy = e.clientY;
+      var r = box.getBoundingClientRect();
+      ox = r.left; oy = r.top;
+      box.style.position = 'fixed';
+      box.style.margin = '0';
+      box.style.left = ox + 'px';
+      box.style.top = oy + 'px';
+      if (e.preventDefault) e.preventDefault();
+    });
+    head.addEventListener('touchstart', function (e) {
+      if (e.target.closest('button')) return;
+      dragging = true;
+      var t = e.touches[0];
+      sx = t.clientX; sy = t.clientY;
+      var r = box.getBoundingClientRect();
+      ox = r.left; oy = r.top;
+      box.style.position = 'fixed';
+      box.style.margin = '0';
+      box.style.left = ox + 'px';
+      box.style.top = oy + 'px';
+    }, { passive: true });
+    document.addEventListener('mousemove', function (e) {
+      if (!dragging) return;
+      box.style.left = (ox + e.clientX - sx) + 'px';
+      box.style.top = (oy + e.clientY - sy) + 'px';
+    });
+    document.addEventListener('touchmove', function (e) {
+      if (!dragging) return;
+      var t = e.touches[0];
+      box.style.left = (ox + t.clientX - sx) + 'px';
+      box.style.top = (oy + t.clientY - sy) + 'px';
+    }, { passive: true });
+    function endDrag() { dragging = false; }
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchend', endDrag);
+  })();
   document.getElementById('backupIntervalSel').addEventListener('change', function() {
     localStorage.setItem(INTERVAL_KEY, this.value);
     showToast('备份提醒已更新');
@@ -5642,10 +6741,6 @@ function renderDistrictNav() {
       });
       renderFaq('qa');
     }
-    // 拜访客户列表合并进需求分析
-    var _visitBlock = document.createElement('div');
-    _visitBlock.innerHTML = '<div class="page-title">拜访客户</div><p class="page-desc">按拜访安排筛选客户，方便安排展业节奏</p><div class="visit-stats" id="visitStats"></div><div id="visitList"></div>';
-    if (qa) qa.appendChild(_visitBlock);
     var _mapbox2 = document.getElementById('sec-map');
     var _rb = document.querySelector('.route-bar');
     var _vqp = document.getElementById('vqPanel');
@@ -5684,7 +6779,7 @@ var visitFilter = '';
 var mapMode = 'plan';
 function _subMenuDefs() {
   return {
-    qa: [{ k: 'month', t: '月拜访' }, { k: 'year', t: '年度拜访' }],
+    qa: [],
     client: [],  // 区县筛选由可折叠区县栏承担
     visit: [],  // 我的客户：名下保单客户，无二级菜单
     map: [],  // 拜访地图直接展示待拜访面板与地图，无需子导航切换
@@ -5719,9 +6814,10 @@ function bindMainNav() {
   var rsc = document.getElementById('routeSendCarBtn');
   if (rsc) rsc.addEventListener('click', function () {
     if (!_rPlanIds || !_rPlanIds.length) { showToast('请先规划路线'); return; }
-    var first = getClientById(_rPlanIds[0]);
+    var _it0 = (typeof _rPlanIds[0] === 'string') ? null : _rPlanIds[0];
+    var first = getClientById(typeof _rPlanIds[0] === 'string' ? _rPlanIds[0] : (_rPlanIds[0] && _rPlanIds[0].id));
     if (!first) { showToast('客户不存在'); return; }
-    window.open(_rNavUrl(first), '_blank');
+    window.open(_rNavUrl(first, _it0), '_blank');
   });
   var mnm = document.getElementById('mapNavMode');
   if (mnm) mnm.querySelectorAll('.mode-tab').forEach(function (mt) {
@@ -5864,11 +6960,12 @@ function bindStartModal() {
     });
   });
 }
-function _rNavUrl(c) {
+function _rNavUrl(c, it) {
   var b = (c && c.basic) || {};
   var mode = _rNavMode || 'car';
   var to = '';
-  if (b.lat != null && b.lng != null) to = b.lng + ',' + b.lat + ',' + encodeURIComponent(b.name || '客户');
+  if (it && typeof it === 'object' && it.lat != null && it.lng != null) to = it.lng + ',' + it.lat + ',' + encodeURIComponent(it.name || b.name || '客户');
+  else if (b.lat != null && b.lng != null) to = b.lng + ',' + b.lat + ',' + encodeURIComponent(b.name || '客户');
   else to = encodeURIComponent(((b.district || '') + (b.address || '')) || (b.name || '客户'));
   var from = '';
   if (_routeStart) from = '&from=' + encodeURIComponent(_routeStart.name || '起点') + ',' + _routeStart.lng + ',' + _routeStart.lat;
@@ -5880,12 +6977,89 @@ function renderMapVq() {
   if (cnt) cnt.textContent = visitQueue.length + ' 位';
   if (!box) return;
   if (!visitQueue.length) { box.innerHTML = '<div class="vq-empty">暂无待拜访客户：打开客户卡片，点「拜访」即可加入</div>'; return; }
-  box.innerHTML = visitQueue.map(function (id, idx) {
-    var c = getClientById(id);
+  box.innerHTML = visitQueue.map(function (it, idx) {
+    var c = getClientById(vqIdOf(it));
     if (!c) return '';
     var b = c.basic || {};
-    return '<div class="vq-item"><span class="vq-idx">' + (idx + 1) + '</span><div class="vq-info"><div class="vq-name">' + (b.name || '') + '</div><div class="vq-addr">' + (b.district || '') + (b.address || '') + '</div></div><a class="vq-nav" href="' + _rNavUrl(c) + '" target="_blank" rel="noopener">导航</a></div>';
+    return '<div class="vq-item">' +
+      '<span class="vq-idx">' + (idx + 1) + '</span>' +
+      '<div class="vq-info"><div class="vq-name">' + _rEsc(b.name || '') + '</div><div class="vq-addr">' + _rEsc(vqPlaceText(it, c)) + '</div></div>' +
+      '<span class="vq-ops">' +
+        '<button class="vq-op" data-vqop="loc" data-vqi="' + idx + '" title="拜访不一定要在客户家：可改到咖啡厅/公司等地">地点</button>' +
+        '<button class="vq-op done" data-vqop="done" data-vqi="' + idx + '" title="拜访结束，生成拜访记录">完成拜访</button>' +
+        '<a class="vq-op" href="' + _rNavUrl(c, it) + '" target="_blank" rel="noopener" title="高德导航">导航</a>' +
+      '</span>' +
+    '</div>';
   }).join('');
+  box.querySelectorAll('[data-vqop]').forEach(function(op) {
+    op.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var i = parseInt(this.getAttribute('data-vqi'), 10);
+      var opType = this.getAttribute('data-vqop');
+      if (opType === 'loc') openVisitLocPick(i);
+      else if (opType === 'done') openVisitDone(i);
+    });
+  });
+}
+var _vdTarget = null;
+function openVisitDone(i) {
+  var it = visitQueue[i];
+  var id = vqIdOf(it);
+  var c = getClientById(id);
+  if (!c) { showToast('客户不存在'); return; }
+  _vdTarget = i;
+  var b = c.basic || {};
+  var _nEl = document.getElementById('vdName'); if (_nEl) _nEl.textContent = b.name || '未命名';
+  var _pEl = document.getElementById('vdPlace'); if (_pEl) _pEl.textContent = vqPlaceText(it, c);
+  var _intent = (c.service && c.service.intent) || '';
+  var _days = { '高': 3, '中': 7, '低': 14, '暂缓': 30 }[_intent] || 7;
+  var _nxt = document.getElementById('vdNext');
+  if (_nxt) _nxt.textContent = '保存后自动生成拜访记录，下次拜访按客户画像顺延：' + (_intent || '未定意向') + '→' + _days + '天';
+  var _ct = document.getElementById('vdContent'); if (_ct) _ct.value = '';
+  document.getElementById('visitDoneModal').classList.add('show');
+  setTimeout(function() { var _f = document.getElementById('vdContent'); if (_f) _f.focus(); }, 120);
+}
+function visitDoneSave() {
+  if (_vdTarget == null) return;
+  var it = visitQueue[_vdTarget];
+  var id = vqIdOf(it);
+  var c = getClientById(id);
+  if (!c) { showToast('客户不存在'); return; }
+  var text = document.getElementById('vdContent').value.trim();
+  var now = nowText();
+  var notes = (c.service && c.service.notes) || [];
+  notes.unshift({ time: now, text: text ? ('拜访完成：' + text) : '拜访完成' });
+  if (!c.service) c.service = {};
+  c.service.notes = notes;
+  var _intent = c.service.intent || '';
+  var _days = { '高': 3, '中': 7, '低': 14, '暂缓': 30 }[_intent] || 7;
+  var _d = new Date(); _d.setDate(_d.getDate() + _days);
+  var _ds = _d.getFullYear() + '-' + String(_d.getMonth() + 1).padStart(2, '0') + '-' + String(_d.getDate()).padStart(2, '0');
+  c.service.nextFollow = _days + '天后（' + _ds + '）';
+  c.updatedAt = now;
+  saveClients();
+  vqRemove(id);
+  var _m = document.getElementById('visitDoneModal'); if (_m) _m.classList.remove('show');
+  _vdTarget = null;
+  showToast('拜访记录已保存，下次拜访顺延至 ' + _ds);
+  if (viewingId === id) openDetail(id);
+}
+function openVisitLocPick(i) {
+  var it = visitQueue[i];
+  var c = getClientById(vqIdOf(it));
+  var b = c && c.basic ? c.basic : {};
+  var ilng = (it && typeof it === 'object' && it.lng != null) ? it.lng : (b.lng != null ? b.lng : 120.165);
+  var ilat = (it && typeof it === 'object' && it.lat != null) ? it.lat : (b.lat != null ? b.lat : 30.259);
+  window.openGeoModal(ilng, ilat, function(res) {
+    var cur = visitQueue[i];
+    if (!cur || typeof cur !== 'object') cur = vqItemOf(vqIdOf(it));
+    cur.lng = res.lng; cur.lat = res.lat;
+    var pn = window.prompt('给这个拜访地点起个名（如：星巴克·滨江店 / 客户公司 / 客户家），留空表示自定义地点', cur.placeName || '');
+    cur.placeName = (pn && pn.trim()) ? pn.trim() : (cur.placeName || '');
+    visitQueue[i] = cur;
+    vqSave(); renderMapVq(); refreshMapBox();
+    showToast('拜访地点已更新');
+  });
 }
 function isSel(id) { return !!(routeSelected || {})[id]; }
 function setSel(id, on) { if (on) routeSelected[id] = true; else delete routeSelected[id]; updateRouteBar(); }
@@ -6042,6 +7216,10 @@ function refreshMapBox() {
     var addr = (item && item.address) || (c && c.basic && c.basic.address) || '';
     var name = (item && item.name) || (c && c.basic && c.basic.name) || '客户';
     var tIdx = idx + 1;
+    if (item && typeof item === 'object' && item.lat != null && item.lng != null) {
+      pts.push({ idx: tIdx, name: name, lnglat: [item.lng, item.lat] });
+      done++; if (done === q.length) drawPts(); return;
+    }
     if (c && c.basic && c.basic.lat != null) {
       pts.push({ idx: tIdx, name: name, lnglat: [c.basic.lng, c.basic.lat] });
       done++; if (done === q.length) drawPts(); return;
@@ -6181,14 +7359,24 @@ function _rRouteSeg(from, to) {
 var _rPlanIds = null;
 function planIds(ids) {
   _rPlanIds = ids || [];
-  var list = _rPlanIds.map(function(id) { return getClientById(id); }).filter(Boolean);
+  var pairs = _rPlanIds.map(function(x) {
+    return { it: (typeof x === 'string') ? null : x, c: getClientById(typeof x === 'string' ? x : (x && x.id)) };
+  }).filter(function(p) { return p.c; });
+  var list = pairs.map(function(p) { return p.c; });
+  var items = pairs.map(function(p) { return p.it; });
   if (!list.length) { showToast('请先勾选客户或添加待拜访'); return; }
   showToast('正在定位 ' + list.length + ' 位客户…');
   var pts = [], fails = 0, done = 0;
   if (_routeStart) {
     pts.push({ id: '__start__', name: _routeStart.name || '起点', addr: _routeStart.name || '起点', lng: _routeStart.lng, lat: _routeStart.lat, isStart: true });
   }
-  list.forEach(function(c) {
+  list.forEach(function(c, ci) {
+    var it = items[ci];
+    if (it && typeof it === 'object' && it.lat != null && it.lng != null) {
+      var _b = c.basic || {};
+      pts.push({ id: c.id, name: it.name || _b.name || '客户', addr: it.placeName || [(_b.district || ''), (_b.address || '')].join('') || '已定位', lng: it.lng, lat: it.lat });
+      next(); return;
+    }
     _rGeo(c).then(function(p) { pts.push(p); next(); }).catch(function() { fails++; next(); });
   });
   function next() {
@@ -6310,20 +7498,43 @@ function _rBind() {
 /* ===== 待拜访队列 ===== */
 var visitQueue = [];
 var VQ_KEY = 'mc_visit_queue_v1';
-function vqLoad() { try { var s = localStorage.getItem(VQ_KEY); visitQueue = (s ? JSON.parse(s) : []) || []; if (!Array.isArray(visitQueue)) visitQueue = []; } catch (e) { visitQueue = []; } }
+function vqIdOf(x) { return (typeof x === 'string') ? x : (x && x.id); }
+function vqItemOf(id) {
+  var c = getClientById(id);
+  var b = c && c.basic ? c.basic : {};
+  return { id: id, name: b.name || '客户', placeName: '', lng: (b.lat != null) ? b.lng : null, lat: (b.lat != null) ? b.lat : null };
+}
+function vqPlaceText(it, c) {
+  var b = (c && c.basic) || {};
+  if (it && typeof it === 'object' && it.placeName) return it.placeName;
+  var addr = [b.city || '', b.district || '', b.address || ''].join('').trim();
+  if (addr) return addr;
+  return (b.lat != null) ? '家庭地址（已定位）' : '地址待补';
+}
+function vqLoad() {
+  try {
+    var s = localStorage.getItem(VQ_KEY);
+    visitQueue = (s ? JSON.parse(s) : []) || [];
+    if (!Array.isArray(visitQueue)) visitQueue = [];
+    visitQueue = visitQueue.map(function(x) {
+      if (typeof x === 'string') return vqItemOf(x);
+      return x;
+    });
+  } catch (e) { visitQueue = []; }
+}
 function vqSave() { try { localStorage.setItem(VQ_KEY, JSON.stringify(visitQueue)); } catch (e) {} }
-function vqHas(id) { return (visitQueue || []).indexOf(id) !== -1; }
+function vqHas(id) { return (visitQueue || []).some(function(x) { return vqIdOf(x) === id; }); }
 function vqCount() { return visitQueue.length; }
 function vqToggle(id) {
-  var i = visitQueue.indexOf(id);
+  var i = visitQueue.findIndex(function(x) { return vqIdOf(x) === id; });
   if (i >= 0) { visitQueue.splice(i, 1); showToast('已移出待拜访'); }
-  else { visitQueue.push(id); showToast('已加入待拜访，点列表顶部「待拜访客户」可排序'); }
-  vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox();
+  else { visitQueue.push(vqItemOf(id)); showToast('已加入待拜访，点列表顶部「待拜访客户」可排序'); }
+  vqSave(); vqRenderBadge(); vqRenderPanel(); renderMapVq(); renderList(); refreshMapBox();
   if (viewingId === id) vqRefreshDetailBtn();
 }
 function vqRemove(id) {
-  var i = visitQueue.indexOf(id);
-  if (i >= 0) { visitQueue.splice(i, 1); vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox(); if (viewingId === id) vqRefreshDetailBtn(); }
+  var i = visitQueue.findIndex(function(x) { return vqIdOf(x) === id; });
+  if (i >= 0) { visitQueue.splice(i, 1); vqSave(); vqRenderBadge(); vqRenderPanel(); renderMapVq(); renderList(); refreshMapBox(); if (viewingId === id) vqRefreshDetailBtn(); }
 }
 function vqMove(i, dir) {
   var j = i + dir;
@@ -6333,7 +7544,7 @@ function vqMove(i, dir) {
 }
 function vqClear() {
   if (!visitQueue.length) { showToast('待拜访列表已为空'); return; }
-  visitQueue = []; vqSave(); vqRenderBadge(); vqRenderPanel(); renderList(); refreshMapBox();
+  visitQueue = []; vqSave(); vqRenderBadge(); vqRenderPanel(); renderMapVq(); renderList(); refreshMapBox();
   showToast('已清空待拜访');
 }
 function vqRenderBadge() { var el = _r$('vqCount'); if (el) el.textContent = vqCount() + ' 位'; }
@@ -6343,7 +7554,7 @@ function vqRenderPanel() {
   if (!visitQueue.length) { box.innerHTML = '<div class="vq-empty">还没有待拜访客户：打开客户卡片，点右上角「拜访」或详情页旗标即可加入</div>'; return; }
   var html = '';
   visitQueue.forEach(function(id, i) {
-    var c = getClientById(id);
+    var c = getClientById(vqIdOf(id));
     if (!c) return;
     var b = c.basic || {};
     var addr = [b.city || '', b.district || '', b.address || ''].join('').trim() || '地址待补';
@@ -6383,7 +7594,11 @@ function vqBind() {
   if (plan) plan.addEventListener('click', function() { openRouteModal(visitQueue.slice()); });
   var clr = _r$('vqClearBtn');
   if (clr) clr.addEventListener('click', vqClear);
-  vqLoad(); vqRenderBadge(); vqRenderPanel();
+  var _vc = document.getElementById('vdCloseBtn');
+  if (_vc) _vc.addEventListener('click', function() { document.getElementById('visitDoneModal').classList.remove('show'); _vdTarget = null; });
+  var _vs = document.getElementById('vdSaveBtn');
+  if (_vs) _vs.addEventListener('click', visitDoneSave);
+  vqLoad(); vqRenderBadge(); vqRenderPanel(); renderMapVq();
 }
 
 if (document.readyState === 'loading') {
