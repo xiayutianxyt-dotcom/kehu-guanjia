@@ -202,8 +202,6 @@ body {
 @media (max-width: 600px) { #aiBtn { padding: 8px 14px; font-size: 14px; } }
 /* ===== 手机端显示优化：整体放大，避免界面偏小 ===== */
 @media (max-width: 560px) {
-  .main-tab { font-size: 15px; padding: 6px 2px 8px; }
-  .main-tab .mt-ico { width: 40px; height: 40px; }
   .brand-bar { font-size: 15px; }
   .client-card { font-size: 15px; }
   .client-card-top .cc-name { font-size: 16px; }
@@ -1564,6 +1562,12 @@ body {
 .main-tab[data-tab=map].active .mt-ico { background:#7C3AED; }
 .main-tab[data-tab=client]:not(.active) .mt-ico { background:rgba(14,124,91,.12); color:#0E7C5B; }
 .main-tab[data-tab=qa]:not(.active) .mt-ico { background:rgba(14,124,91,.12); color:#0E7C5B; }
+/* ===== 手机端主导航：2×2 大网格（放在基础样式之后才能覆盖） ===== */
+@media (max-width: 560px) {
+  .main-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 0 4px; }
+  .main-tab { font-size: 17px; padding: 14px 4px 12px; border-radius: 14px; background: var(--card); box-shadow: 0 2px 10px rgba(14,124,91,.08); }
+  .main-tab .mt-ico { width: 58px; height: 58px; border-radius: 14px; }
+}
 .main-tab[data-tab=visit]:not(.active) .mt-ico { background:rgba(234,88,12,.12); color:#EA580C; }
 .main-tab[data-tab=map]:not(.active) .mt-ico { background:rgba(124,58,237,.12); color:#7C3AED; }
 .sub-nav { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none; }
