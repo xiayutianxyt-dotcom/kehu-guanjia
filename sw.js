@@ -2,7 +2,7 @@
    用途：客户成功打开过一次后，即使站点不可达或断网，也能从本机缓存继续打开使用。
    安全：本文件仅缓存页面代码（index.html 与自身），不含任何客户数据（客户数据在浏览器本地加密存储，SW 不触碰）。
    注意：对外部署需与 index.html 一起上传到同一目录。 */
-var CACHE = 'khgj-v2.4.4-sw';
+var CACHE = 'khgj-v2.4.4c-sw';
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
